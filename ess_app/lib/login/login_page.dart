@@ -1,3 +1,5 @@
+import 'package:ess_app/login/email_verification.dart';
+import 'package:ess_app/login/forgot_password.dart';
 import 'package:flutter/material.dart';
 
 import 'choice_page.dart';
@@ -120,12 +122,18 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Container(
                     alignment: Alignment.centerRight,
-                    child: (Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => EmailVerification()));
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    )),
+                    ),
                   ),
                 ),
                 SizedBox(height: 40),
