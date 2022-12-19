@@ -124,6 +124,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                                   ))),
                         )),
                       ),
+                      SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0),
                         child: Container(

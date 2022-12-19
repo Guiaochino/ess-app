@@ -123,6 +123,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   ))),
                         )),
                       ),
+                      SizedBox(height: 20),
                       //done button
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0),

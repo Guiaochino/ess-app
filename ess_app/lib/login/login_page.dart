@@ -1,3 +1,4 @@
+import 'package:ess_app/login/create_account.dart';
 import 'package:ess_app/login/email_verification.dart';
 import 'package:ess_app/login/forgot_password.dart';
 import 'package:flutter/material.dart';
@@ -170,11 +171,17 @@ class _LoginPageState extends State<LoginPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    ' Sign up now!',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 241, 83, 72),
-                      fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CreateAccount()));
+                    },
+                    child: Text(
+                      ' Sign up now!',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 241, 83, 72),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ])
