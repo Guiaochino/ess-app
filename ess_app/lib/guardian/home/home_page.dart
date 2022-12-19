@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/main_drawer.dart';
 import '../../widgets/memory_card.dart';
 import '../../widgets/upcoming_schedule.dart';
+import '../memory/memory_home_page.dart';
 
 class guardianHomePage extends StatefulWidget {
   const guardianHomePage({Key? key}) : super(key: key);
@@ -140,31 +141,37 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     //memories button
                     Padding(
                       padding: const EdgeInsets.only(left: 20.0),
-                      child: Container(
-                        padding: EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFE86166),
-                                Color.fromARGB(255, 245, 133, 59),
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            )),
-                        child: Row(
-                          children: [
-                            Icon(Icons.photo_album_outlined,
-                                size: 30, color: Colors.white),
-                            SizedBox(width: 10),
-                            Text(
-                              "Memories",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white),
-                            )
-                          ],
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => MemoryHomePage()));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFE86166),
+                                  Color.fromARGB(255, 245, 133, 59),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              )),
+                          child: Row(
+                            children: [
+                              Icon(Icons.photo_album_outlined,
+                                  size: 30, color: Colors.white),
+                              SizedBox(width: 10),
+                              Text(
+                                "Memories",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.white),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
