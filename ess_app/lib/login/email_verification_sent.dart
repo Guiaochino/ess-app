@@ -17,22 +17,16 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: (Padding(
-            padding: const EdgeInsets.only(
-              top: 15,
-              left: 15,
-            ),
-            child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => EmailVerification()));
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
-                  size: 30,
-                )),
-          )),
+          leading: (IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EmailVerification()));
+              },
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+                size: 30,
+              ))),
         ),
         body: SafeArea(
           child: Container(

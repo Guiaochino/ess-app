@@ -16,21 +16,6 @@ class _ChoicePageState extends State<ChoicePage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 15,
-                right: 15,
-              ),
-              child: IconButton(
-                  onPressed: () => print("Search Pressed"),
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.black,
-                    size: 30,
-                  )),
-            ),
-          ],
         ),
         body: SafeArea(
             child: Container(
