@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'guardian/home/home_page.dart';
 import 'login/landing_page.dart';
 import 'login/login_page.dart';
 
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.yellow,
       ),
       // test commit
-      home: const LandingPage(),
+      home: const guardianHomePage(),
     );
   }
 }
