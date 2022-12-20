@@ -5,6 +5,7 @@ import '../../widgets/memory_card.dart';
 import '../../widgets/upcoming_schedule.dart';
 import '../memory/memory_home_page.dart';
 import '../reminder/reminder_home.dart';
+import '../schedule/schedule_home.dart';
 
 class guardianHomePage extends StatefulWidget {
   const guardianHomePage({Key? key}) : super(key: key);
@@ -266,8 +267,8 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 20.0),
+                          padding: const EdgeInsets.only(
+                              top: 20.0, left: 20.0, bottom: 20.0),
                           child: Text(
                             'YOUR RECENT MEMORIES',
                             style: TextStyle(
@@ -277,12 +278,18 @@ class _guardianHomePageState extends State<guardianHomePage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 20.0),
-                          child: Text(
-                            'See all',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.grey[600]),
+                          child: MaterialButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => MemoryHomePage()));
+                            },
+                            child: Text(
+                              'See all',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.grey[600]),
+                            ),
                           ),
                         )
                       ],
@@ -330,12 +337,18 @@ class _guardianHomePageState extends State<guardianHomePage> {
                               horizontal: 20.0, vertical: 20.0),
                           child: MaterialButton(
                             onPressed: () {},
-                            child: Text(
-                              'See all',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.grey),
+                            child: MaterialButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ScheduleHomePage()));
+                              },
+                              child: Text(
+                                'See all',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.grey),
+                              ),
                             ),
                           ),
                         ),
