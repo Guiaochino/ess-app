@@ -1,4 +1,26 @@
-import "package:flutter/material.dart" show AnimatedIcons, AppBar, BuildContext, Color, Colors, Column, DefaultTabController, Expanded, FontWeight, Icon, Icons, MaterialPageRoute, Navigator, Scaffold, StatelessWidget, Tab, TabBar, TabBarView, Text, TextStyle, Widget;
+import "package:flutter/material.dart"
+    show
+        AnimatedIcons,
+        AppBar,
+        BuildContext,
+        Color,
+        Colors,
+        Column,
+        DefaultTabController,
+        Expanded,
+        FontWeight,
+        Icon,
+        Icons,
+        MaterialPageRoute,
+        Navigator,
+        Scaffold,
+        StatelessWidget,
+        Tab,
+        TabBar,
+        TabBarView,
+        Text,
+        TextStyle,
+        Widget;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../widgets/main_drawer.dart';
 import '../create/create_entry_diary.dart';
@@ -16,8 +38,9 @@ class MemoryHomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'M E M O R Y  P A G E',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            'MEMORY PAGE',
+            style: TextStyle(
+                fontSize: 25, fontWeight: FontWeight.bold, letterSpacing: 4.5),
           ),
           backgroundColor: Color.fromARGB(255, 255, 197, 6),
           foregroundColor: Colors.black,

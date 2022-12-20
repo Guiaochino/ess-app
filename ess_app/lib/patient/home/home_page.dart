@@ -20,10 +20,12 @@ class _patientHomePageState extends State<patientHomePage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            title: Text('HOME'),
+            centerTitle: true,
             iconTheme: IconThemeData(color: Colors.black),
             backgroundColor: Color(0xFFE86166),
             elevation: 0,
-            expandedHeight: 250,
+            expandedHeight: 200,
             floating: false,
             pinned: true,
             actions: [
@@ -105,7 +107,7 @@ class _patientHomePageState extends State<patientHomePage> {
                                               color: Colors.black),
                                         ),
                                         Text(
-                                          'PATIENT',
+                                          'Patient',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 35,
@@ -122,18 +124,12 @@ class _patientHomePageState extends State<patientHomePage> {
                       ],
                     )),
               ),
-              centerTitle: true,
-              title: Text(
-                'H O M E',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-              ),
             ),
           ),
           //categories
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(top: 30.0),
+              padding: const EdgeInsets.only(top: 20.0),
               child: Container(
                 height: 80,
                 child: ListView(
@@ -145,7 +141,7 @@ class _patientHomePageState extends State<patientHomePage> {
                       child: MaterialButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => MemoryHomePage()));
+                              builder: (context) => const MemoryHomePage()));
                         },
                         child: Container(
                           padding: EdgeInsets.all(20.0),
@@ -213,7 +209,7 @@ class _patientHomePageState extends State<patientHomePage> {
                       child: MaterialButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ReminderHomePage()));
+                              builder: (context) => const ReminderHomePage()));
                         },
                         child: Container(
                           padding: EdgeInsets.all(20.0),
@@ -258,7 +254,7 @@ class _patientHomePageState extends State<patientHomePage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                height: 300,
+                height: 250,
                 child: Column(
                   children: [
                     //title
@@ -401,7 +397,8 @@ class _patientHomePageState extends State<patientHomePage> {
                         child: MaterialButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ReminderHomePage()));
+                                builder: (context) =>
+                                    const ReminderHomePage()));
                           },
                           child: Text(
                             'See all',
@@ -423,7 +420,8 @@ class _patientHomePageState extends State<patientHomePage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ReminderHomePage()));
+                                builder: (context) =>
+                                    const ReminderHomePage()));
                           },
                           child: Container(
                             height: 100.0,
@@ -484,7 +482,8 @@ class _patientHomePageState extends State<patientHomePage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ReminderHomePage()));
+                                builder: (context) =>
+                                    const ReminderHomePage()));
                           },
                           child: Container(
                             height: 100.0,

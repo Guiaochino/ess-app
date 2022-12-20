@@ -1,4 +1,6 @@
+import 'package:ess_app/patient/home/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 import 'guardian/home/home_page.dart';
 import 'login/landing_page.dart';
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.yellow,
       ),
       // test commit
-      home: const guardianHomePage(),
+      home: const LoginPage(),
     );
   }
 }

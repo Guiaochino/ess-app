@@ -34,9 +34,9 @@ class MemoryImageTab extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Container(
-                  height: 40,
-                  child: Text('Spare Container'),
-                ),
+                    // height: 40,
+                    // child: Text('Spare Container'),
+                    ),
               ),
               //container for gridview contents
               Expanded(

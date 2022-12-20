@@ -16,8 +16,9 @@ class ReminderHomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'R E M I N D E R  P A G E',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            'REMINDER PAGE',
+            style: TextStyle(
+                fontSize: 25, fontWeight: FontWeight.bold, letterSpacing: 4.5),
           ),
           backgroundColor: Color.fromARGB(255, 255, 197, 6),
           foregroundColor: Colors.black,
