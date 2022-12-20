@@ -1,3 +1,4 @@
+import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:flutter/material.dart';
 
 import '../guardian/home/home_page.dart';
@@ -40,8 +41,8 @@ class MainDrawer extends StatelessWidget {
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => guardianHomePage()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => MemoryHomePage()));
               },
             ),
             ListTile(
