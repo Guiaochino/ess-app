@@ -180,31 +180,37 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     //schedules button
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Container(
-                        padding: EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFE86166),
-                                Color.fromARGB(255, 245, 133, 59),
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            )),
-                        child: Row(
-                          children: [
-                            Icon(Icons.calendar_month_outlined,
-                                size: 30, color: Colors.white),
-                            SizedBox(width: 10),
-                            Text(
-                              "Schedules",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white),
-                            )
-                          ],
+                      child: MaterialButton(
+                        onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ScheduleHomePage()));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFE86166),
+                                  Color.fromARGB(255, 245, 133, 59),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              )),
+                          child: Row(
+                            children: [
+                              Icon(Icons.calendar_month_outlined,
+                                  size: 30, color: Colors.white),
+                              SizedBox(width: 10),
+                              Text(
+                                "Schedules",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.white),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

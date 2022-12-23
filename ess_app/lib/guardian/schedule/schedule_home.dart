@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../widgets/main_drawer.dart';
 import '../../widgets/schedule_monthly_summary.dart';
 import '../../widgets/schedule_tab_listview.dart';
+import '../create/create_entry_schedule.dart';
 
 class ScheduleHomePage extends StatefulWidget {
   const ScheduleHomePage({super.key});
@@ -80,6 +81,33 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
 //     });
 //   }
 
+  List ScheduleList = [
+      //datetime format is dd-mm-yyyy hh:mm:ss
+      [
+        'sched 1',
+        '2Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore eu duis enim. Eiusmod pariatur fugiat do veniam.',
+        false,
+        '13-12-2022 23:58:44',
+      ],
+      [
+        'sched 2',
+        '1Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore eu duis enim. Eiusmod pariatur fugiat do veniam.',
+        false,
+        '22-09-2022 12:39:20',
+      ],
+      [
+        'sched 3',
+        '3Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore eu duis enim. Eiusmod pariatur fugiat do veniam.',
+        false,
+        '12-06-2022 23:23:44',
+      ],
+      [
+        'sched 4',
+        '4Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore eu duis enim. Eiusmod pariatur fugiat do veniam.',
+        false,
+        '12-25-2020 12:58:44',
+      ],
+    ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,8 +127,8 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
         label: Text('Add Schedule'),
         icon: Icon(Icons.add_box),
         onPressed: () {
-          // Navigator.of(context)
-          //     .push(MaterialPageRoute(builder: (context) => CreateSchedule()));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => CreateSchedule()));
         },
       ),
       body: Container(
