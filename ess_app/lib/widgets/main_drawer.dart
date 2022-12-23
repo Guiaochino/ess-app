@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../guardian/home/home_page.dart';
 import '../guardian/reminder/reminder_home.dart';
+import '../guardian/settings/settings_home.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -21,6 +22,13 @@ class MainDrawer extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.w700,
+                  shadows: [
+                          Shadow(
+                            blurRadius: 10.0,
+                            color: Colors.grey,
+                            offset: Offset(5.0, 5.0),
+                          ),
+                        ],
                 ),
               )),
             ),
@@ -76,7 +84,7 @@ class MainDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => guardianHomePage()));
+                    builder: (context) => SettingsHomePage()));
               },
             ),
           ],
