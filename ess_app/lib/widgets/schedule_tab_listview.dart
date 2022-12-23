@@ -1,21 +1,21 @@
 import 'package:ess_app/guardian/view/view_entry_schedule.dart';
+import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ScheduleTabListView extends StatelessWidget {
-  // final String scheduleTitle;
-  // final String scheduleDetails;
-  // final String scheduleDateTime;
-  // final bool eventDone;
+  final String title;
+  final String details;
+  final String dateTime;
   // final Function(bool?)? onChanged;
   // final Function(BuildContext)? deleteTapped;
 
   ScheduleTabListView({
     super.key,
-    // required this.scheduleTitle,
-    // required this.scheduleDetails,
+    required this.title,
+    required this.details,
+    required this.dateTime,
     // required this.eventDone,
-    // // required this.scheduleDateTime,
     // required this.onChanged,
     // required this.deleteTapped
   });
@@ -73,7 +73,7 @@ class ScheduleTabListView extends StatelessWidget {
                 color: Colors.black,
               ),
               title: Text(
-                'Sample Title',
+                title,
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w700,
@@ -81,7 +81,7 @@ class ScheduleTabListView extends StatelessWidget {
                   ),
                 ),
               subtitle: Text(
-                TimeOfDay.now().format(context).toString(),
+                extractTimefromDTString(dateTime),
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontWeight: FontWeight.bold,

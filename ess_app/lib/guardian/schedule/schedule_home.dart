@@ -1,4 +1,7 @@
+import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../widgets/main_drawer.dart';
@@ -19,95 +22,28 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
 //   final _myBox = Hive.box("Schedule_Database");
 //   List thisDaySchedule = [];
 
-//   @override
-//   void initState() {
-//     // if no current sched, then 1st time ever opening the app
-//     //create default data
-//     if (_myBox.get("CURRENT_SCHEDULE_LIST") == null) {
-//       db.createDefaultData();
-//       print("no saved data");
-//     }
-//     //if theres an existing data, load it
-//     else {
-//       db.loadData();
-//       print(db.ScheduleList);
-//     }
-//     super.initState();
-//   }
+  @override
+  void initState() {
+    final filteredDates = scheduleList.where((schedule) {
+      final dateTime = extractDatefromDTString(schedule.schedDateTime);
+      final input = extractDatefromDTString(DateTime.now().toString());
+      return dateTime.contains(input); 
 
-//   // firstDate
-//   DateTime FirstDate() {
-//     DateTime fetchedDate;
-//     DateTime firstDate = DateTime.now();
-//     print(db.ScheduleList);
-//     for (var i = 0; i < db.ScheduleList.length; i++) {
-//       fetchedDate = parseStringToDate(db.ScheduleList[i][3]);
-//       if (fetchedDate.isBefore(firstDate)) {
-//         firstDate = fetchedDate;
-//         print('$fetchedDate aaaaaaa');
-//       }
-//     }
-//     print('first date is, $firstDate');
-//     return firstDate;
-//   }
+    }).toList();
+    print(filteredDates);
+    setState(() {
+      schedules = filteredDates;
+    });
+    super.initState();
+  }
 
-//   //clicked date events getter
-//   List showClickedDateEvents(DateTime clickedDate) {
-//     List thisDaySchedule = [];
-//     for (var i = 0; i < db.ScheduleList.length; i++) {
-//       DateTime fetchedDate = parseStringToDate(db.ScheduleList[i][3]);
-//       if (fetchedDate.difference(clickedDate).inDays == 0) {
-//         thisDaySchedule.add(db.ScheduleList[i]);
-//       }
-//     }
-//     return thisDaySchedule;
-//   }
 
-//event done controller
-  bool eventDone = false;
-//checkbox tapper
-  // void checkBoxTapped(bool? value, int index) {
-  //   setState(() {
-  //     db.ScheduleList[index][2] = value!;
-  //   });
-  //   db.updateDataBase();
-  // }
 
-// //delete schedule
-//   void deleteSchedule(int index) {
-//     setState(() {
-//       db.ScheduleList.removeAt(index);
-//       db.updateDataBase();
-//     });
-//   }
 
-  List ScheduleList = [
-      //datetime format is dd-mm-yyyy hh:mm:ss
-      [
-        'sched 1',
-        '2Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore eu duis enim. Eiusmod pariatur fugiat do veniam.',
-        false,
-        '13-12-2022 23:58:44',
-      ],
-      [
-        'sched 2',
-        '1Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore eu duis enim. Eiusmod pariatur fugiat do veniam.',
-        false,
-        '22-09-2022 12:39:20',
-      ],
-      [
-        'sched 3',
-        '3Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore eu duis enim. Eiusmod pariatur fugiat do veniam.',
-        false,
-        '12-06-2022 23:23:44',
-      ],
-      [
-        'sched 4',
-        '4Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore eu duis enim. Eiusmod pariatur fugiat do veniam.',
-        false,
-        '12-25-2020 12:58:44',
-      ],
-    ];
+
+
+  List<Schedule> schedules = scheduleList;
+  DateTime dateClicked = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +84,41 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
         )),
         child: Column(
           children: [
-            Expanded(flex: 1, child: MonthlySummary()),
+            SizedBox(height: 20),
+            Expanded(
+              flex: 1, 
+              child: HeatMapCalendar(
+                initDate: DateTime.now(),
+                datasets: {
+                  DateTime(2022, 12, 2): 3,
+                },
+                margin: EdgeInsets.all(5),
+                colorMode: ColorMode.color,
+                borderRadius: 10,
+                defaultColor: Colors.grey[200],
+                textColor: Colors.black,
+                showColorTip: false,
+                size: 40,
+                monthFontSize: 20,
+                weekFontSize: 14,
+                weekTextColor: Colors.black,
+                flexible: true,
+                colorsets: const {
+                  1: Colors.red,
+                  2: Colors.lightBlue,
+                  3: Colors.orange,
+                  5: Colors.yellow,
+                  7: Colors.green,
+                  9: Colors.blue,
+                  11: Colors.indigo,
+                  13: Colors.purple,
+                },
+                onClick: (value){
+                  //date clicked
+                  filterDate(value.toString());
+                },
+              )
+            ),
             Expanded(
               flex: 1,
               child: Padding(
@@ -180,11 +150,30 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                       ),
                       Expanded(
                         child: Container(
-                            child: ListView.builder(
+                          child: schedules.isEmpty? 
+                          Column(
+                            children: [
+                              SizedBox(height: 40),
+                              Text(
+                                'No Schedule.',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25),
+                              ),
+                            ],
+                          )
+                          :ListView.builder(
                           shrinkWrap: true,
-                          itemCount: 4,
+                          itemCount: schedules.length,
                           itemBuilder: (context, index) {
-                            return ScheduleTabListView();
+                            final schedule = schedules[index];
+                            return ScheduleTabListView(
+                              title: schedule.schedTitle,
+                              dateTime: schedule.schedDateTime,
+                              details: schedule.schedDetails,
+                            );
+                            
                           },
                         )),
                       )
@@ -197,5 +186,21 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
         ),
       ),
     );
+  }
+
+  //schedule getter on date click
+  void filterDate(String query){
+    final filteredDates = scheduleList.where((schedule) {
+      final dateTime = extractDatefromDTString(schedule.schedDateTime);
+      print('dateTime $dateTime');
+      final input = extractDatefromDTString(query);
+      print("Input $input");
+      return dateTime.contains(input); 
+
+    }).toList();
+    print(filteredDates);
+    setState(() {
+      schedules = filteredDates;
+    });
   }
 }
