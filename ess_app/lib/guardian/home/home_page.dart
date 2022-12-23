@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../widgets/main_drawer.dart';
 import '../../widgets/memory_card.dart';
 import '../../widgets/upcoming_schedule.dart';
@@ -23,9 +22,15 @@ class _guardianHomePageState extends State<guardianHomePage> {
             iconTheme: IconThemeData(color: Colors.black),
             backgroundColor: Color(0xFFE86166),
             elevation: 0,
-            expandedHeight: 250,
+            expandedHeight: 220,
             floating: false,
             pinned: true,
+            centerTitle: true,
+              title: Text(
+                'H O M E',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+              ),
             actions: [
               IconButton(
                 onPressed: () {
@@ -60,97 +65,99 @@ class _guardianHomePageState extends State<guardianHomePage> {
                           height: 60.0,
                         ),
                         //full container of hello guardian and icon
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              // gradient: LinearGradient(
-                              //   colors: [
-                              //     Color.fromARGB(255, 255, 0, 0),
-                              //     Color.fromARGB(255, 255, 196, 0),
-                              //   ],
-                              //   begin: Alignment.centerRight,
-                              //   end: Alignment.centerLeft,
-                              // ),
-                              color: Color.fromARGB(255, 245, 244, 244),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    child: Icon(
-                                      Icons.account_circle_rounded,
-                                      size: 75,
-                                      color: Colors.black,
+                        Expanded(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  // gradient: LinearGradient(
+                                  //   colors: [
+                                  //     Color.fromARGB(255, 255, 0, 0),
+                                  //     Color.fromARGB(255, 255, 196, 0),
+                                  //   ],
+                                  //   begin: Alignment.centerRight,
+                                  //   end: Alignment.centerLeft,
+                                  // ),
+                                  color: Color.fromARGB(255, 245, 244, 244),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        child: Icon(
+                                          Icons.account_circle_rounded,
+                                          size: 75,
+                                          color: Colors.black,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20.0, top: 20, bottom: 20),
+                                        child: Container(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Hello,',
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ),
+                                            Text(
+                                              'Guardian',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 35,
+                                                  color: Colors.black),
+                                            ),
+                                          ],
+                                        )),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20.0, top: 20, bottom: 20),
-                                    child: Container(
-                                        child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Hello,',
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                        Text(
-                                          'Guardian',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 35,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    )),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: 60.0,
                         ),
                       ],
                     )),
               ),
-              centerTitle: true,
-              title: Text(
-                'H O M E',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-              ),
+              
             ),
           ),
           //categories
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(top: 30.0),
+              padding: const EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
               child: Container(
-                height: 80,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
+                height: 150,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     //memories button
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: MaterialButton(
-                        onPressed: () {
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => MemoryHomePage()));
                         },
                         child: Container(
-                          padding: EdgeInsets.all(20.0),
+                          padding: EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
+                              borderRadius: BorderRadius.circular(20),
                               gradient: LinearGradient(
                                 colors: [
                                   Color(0xFFE86166),
@@ -159,16 +166,16 @@ class _guardianHomePageState extends State<guardianHomePage> {
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                               )),
-                          child: Row(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(Icons.photo_album_outlined,
-                                  size: 30, color: Colors.white),
-                              SizedBox(width: 10),
+                                  size: 70, color: Colors.white),
                               Text(
                                 "Memories",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: 15,
                                     color: Colors.white),
                               )
                             ],
@@ -176,49 +183,18 @@ class _guardianHomePageState extends State<guardianHomePage> {
                         ),
                       ),
                     ),
+                    SizedBox(width: 10.0),
                     //schedules button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Container(
-                        padding: EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFE86166),
-                                Color.fromARGB(255, 245, 133, 59),
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            )),
-                        child: Row(
-                          children: [
-                            Icon(Icons.calendar_month_outlined,
-                                size: 30, color: Colors.white),
-                            SizedBox(width: 10),
-                            Text(
-                              "Schedules",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    //reminders button
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: MaterialButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ReminderHomePage()));
-                        },
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                        //schedule
+                      },
                         child: Container(
-                          padding: EdgeInsets.all(20.0),
+                          padding: EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
+                              borderRadius: BorderRadius.circular(20),
                               gradient: LinearGradient(
                                 colors: [
                                   Color(0xFFE86166),
@@ -227,16 +203,54 @@ class _guardianHomePageState extends State<guardianHomePage> {
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
                               )),
-                          child: Row(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(Icons.calendar_month_outlined,
+                                  size: 70, color: Colors.white),
+                              Text(
+                                "Schedules",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.white),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.0),
+                    //reminders button
+                    Expanded(
+                      flex:1,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ReminderHomePage()));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(15.0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFE86166),
+                                  Color.fromARGB(255, 245, 133, 59),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              )),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Icon(Icons.pending_actions_outlined,
-                                  size: 30, color: Colors.white),
-                              SizedBox(width: 10),
+                                  size: 70, color: Colors.white),
                               Text(
                                 "Reminders",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   color: Colors.white,
                                 ),
                               )
