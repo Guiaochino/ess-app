@@ -44,16 +44,36 @@ class _ViewEntryDiaryState extends State<ViewEntryDiary> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: (IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
+          leading: 
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => MemoryHomePage()));
-              },
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 30,
-              ))),
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
+                  size: 30,
+                )
+              ),
+            ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                onPressed: () {
+                  //edit
+                },
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.black,
+                  size: 30,
+                )
+              ),
+            ),
+          ],
         ),
         body: SafeArea(
             child: Container(
