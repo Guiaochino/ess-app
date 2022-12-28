@@ -4,9 +4,15 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../dataList/memories.dart';
 import '../../widgets/memory_image_card.dart';
 
-class MemoryImageTab extends StatelessWidget {
+class MemoryImageTab extends StatefulWidget {
   const MemoryImageTab({super.key});
-  
+
+  @override
+  State<MemoryImageTab> createState() => _MemoryImageTabState();
+}
+
+class _MemoryImageTabState extends State<MemoryImageTab> {
+  //memories from datalist
   final List<Memory> memories = memoryList;
 
   @override
@@ -50,22 +56,23 @@ class MemoryImageTab extends StatelessWidget {
                         ),
                       ],
                     )
+                    //builder for gridview
                     :StaggeredGridView.countBuilder(
                     staggeredTileBuilder: (index) => index % 7 == 0
-                        ? StaggeredTile.count(2, 2)
-                        : StaggeredTile.count(1, 1),
+                      ? StaggeredTile.count(2, 2)
+                      : StaggeredTile.count(1, 1),
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
                     crossAxisCount: 3,
                     itemCount: memories.length,
                     itemBuilder: (context, index) {
                       final memory = memories[index];
-                        return MemoryImageCard(
-                          title: memory.memoryTitle,
-                          details: memory.memoryDetails,
-                          imageDirectory: memory.memoryImg,
-                          dateTime: memory.memoryDateTime,
-                        );
+                      return MemoryImageCard(
+                        title: memory.memoryTitle,
+                        details: memory.memoryDetails,
+                        imageDirectory: memory.memoryImg,
+                        dateTime: memory.memoryDateTime,
+                      );
                     }
                   ),
                 ),

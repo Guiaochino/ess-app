@@ -20,14 +20,22 @@ class MemoryImageCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ViewEntryImage()));
+          builder: (context) => ViewEntryImage(
+            title: title,
+            dateTime:dateTime,
+            imgPath: imageDirectory,
+            details:details,
+          )
+        ));
       },
       child: Stack(fit: StackFit.expand, children: [
         Container(
           height: 50,
           width: 50,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12), color: Colors.black),
+            borderRadius: BorderRadius.circular(12), 
+            color: Colors.black,
+          ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(19),
             child: Opacity(
@@ -43,11 +51,13 @@ class MemoryImageCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(title,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold)),
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         )
       ]),

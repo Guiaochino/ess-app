@@ -6,8 +6,16 @@ import '../guardian/memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
   final String diaryTitle;
+  final String diaryDateTime;
+  final String diaryRecording;
+  final String diaryDetails;
 
-  MemoryTabListView({required this.diaryTitle});
+  MemoryTabListView({
+    required this.diaryTitle,
+    required this.diaryDateTime,
+    required this.diaryRecording,
+    required this.diaryDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,12 +85,15 @@ class MemoryTabListView extends StatelessWidget {
                               color: Colors.black,
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              diaryTitle,
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.w600),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                diaryTitle,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.w600),
+                              ),
                             ),
                           )
                         ],
@@ -96,7 +107,7 @@ class MemoryTabListView extends StatelessWidget {
                         child: Container(
                           child: Container(
                             child: Text(
-                                'Laborum duis ad consequat ad aliqua qui incididunt nulla aute. Elit Lorem qui enim ea enim commodo non consectetur commodo sunt irure. Ad nisi sit irure adipisicing irure officia.',
+                                diaryDetails,
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.justify,
