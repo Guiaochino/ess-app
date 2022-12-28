@@ -13,29 +13,6 @@ class _ViewEntryDiaryState extends State<ViewEntryDiary> {
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay.now();
 
-  void _showDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-    ).then((value) {
-      setState(() {
-        _dateTime = value!;
-      });
-    });
-  }
-
-  void _showTimePicker() {
-    showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    ).then((value) {
-      setState(() {
-        _timeOfDay = value!;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

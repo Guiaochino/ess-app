@@ -23,26 +23,34 @@ class MemoryCard extends StatelessWidget {
             color: Color(0xFFE86166), borderRadius: BorderRadius.circular(15)),
         width: 200,
         child: Stack(
+          fit: StackFit.expand, 
           children: [
-            Image.asset(
-              imageDirectory,
-              fit: BoxFit.fitWidth,
-              height: 700,
-            ),
             Container(
+              height: 50,
+              width: 50,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.black54, 
+                borderRadius: BorderRadius.circular(12), 
+                color: Colors.black
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    title,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 25, color: Colors.white),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(19),
+                child: Opacity(
+                  opacity: 0.5,
+                  child: Image.asset(
+                    imageDirectory,
+                    fit: BoxFit.cover,
                   ),
+                ),
+              ),
+            ),
+            Center(
+              child: Text(
+                title,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold
                 ),
               ),
             ),

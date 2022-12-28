@@ -51,7 +51,7 @@ class MemoryTabListView extends StatelessWidget {
           child: Container(
             height: 250,
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(

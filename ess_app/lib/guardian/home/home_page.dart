@@ -32,16 +32,15 @@ class _guardianHomePageState extends State<guardianHomePage> {
             floating: false,
             pinned: true,
             centerTitle: false,
-              title: Text(
-                'Dashboard',
-                style:
-                  TextStyle(
-                    color: Colors.black, 
-                    fontWeight: FontWeight.w700,
-                    fontSize: 25.0,
-                    letterSpacing: 2.0
-                  ),
+            title: Text(
+              'Dashboard',
+              style: TextStyle(
+                color: Colors.black, 
+                fontWeight: FontWeight.w700,
+                fontSize: 25.0,
+                letterSpacing: 2.0
               ),
+            ),
             flexibleSpace: FlexibleSpaceBar(
               background: Expanded(
                 child: Container(
