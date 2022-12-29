@@ -2,6 +2,7 @@ import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:flutter/material.dart';
 import '../guardian/home/home_page.dart';
 import '../guardian/reminder/reminder_home.dart';
+import '../guardian/schedule/schedule_home.dart';
 import '../guardian/settings/settings_home.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -82,7 +83,7 @@ class MainDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => guardianHomePage()));
+                    builder: (context) => ScheduleHomePage()));
               },
             ),
             SizedBox(height: 20),

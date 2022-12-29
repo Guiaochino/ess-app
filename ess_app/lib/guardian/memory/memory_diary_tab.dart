@@ -39,10 +39,10 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
                   }),
                 ),
               ),
-            )
+            ),
           ]
-        )
-      )
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:ess_app/guardian/view/view_entry_diary.dart';
+import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import '../guardian/memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
@@ -59,7 +59,7 @@ class MemoryTabListView extends StatelessWidget {
           child: Container(
             height: 250,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.grey[100],
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(
@@ -78,7 +78,9 @@ class MemoryTabListView extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 5.0),
+                              horizontal: 20.0, 
+                              vertical: 5.0,
+                            ),
                             child: Container(
                               width: 5,
                               height: 50,
@@ -92,7 +94,9 @@ class MemoryTabListView extends StatelessWidget {
                                 diaryTitle,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.w600),
+                                  fontSize: 25, 
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           )
@@ -103,16 +107,21 @@ class MemoryTabListView extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10.0),
+                          vertical: 10.0, 
+                          horizontal: 10.0,
+                        ),
                         child: Container(
                           child: Container(
                             child: Text(
-                                diaryDetails,
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.grey)),
+                              diaryDetails,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                fontSize: 15, 
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -123,21 +132,30 @@ class MemoryTabListView extends StatelessWidget {
                       child: MaterialButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ViewEntryDiary()));
+                            builder: (context) => ViewEntryDiary(
+                              title: diaryTitle,
+                              dateTime: diaryDateTime,
+                              recPath: diaryRecording,
+                              details: diaryDetails,
+                            ),
+                          ));
                         },
                         child: Container(
                           height: 50,
                           width: 120,
                           decoration: BoxDecoration(
-                              color: Color(0xFFE86166),
-                              borderRadius: BorderRadius.circular(12)),
+                            color: Color(0xFFE86166),
+                            borderRadius: BorderRadius.circular(12)
+                          ),
                           child: Center(
-                              child: Text('View Details',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 15,
-                                  ))),
+                            child: Text('View Details',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     )

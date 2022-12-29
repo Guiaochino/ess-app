@@ -1,6 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-
 import '../../widgets/main_drawer.dart';
 import '../create/create_entry_reminder.dart';
 import 'reminder_incoming_tab.dart';
@@ -16,8 +14,13 @@ class ReminderHomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'R E M I N D E R  P A G E',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            'Reminders',
+            style: TextStyle(
+              color: Colors.black, 
+              fontWeight: FontWeight.w700,
+              fontSize: 25.0,
+              letterSpacing: 2.0,
+            ),
           ),
           backgroundColor: Color.fromARGB(255, 255, 197, 6),
           foregroundColor: Colors.black,
@@ -25,7 +28,7 @@ class ReminderHomePage extends StatelessWidget {
         ),
         drawer: MainDrawer(),
         floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Color.fromARGB(255, 255, 197, 6),
+          backgroundColor: Color(0xFFF2BA05),
           foregroundColor: Colors.black,
           label: Text('Add Reminder'),
           icon: Icon(Icons.notification_add),
@@ -37,31 +40,40 @@ class ReminderHomePage extends StatelessWidget {
         body: Column(
           children: [
             TabBar(
+              unselectedLabelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                letterSpacing: 2.0,
+              ),
+              unselectedLabelColor: Colors.grey[600],
               automaticIndicatorColorAdjustment: true,
               indicatorWeight: 5.0,
-              indicatorColor: Color(0xFFE86166),
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorColor: Color(0xFFF2BA05),
               tabs: [
                 Tab(
-                  height: 100,
+                  height: 90,
                   icon: Icon(
                     Icons.notifications_active,
                     color: Colors.black,
-                    size: 40,
+                    size: 30,
                   ),
-                  text: 'Incoming Reminders',
+                  text: 'INCOMING',
                 ),
                 Tab(
-                  height: 100,
+                  height: 90,
                   icon: Icon(
                     Icons.notifications_off,
                     color: Colors.black,
-                    size: 40,
+                    size: 30,
                   ),
-                  text: 'Past Reminders',
+                  text: 'PAST',
                 ),
               ],
               labelColor: Colors.black,
-              labelStyle: TextStyle(fontWeight: FontWeight.w900),
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.w700,
+                letterSpacing: 10.0,
+              ),
             ),
             Expanded(
               child: TabBarView(

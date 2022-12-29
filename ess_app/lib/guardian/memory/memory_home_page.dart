@@ -16,12 +16,12 @@ class MemoryHomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-              'Memory',
+              'Memories',
               style: TextStyle(
                 color: Colors.black, 
                 fontWeight: FontWeight.w700,
                 fontSize: 25.0,
-                letterSpacing: 2.0
+                letterSpacing: 2.0,
               ),
             ),
           backgroundColor: Color.fromARGB(255, 255, 197, 6),
@@ -44,12 +44,10 @@ class MemoryHomePage extends StatelessWidget {
               ),
               label: 'Add Image',
               backgroundColor: Colors.grey[800],
-
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => CreateEntryImage()));
               },
-              // onTap: () => add image function
             ),
             SpeedDialChild(
               child: Icon(Icons.note_add, color: Colors.white),
