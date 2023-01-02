@@ -1,13 +1,21 @@
 import 'package:ess_app/guardian/view/view_entry_diary.dart';
+import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import '../guardian/memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
   final String diaryTitle;
+  final String diaryDateTime;
+  final String diaryRecording;
+  final String diaryDetails;
 
-  MemoryTabListView({required this.diaryTitle});
+  MemoryTabListView({
+    required this.diaryTitle,
+    required this.diaryDateTime,
+    required this.diaryRecording,
+    required this.diaryDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,19 +78,26 @@ class MemoryTabListView extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 5.0),
+                              horizontal: 20.0, 
+                              vertical: 5.0,
+                            ),
                             child: Container(
                               width: 5,
                               height: 50,
                               color: Colors.black,
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              diaryTitle,
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.w600),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                diaryTitle,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 25, 
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           )
                         ],
@@ -92,16 +107,21 @@ class MemoryTabListView extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 10.0),
+                          vertical: 10.0, 
+                          horizontal: 10.0,
+                        ),
                         child: Container(
                           child: Container(
                             child: Text(
-                                'Laborum duis ad consequat ad aliqua qui incididunt nulla aute. Elit Lorem qui enim ea enim commodo non consectetur commodo sunt irure. Ad nisi sit irure adipisicing irure officia.',
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.grey)),
+                              diaryDetails,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                fontSize: 15, 
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -112,21 +132,30 @@ class MemoryTabListView extends StatelessWidget {
                       child: MaterialButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ViewEntryDiary()));
+                            builder: (context) => ViewEntryDiary(
+                              title: diaryTitle,
+                              dateTime: diaryDateTime,
+                              recPath: diaryRecording,
+                              details: diaryDetails,
+                            ),
+                          ));
                         },
                         child: Container(
                           height: 50,
                           width: 120,
                           decoration: BoxDecoration(
-                              color: Color(0xFFE86166),
-                              borderRadius: BorderRadius.circular(12)),
+                            color: Color(0xFFE86166),
+                            borderRadius: BorderRadius.circular(12)
+                          ),
                           child: Center(
-                              child: Text('View Details',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 15,
-                                  ))),
+                            child: Text('View Details',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     )

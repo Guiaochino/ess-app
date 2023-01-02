@@ -1,12 +1,8 @@
 import 'package:ess_app/dataList/schedules.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '../../widgets/main_drawer.dart';
-import '../../widgets/schedule_monthly_summary.dart';
 import '../../widgets/schedule_tab_listview.dart';
 import '../create/create_entry_schedule.dart';
 
@@ -18,15 +14,15 @@ class ScheduleHomePage extends StatefulWidget {
 }
 
 class _ScheduleHomePageState extends State<ScheduleHomePage> {
-// //list for schedule title
-//   ScheduleDatabase db = ScheduleDatabase();
-//   final _myBox = Hive.box("Schedule_Database");
-//   List thisDaySchedule = [];
+  //schedule from datalist
+  List<Schedule> schedules = scheduleList;
+  DateTime dateClicked = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-   CalendarFormat _calendarFormat = CalendarFormat.month;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   @override
+  //filter dates onload
   void initState() {
     final filteredDates = scheduleList.where((schedule) {
       final dateTime = extractDatefromDTString(schedule.schedDateTime);
@@ -41,8 +37,6 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
     super.initState();
   }
 
-  List<Schedule> schedules = scheduleList;
-  DateTime dateClicked = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,57 +62,17 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(255, 177, 190, 226),
-            Color.fromARGB(255, 200, 204, 218),
-            Color.fromARGB(255, 214, 174, 175),
-            Color.fromARGB(255, 221, 170, 172),
-            Color.fromARGB(255, 233, 170, 172),
-            Color.fromARGB(255, 233, 148, 151),
-            Color.fromARGB(255, 230, 109, 113),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        )),
+          color: Colors.grey[300],
+        ),
         child: Column(
           children: [
             SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Container(
-                // child: HeatMapCalendar(
-                //   initDate: DateTime.now(),
-                //   datasets: {
-                //     DateTime(2022, 12, 2): 3,
-                //   },
-                //   margin: EdgeInsets.all(5),
-                //   colorMode: ColorMode.color,
-                //   borderRadius: 10,
-                //   defaultColor: Colors.grey[200],
-                //   textColor: Colors.black,
-                //   showColorTip: false,
-                //   size: 40,
-                //   monthFontSize: 20,
-                //   weekFontSize: 14,
-                //   weekTextColor: Colors.black,
-                //   flexible: true,
-                //   colorsets: const {
-                //     1: Colors.red,
-                //     2: Colors.lightBlue,
-                //     3: Colors.orange,
-                //     5: Colors.yellow,
-                //     7: Colors.green,
-                //     9: Colors.blue,
-                //     11: Colors.indigo,
-                //     13: Colors.purple,
-                //   },
-                //   onClick: (value){
-                //     //date clicked
-                //     filterDate(value.toString());
-                //   },
-                // )
+                //table calendar
                 child: TableCalendar(
+                  
                   locale: 'en_US',
                   rowHeight: 60,
                   daysOfWeekHeight: 25,
@@ -217,6 +171,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                       });
                     }
                   },
+                  //date selector 
                   onDaySelected: ((selectedDay, focusedDay) {
                     print(selectedDay);
                     setState(() {
@@ -226,7 +181,6 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                     filterDate(selectedDay.toString());
                   }),
                 ),
-               
               ),
             ),
             //schedule tab
@@ -276,7 +230,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                                   children: [
                                     Icon(
                                       Icons.event_busy_rounded,
-                                      size: 200,
+                                      size: 150,
                                       color: Colors.white,
                                     ),
                                     Text(
@@ -291,6 +245,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                               ),
                             ],
                           )
+                          //listview builder of onclick date events
                           :ListView.builder(
                           shrinkWrap: true,
                           itemCount: schedules.length,

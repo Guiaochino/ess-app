@@ -92,6 +92,13 @@ String extractTimefromDTString(String dateTime) {
   return formattedTime;
 }
 
+String extractDayNamefromDTString(String dateTime) {
+  DateTime tempTime = DateFormat("dd-MM-yyyy H:mm:ss").parse(dateTime);
+  String formattedTime = DateFormat.EEEE().format(tempTime);
+  print (formattedTime);
+  return formattedTime;
+}
+
 // in case you forgot, just use dateformat if its dateTime-dateTime data type
 // extracted string time from DateTime
 String extractTime(DateTime dateTime) {

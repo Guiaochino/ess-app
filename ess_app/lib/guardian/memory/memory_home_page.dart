@@ -16,9 +16,14 @@ class MemoryHomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'M E M O R Y  P A G E',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          ),
+              'Memories',
+              style: TextStyle(
+                color: Colors.black, 
+                fontWeight: FontWeight.w700,
+                fontSize: 25.0,
+                letterSpacing: 2.0,
+              ),
+            ),
           backgroundColor: Color.fromARGB(255, 255, 197, 6),
           foregroundColor: Colors.black,
           centerTitle: true,
@@ -26,7 +31,7 @@ class MemoryHomePage extends StatelessWidget {
         drawer: MainDrawer(),
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
-          backgroundColor: Color.fromARGB(255, 255, 197, 6),
+          backgroundColor: Color(0xFFF2BA05),
           foregroundColor: Colors.black,
           overlayColor: Colors.black,
           overlayOpacity: 0.5,
@@ -39,12 +44,10 @@ class MemoryHomePage extends StatelessWidget {
               ),
               label: 'Add Image',
               backgroundColor: Colors.grey[800],
-
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => CreateEntryImage()));
               },
-              // onTap: () => add image function
             ),
             SpeedDialChild(
               child: Icon(Icons.note_add, color: Colors.white),
@@ -60,31 +63,40 @@ class MemoryHomePage extends StatelessWidget {
         body: Column(
           children: [
             TabBar(
+              unselectedLabelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                letterSpacing: 2.0,
+              ),
+              unselectedLabelColor: Colors.grey[600],
               automaticIndicatorColorAdjustment: true,
               indicatorWeight: 5.0,
-              indicatorColor: Color(0xFFE86166),
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorColor: Color(0xFFF2BA05),
               tabs: [
                 Tab(
-                  height: 100,
+                  height: 90,
                   icon: Icon(
                     Icons.collections,
                     color: Colors.black,
-                    size: 40,
+                    size: 30,
                   ),
                   text: 'IMAGES',
                 ),
                 Tab(
-                  height: 100,
+                  height: 90,
                   icon: Icon(
                     Icons.my_library_books,
                     color: Colors.black,
-                    size: 40,
+                    size: 30,
                   ),
                   text: 'DIARY',
                 ),
               ],
               labelColor: Colors.black,
-              labelStyle: TextStyle(fontWeight: FontWeight.w900),
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.w700,
+                letterSpacing: 10.0,
+              ),
             ),
             Expanded(
               child: TabBarView(

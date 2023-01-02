@@ -32,16 +32,15 @@ class _guardianHomePageState extends State<guardianHomePage> {
             floating: false,
             pinned: true,
             centerTitle: false,
-              title: Text(
-                'Dashboard',
-                style:
-                  TextStyle(
-                    color: Colors.black, 
-                    fontWeight: FontWeight.w700,
-                    fontSize: 25.0,
-                    letterSpacing: 2.0
-                  ),
+            title: Text(
+              'Dashboard',
+              style: TextStyle(
+                color: Colors.black, 
+                fontWeight: FontWeight.w700,
+                fontSize: 25.0,
+                letterSpacing: 2.0
               ),
+            ),
             flexibleSpace: FlexibleSpaceBar(
               background: Expanded(
                 child: Container(
@@ -198,7 +197,8 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       flex: 1,
                       child: GestureDetector(
                         onTap: () {
-                        //schedule
+                        Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ScheduleHomePage()));
                       },
                         child: Container(
                           padding: EdgeInsets.all(15.0),
@@ -550,7 +550,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                             highlightColor: Color(0xFFE86166),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MemoryHomePage()));
+                                  builder: (context) => ScheduleHomePage()));
                             },
                             child: Text(
                               'View all',
@@ -628,7 +628,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                             highlightColor: Color(0xFFE86166),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MemoryHomePage()));
+                                  builder: (context) => ReminderHomePage()));
                             },
                             child: Text(
                               'View all',
