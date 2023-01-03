@@ -4,7 +4,16 @@ import 'guardian/home/home_page.dart';
 import 'login/landing_page.dart';
 import 'login/login_page.dart';
 
-void main() {
+// Firebase Plugins
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
