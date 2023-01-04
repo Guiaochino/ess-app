@@ -1,6 +1,7 @@
 import 'package:ess_app/login/create_account.dart';
 import 'package:ess_app/login/email_verification.dart';
 import 'package:ess_app/login/forgot_password.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'choice_page.dart';
@@ -13,6 +14,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -77,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextField(
+                      controller: emailController, // Email Controller for inputs
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           filled: true,
@@ -102,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextField(
+                      controller: passwordController, // Password Controller for inputs
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           filled: true,
@@ -143,10 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: MaterialButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ChoicePage()));
-                    },
+                    onPressed: signin,
                     child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -190,4 +201,12 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ));
   }
+
+  Future signin() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text.trim(), 
+      password: passwordController.text.trim()
+    );
+  }
+
 }
