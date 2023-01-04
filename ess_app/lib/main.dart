@@ -1,3 +1,5 @@
+import 'package:ess_app/login/choice_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'guardian/home/home_page.dart';
@@ -39,7 +41,23 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.yellow,
       ),
       // test commit
-      home: const guardianHomePage(),
+      home: MainPage(),
     );
   }
+}
+
+class MainPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ChoicePage();
+        } else {
+          return LoginPage();
+        }
+      },
+    ),
+  );
 }
