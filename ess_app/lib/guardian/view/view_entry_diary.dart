@@ -6,13 +6,11 @@ import '../memory/memory_home_page.dart';
 class ViewEntryDiary extends StatelessWidget {
   final String title;
   final String dateTime;
-  final String recPath;
   final String details;
 
   const ViewEntryDiary({
     required this.title,     
     required this.dateTime,
-    required this.recPath,
     required this.details,
     super.key
   });
