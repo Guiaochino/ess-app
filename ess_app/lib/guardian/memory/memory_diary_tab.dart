@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/diaries.dart';
+import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,7 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
                   itemBuilder: ((context, index) {
                     final diary = diaries[index];
                     return MemoryTabListView(
+                      diaryIndex: diary.diaryID,
                       diaryTitle: diary.diaryTitle,
                       diaryDateTime: diary.diaryDateTime,
                       diaryDetails: diary.diaryDetails,
@@ -40,8 +42,12 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
                       deleteTapped: (context){
                         // deleteDialog(context, index).show();
                         deleteDiaryEntry(index);
+                        
                         print('tapped');
                       },
+                      editTapped:(context){
+                        editDiaryEntry(context, diary.diaryID);
+                      }
                     );
                   }),
                 ),
@@ -129,7 +135,12 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
     setState(() {
       diaryList.removeAt(index);
     });
-
     deleteSuccessDialog(context).show();
   }
+  void editDiaryEntry(BuildContext context, int index) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => EditEntryDiary(editIndex: index)));
+  }
 }
+
+

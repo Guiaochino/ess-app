@@ -1,26 +1,39 @@
+import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/memories.dart';
+import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-import '../memory/memory_home_page.dart';
-import 'dart:io';
 
-class CreateEntryImage extends StatefulWidget {
-  const CreateEntryImage({Key? key}) : super(key: key);
+class EditEntryImage extends StatefulWidget {
+  final int editIndex;
+  
+  const EditEntryImage({required this.editIndex});
 
   @override
-  State<CreateEntryImage> createState() => _CreateEntryImageState();
+  State<EditEntryImage> createState() => _EditEntryImageState(memoryId: editIndex);
 }
 
-class _CreateEntryImageState extends State<CreateEntryImage> {
+class _EditEntryImageState extends State<EditEntryImage> {
+  int memoryId = 0 ;
+  _EditEntryImageState({required this.memoryId});
 
   File? _imageSelected;
   Uint8List? _imageSelectedPC;
   final imagePicker = ImagePicker(); // imagepicker controller
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
+  late Memory memoryEntry;
+
+  //load memory data
+  void initState(){
+    print(memoryId);
+    memoryEntry = memoryList[memoryId];
+    titleController.text = memoryEntry.memoryTitle;
+    paragraphController.text = memoryEntry.memoryDetails;
+  }
 
   void dispose(){
     titleController.dispose();
@@ -147,6 +160,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                     child: Container(
                       width: 250,
                       child: TextField(
+                        controller: titleController,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 25,
@@ -176,6 +190,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                     child: Container(
                       color: Colors.white,
                       child: TextFormField(
+                        controller: paragraphController,
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
@@ -215,7 +230,6 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                     ),
                     child: Container(
                       height: 80,
-                      
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -245,71 +259,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
     );
   }
 
-  void saveMemoryEntry() {
-
-    //null or empty entries
-    if(titleController.text == null || titleController.text == ''){
-      titleController.text = 'No Title';
-    }
-    if(paragraphController.text == null || paragraphController.text == ''){
-      paragraphController.text = 'No Details';
-    }
-
-    print('image path : ');
-    print('title : ' + titleController.text);
-    print('dateTime: '+ DateTime.now().toString());
-    print('details : ' + paragraphController.text);
-
-    //add to memoryList
-    if(_imageSelectedPC != '' && _imageSelectedPC != null){
-      memoryList.add(
-      Memory(
-        memoryID: memoryList.length + 1, // auto increment
-        memoryTitle: titleController.text,
-        memoryImg: _imageSelectedPC.toString(),
-        memoryDateTime: DateTime.now().toString(),
-        memoryDetails: paragraphController.text,
-      )
-    );
-    print('Memory Entry Added');
-    successDialog(context).show();
-    }
-    else{
-      errorDialog(context).show();
-    }
-  }
-
-  //success
-  AwesomeDialog successDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Diary Entry Added!',
-      titleTextStyle: TextStyle(
-        color: Colors.green,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      onDissmissCallback:(type) {
-        Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => MemoryHomePage()));
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
-
+  
   //
   AwesomeDialog errorDialog(BuildContext context) {
     return AwesomeDialog(
@@ -399,6 +349,71 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
     setState(() {
       _imageSelectedPC = image;
     });
+  }
+
+  //success dialog
+  AwesomeDialog successDialog(BuildContext context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.SUCCES,
+      borderSide: BorderSide(
+        color: Color(0xFFE86166),
+        width: 2,
+      ),
+      width: MediaQuery.of(context).size.width * 0.9,
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+      dismissOnTouchOutside: true,
+      dismissOnBackKeyPress: false,
+      headerAnimationLoop: false,
+      animType: AnimType.SCALE,
+      title: 'Edited Successfully!',
+      titleTextStyle: TextStyle(
+        color: Colors.green,
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+      onDissmissCallback:(type) {
+        Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => MemoryHomePage()));
+      },
+      padding: EdgeInsets.all(15),
+      showCloseIcon: false,
+      autoHide: Duration(seconds: 3),
+    );
+  }
+
+  //saving memory
+  void saveMemoryEntry() {
+
+    //null or empty entries
+    if(titleController.text == null || titleController.text == ''){
+      titleController.text = 'No Title';
+    }
+    if(paragraphController.text == null || paragraphController.text == ''){
+      paragraphController.text = 'No Details';
+    }
+    
+    if(_imageSelectedPC != '' && _imageSelectedPC != null){
+      print('id: ' + memoryId.toString());
+      print('title : ' + titleController.text);
+      print('dateTime: '+ DateTime.now().toString());
+      print('details : ' + paragraphController.text);
+
+      //save to memoryList
+      setState(() {
+        memoryList[memoryId].memoryID = memoryId;
+        memoryList[memoryId].memoryTitle = titleController.text;
+        memoryList[memoryId].memoryDateTime = DateTime.now().toString();
+        memoryList[memoryId].memoryDetails = paragraphController.text;
+      },);
+      
+      print('Memory Entry Edited');
+      successDialog(context).show();
+    }
+    else{
+      errorDialog(context).show();
+    }
+    
   }
 }
 

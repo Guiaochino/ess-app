@@ -1,14 +1,17 @@
+import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../memory/memory_home_page.dart';
 
 class ViewEntryDiary extends StatelessWidget {
+  final int entryIndex;
   final String title;
   final String dateTime;
   final String details;
 
   const ViewEntryDiary({
+    required this.entryIndex,
     required this.title,     
     required this.dateTime,
     required this.details,
@@ -43,6 +46,8 @@ class ViewEntryDiary extends StatelessWidget {
             child: IconButton(
               onPressed: () {
                 //edit
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => EditEntryDiary(editIndex: entryIndex)));
               },
               icon: Icon(
                 Icons.edit,

@@ -1,33 +1,55 @@
+/*
+  NOTE: edit entry diary uses INT editIndex taken from listviewbuilder index 
+*/
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/diaries.dart';
+import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../memory/memory_home_page.dart';
 
-class CreateEntryDiary extends StatefulWidget {
-  const CreateEntryDiary({Key? key}) : super(key: key);
+class EditEntryDiary extends StatefulWidget {
+  final int editIndex;
+  
+  const EditEntryDiary({required this.editIndex});
+  
 
   @override
-  State<CreateEntryDiary> createState() => _CreateEntryDiaryState();
+  State<EditEntryDiary> createState() => _EditEntryDiaryState(diaryId: editIndex);
 }
 
-class _CreateEntryDiaryState extends State<CreateEntryDiary> {
-  
+class _EditEntryDiaryState extends State<EditEntryDiary> {
+  int diaryId = 0 ;
+  _EditEntryDiaryState({required this.diaryId});
+
+  DateTime _dateTime = DateTime.now();
+  TimeOfDay _timeOfDay = TimeOfDay.now();
   int selectedMood = 0; // selected mood index
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
+  late Diary diaryEntry;
+
+  //load diary data
+  void initState(){
+    print(diaryId);
+    diaryEntry = diaryList[diaryId];
+    titleController.text = diaryEntry.diaryTitle;
+    paragraphController.text = diaryEntry.diaryDetails;
+    selectedMood = diaryEntry.emoteRate;
+  }
 
   void dispose(){
     titleController.dispose();
     paragraphController.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        title: Text(diaryEntry.diaryID.toString()),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
@@ -70,7 +92,8 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                 SizedBox(height: 20.0),
                 // mood radio buttons -
                 Container(
-                  height: 50,
+                  color: Colors.grey[400],
+                  height: 60,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: SingleChildScrollView(
@@ -90,7 +113,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 //diary title
                 Align(
                   alignment: Alignment.center,
@@ -289,7 +312,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
       dismissOnBackKeyPress: false,
       headerAnimationLoop: false,
       animType: AnimType.SCALE,
-      title: 'Diary Entry Added!',
+      title: 'Edited Successfully!',
       titleTextStyle: TextStyle(
         color: Colors.green,
         fontSize: 25,
@@ -319,24 +342,22 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
       selectedMood = 4;
     }
 
+    print('id: ' + diaryId.toString());
     print('title : ' + titleController.text);
-    print('Emote Rate: $selectedMood');
+    print('emote rate: $selectedMood');
     print('dateTime: '+ DateTime.now().toString());
     print('details : ' + paragraphController.text);
 
+    //save to diaryList
+    setState(() {
+      diaryList[diaryId].diaryID = diaryId;
+      diaryList[diaryId].diaryTitle = titleController.text;
+      diaryList[diaryId].emoteRate = selectedMood;
+      diaryList[diaryId].diaryDateTime = DateTime.now().toString();
+      diaryList[diaryId].diaryDetails = paragraphController.text;
+    },);
     
-
-    //add to diaryList
-    diaryList.add(
-      Diary(
-        diaryID: diaryList.length + 1, // auto increment
-        diaryTitle: titleController.text,
-        emoteRate: selectedMood,
-        diaryDateTime: DateTime.now().toString(),
-        diaryDetails: paragraphController.text,
-      )
-    );
-    print('Diary Entry Added');
+    print('Diary Entry Edited');
     successDialog(context).show();
   }
   

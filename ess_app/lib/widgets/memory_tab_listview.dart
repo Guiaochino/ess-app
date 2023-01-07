@@ -5,18 +5,22 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../guardian/memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
+  final int diaryIndex;
   final String diaryTitle;
   final String diaryDateTime;
   final String diaryDetails;
   final int emoteRate;
   final Function(BuildContext)? deleteTapped;
+  final Function(BuildContext)? editTapped;
 
   MemoryTabListView({
+    required this.diaryIndex,
     required this.diaryTitle,
     required this.diaryDateTime,
     required this.diaryDetails,
     required this.emoteRate,
-    required this.deleteTapped,
+    required this.deleteTapped, 
+    required this.editTapped,
   });
 
   
@@ -30,9 +34,7 @@ class MemoryTabListView extends StatelessWidget {
           motion: DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: ((context) {
-                //edit
-              }),
+              onPressed: editTapped,
               backgroundColor: Colors.blue,
               icon: Icons.edit_note,
               label: 'Edit',
@@ -139,6 +141,7 @@ class MemoryTabListView extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => ViewEntryDiary(
+                              entryIndex: diaryIndex,
                               title: diaryTitle,
                               dateTime: diaryDateTime,
                               details: diaryDetails,

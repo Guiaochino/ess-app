@@ -1,5 +1,6 @@
 import 'package:ess_app/guardian/create/create_entry_diary.dart';
 import 'package:ess_app/guardian/create/create_entry_image.dart';
+import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/login/choice_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.yellow,
       ),
       // test commit
-      home: CreateEntryDiary(),
+      home: MemoryHomePage(),
     );
   }
 }
