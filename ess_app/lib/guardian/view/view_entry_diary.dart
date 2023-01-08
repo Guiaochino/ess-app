@@ -89,7 +89,7 @@ class ViewEntryDiary extends StatelessWidget {
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    width: 250,
+                    width: 300,
                     child: Text(
                       title,            
                       textAlign: TextAlign.center,

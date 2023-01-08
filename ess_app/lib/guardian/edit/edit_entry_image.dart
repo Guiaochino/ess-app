@@ -236,11 +236,13 @@ class _EditEntryImageState extends State<EditEntryImage> {
                           Icon(
                             Icons.save_alt,
                             size: 35,
+                            color: Colors.black,
                           ),
                           SizedBox(width: 10),
                           Text(
                             'Save',
                             style: TextStyle(
+                              color: Colors.black,
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),

@@ -32,6 +32,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
   //load diary data
   void initState(){
     print(diaryId);
+    
     diaryEntry = diaryList[diaryId];
     titleController.text = diaryEntry.diaryTitle;
     paragraphController.text = diaryEntry.diaryDetails;
@@ -127,6 +128,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                         style: TextStyle(
                           fontSize: 25,
                           color: Colors.black,
+                          fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
                         ),
                         decoration: InputDecoration(
@@ -274,11 +276,13 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                           Icon(
                             Icons.save_alt,
                             size: 35,
+                            color: Colors.black,
                           ),
                           SizedBox(width: 10),
                           Text(
                             'Save',
                             style: TextStyle(
+                              color: Colors.black,
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),

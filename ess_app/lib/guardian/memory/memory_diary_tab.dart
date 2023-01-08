@@ -25,9 +25,37 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
         ),
         child: Column(
           children: [
+            SizedBox(height: 10.0),
           //container for gridview
             Expanded(
-              child: Container(
+              child: diaries.isEmpty?
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.description,
+                          size: 200,
+                          color: Colors.black,
+                        ),
+                        Text(
+                          'No Diary Entry',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+              :Container(
                 //builder of listview
                 child: ListView.builder(
                   itemCount: diaries.length,

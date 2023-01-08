@@ -76,7 +76,7 @@ class ScheduleTabListView extends StatelessWidget {
                 title,
                 style: TextStyle(
                   color: Colors.black,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w900,
                   fontSize: 25,
                   ),
                 ),

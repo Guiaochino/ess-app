@@ -1,5 +1,6 @@
 import 'package:ess_app/guardian/create/create_entry_diary.dart';
 import 'package:ess_app/guardian/create/create_entry_image.dart';
+import 'package:ess_app/guardian/create/create_entry_reminder.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/login/choice_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,10 +42,10 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.yellow,
+        primarySwatch: Colors.blueGrey,
       ),
       // test commit
-      home: MemoryHomePage(),
+      home: CreateReminder(),
     );
   }
 }

@@ -251,11 +251,13 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                           Icon(
                             Icons.save_alt,
                             size: 35,
+                            color: Colors.black,
                           ),
                           SizedBox(width: 10),
                           Text(
                             'Save',
                             style: TextStyle(
+                              color: Colors.black,
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),
