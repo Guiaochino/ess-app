@@ -31,7 +31,7 @@ class ViewEntryImage extends StatelessWidget {
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => MemoryHomePage()));
+                MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
             },
             icon: Icon(
               Icons.arrow_back_ios,

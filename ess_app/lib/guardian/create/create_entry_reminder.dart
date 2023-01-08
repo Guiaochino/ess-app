@@ -35,7 +35,7 @@ class _CreateReminderState extends State<CreateReminder> {
         leading: (IconButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ReminderHomePage()));
+                  builder: (context) => ReminderHomePage(activePage: 0,)));
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -263,7 +263,7 @@ class _CreateReminderState extends State<CreateReminder> {
       ),
       onDissmissCallback:(type) {
         Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ReminderHomePage()));
+        MaterialPageRoute(builder: (context) => ReminderHomePage(activePage: 0,)));
       },
       padding: EdgeInsets.all(15),
       showCloseIcon: false,

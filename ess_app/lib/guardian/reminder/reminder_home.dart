@@ -5,11 +5,15 @@ import 'reminder_incoming_tab.dart';
 import 'reminder_past_tab.dart';
 
 class ReminderHomePage extends StatelessWidget {
-  const ReminderHomePage({super.key});
+  final int activePage;
+  const ReminderHomePage({
+    required this.activePage,
+    super.key});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: activePage,
       length: 2,
       child: Scaffold(
         appBar: AppBar(

@@ -64,7 +64,7 @@ class MainDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => MemoryHomePage()));
+                    MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
               },
             ),
             SizedBox(height: 20),
@@ -102,7 +102,7 @@ class MainDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ReminderHomePage()));
+                    builder: (context) => ReminderHomePage(activePage: 0,)));
               },
             ),
             SizedBox(height: 10.0),

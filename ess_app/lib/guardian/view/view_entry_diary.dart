@@ -31,7 +31,7 @@ class ViewEntryDiary extends StatelessWidget {
             child: IconButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => MemoryHomePage()));
+                  MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 1,)));
               },
               icon: Icon(
                 Icons.arrow_back_ios,

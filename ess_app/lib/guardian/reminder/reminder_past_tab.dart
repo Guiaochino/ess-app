@@ -152,7 +152,6 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
     );
   }
 
-
   void deleteReminderEntry(int index) {
 
     print('Deleted diary at index ' + index.toString());

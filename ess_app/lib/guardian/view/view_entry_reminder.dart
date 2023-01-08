@@ -27,7 +27,7 @@ class ViewReminder extends StatelessWidget {
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => ReminderHomePage()));
+                MaterialPageRoute(builder: (context) => ReminderHomePage(activePage: 0,)));
           },
           icon: Icon(
             Icons.arrow_back_ios,

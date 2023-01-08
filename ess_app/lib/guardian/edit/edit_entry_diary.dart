@@ -54,7 +54,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MemoryHomePage()));
+              MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 1,)));
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -324,7 +324,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
       ),
       onDissmissCallback:(type) {
         Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => MemoryHomePage()));
+        MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 1,)));
       },
       padding: EdgeInsets.all(15),
       showCloseIcon: false,

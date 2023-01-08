@@ -158,7 +158,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => MemoryHomePage()));
+                              builder: (context) => MemoryHomePage(activePage: 0,)));
                         },
                         child: Container(
                           padding: EdgeInsets.all(15.0),
@@ -238,7 +238,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ReminderHomePage()));
+                              builder: (context) => ReminderHomePage(activePage: 0,)));
                         },
                         child: Container(
                           padding: EdgeInsets.all(15.0),
@@ -485,7 +485,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                             highlightColor: Color(0xFFE86166),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MemoryHomePage()));
+                                  builder: (context) => MemoryHomePage(activePage: 0,)));
                             },
                             child: Text(
                               'View all',
@@ -628,7 +628,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                             highlightColor: Color(0xFFE86166),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ReminderHomePage()));
+                                  builder: (context) => ReminderHomePage(activePage: 0,)));
                             },
                             child: Text(
                               'View all',
@@ -653,7 +653,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ReminderHomePage()));
+                            builder: (context) => ReminderHomePage(activePage: 0,)));
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -714,7 +714,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ReminderHomePage()));
+                            builder: (context) => ReminderHomePage(activePage: 1,)));
                       },
                       child: Container(
                         decoration: BoxDecoration(

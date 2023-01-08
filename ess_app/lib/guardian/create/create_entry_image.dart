@@ -37,7 +37,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
         leading: (IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => MemoryHomePage()));
+                MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -304,7 +304,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
       ),
       onDissmissCallback:(type) {
         Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => MemoryHomePage()));
+        MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
       },
       padding: EdgeInsets.all(15),
       showCloseIcon: false,

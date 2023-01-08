@@ -7,11 +7,15 @@ import 'memory_diary_tab.dart';
 import 'memory_image_tab.dart';
 
 class MemoryHomePage extends StatelessWidget {
-  const MemoryHomePage({super.key});
+  final int activePage;
+  const MemoryHomePage({
+    required this.activePage,
+    super.key});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: activePage,
       length: 2,
       child: Scaffold(
         appBar: AppBar(

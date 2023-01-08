@@ -51,7 +51,7 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
         leading: (IconButton(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ReminderHomePage()));
+                  builder: (context) => ReminderHomePage(activePage: 0,)));
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -279,7 +279,7 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
       ),
       onDissmissCallback:(type) {
         Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ReminderHomePage()));
+        MaterialPageRoute(builder: (context) => ReminderHomePage(activePage: 0,)));
       },
       padding: EdgeInsets.all(15),
       showCloseIcon: false,
