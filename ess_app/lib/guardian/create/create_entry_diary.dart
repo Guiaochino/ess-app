@@ -13,6 +13,8 @@ class CreateEntryDiary extends StatefulWidget {
 
 class _CreateEntryDiaryState extends State<CreateEntryDiary> {
   
+  DateTime _dateTime = DateTime.now();
+  TimeOfDay _timeOfDay = TimeOfDay.now();
   int selectedMood = 0; // selected mood index
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
@@ -130,66 +132,96 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        //date
                         Expanded(
-                          flex: 5,
+                      flex: 5,
+                      child: Container(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Icon(
-                                  Icons.calendar_month,
-                                  color: Color(0xFFE86166),
-                                  size: 40,
-                                ),
-                              ),
-                              SizedBox(width: 5.0),
-                              Expanded(
-                                flex: 5,
-                                child: Text(
-                                DateFormat('E, MMM d, yyyy').format(DateTime.now()),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFE86166),
-                                ),
-                              ))
-                            ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.calendar_month,
+                            color: Color(0xFFE86166),
+                            size: 40,
                           ),
-                        ),
-                        SizedBox(width: 20),
-                        //time
-                        Expanded(
-                          flex: 4,
+                          SizedBox(width: 5.0),
+                          Container(
+                              child: MaterialButton(
+                            onPressed: () async {
+                              DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: _dateTime,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2025),
+                              );
+                              if (newDate == null) return;
+                              final newDateTime = DateTime(
+                                newDate.year,
+                                newDate.month,
+                                newDate.day,
+                                _dateTime.hour,
+                                _dateTime.minute,
+                              );
+                              setState(() {
+                                _dateTime = newDateTime;
+                              });
+                            },
+                            child: Text(
+                              DateFormat.yMMMEd().format(_dateTime),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFE86166),
+                              ),
+                            ),
+                          ))
+                        ],
+                      )),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Container(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Icon(
-                                  Icons.watch_later,
-                                  color: Color(0xFFE86166),
-                                  size: 40,
-                                ),
-                              ),
-                              SizedBox(width: 5.0),
-                              Expanded(
-                                flex: 5,
-                                child: Text(
-                                  TimeOfDay.now().format(context).toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFE86166),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.watch_later,
+                            color: Color(0xFFE86166),
+                            size: 40,
                           ),
-                        ),
+                          SizedBox(width: 5.0),
+                          Container(
+                              child: MaterialButton(
+                            onPressed: () async {
+                              TimeOfDay? newTime = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.fromDateTime(_dateTime),
+                              );
+                              if (newTime == null) return;
+                              final newDateTime = DateTime(
+                                _dateTime.year,
+                                _dateTime.month,
+                                _dateTime.day,
+                                newTime.hour,
+                                newTime.minute,
+                              );
+                              setState(() {
+                                _dateTime = newDateTime;
+                              });
+                            },
+                            child: Text(
+                              DateFormat.jm().format(_dateTime),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFE86166),
+                              ),
+                            ),
+                          ))
+                        ],
+                      )),
+                    ),
                       ],
                     ),
                   ),
@@ -323,7 +355,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
 
     print('title : ' + titleController.text);
     print('Emote Rate: $selectedMood');
-    print('dateTime: '+ DateTime.now().toString());
+    print('dateTime: '+ _dateTime.toString());
     print('details : ' + paragraphController.text);
 
     
@@ -334,7 +366,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
         diaryID: diaryList.length + 1, // auto increment
         diaryTitle: titleController.text,
         emoteRate: selectedMood,
-        diaryDateTime: DateTime.now().toString(),
+        diaryDateTime: _dateTime.toString(),
         diaryDetails: paragraphController.text,
       )
     );

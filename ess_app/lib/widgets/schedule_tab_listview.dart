@@ -4,20 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ScheduleTabListView extends StatelessWidget {
+  final int entryID;
   final String title;
   final String details;
   final String dateTime;
-  // final Function(bool?)? onChanged;
-  // final Function(BuildContext)? deleteTapped;
+  final bool isDone;
+  final Function(BuildContext)? deleteTapped;
+  final Function(BuildContext)? editTapped;
 
   ScheduleTabListView({
     super.key,
+    required this.entryID,
     required this.title,
     required this.details,
     required this.dateTime,
-    // required this.eventDone,
-    // required this.onChanged,
-    // required this.deleteTapped
+    required this.isDone,
+    required this.deleteTapped,
+    required this.editTapped,
+
   });
 
   @override
@@ -25,13 +29,13 @@ class ScheduleTabListView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Slidable(
-        startActionPane: ActionPane(
+        // no edit button if sched is done
+         startActionPane: isDone == true ? null
+         :ActionPane(
           motion: DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: ((context) {
-                //edit
-              }),
+              onPressed: editTapped,
               backgroundColor: Colors.blue,
               icon: Icons.edit_note,
               label: 'Edit',
@@ -45,7 +49,7 @@ class ScheduleTabListView extends StatelessWidget {
           motion: DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: (context) {},
+              onPressed: deleteTapped,
               icon: Icons.delete_forever,
               label: 'Delete',
               backgroundColor: Colors.red,
@@ -65,7 +69,13 @@ class ScheduleTabListView extends StatelessWidget {
             child: ListTile(
               onTap: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ViewSchedule()));
+                  MaterialPageRoute(builder: (context) => ViewEntrySchedule(
+                    entryIndex: entryID,
+                    title: title,
+                    dateTime: dateTime,
+                    isDone: isDone,
+                    details: details,
+                  )));
               },
               leading: Icon(
                 Icons.schedule,

@@ -5,6 +5,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -36,7 +37,9 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
     diaryEntry = diaryList[diaryId];
     titleController.text = diaryEntry.diaryTitle;
     paragraphController.text = diaryEntry.diaryDetails;
+    _dateTime = parseStringToDate(diaryEntry.diaryDateTime);
     selectedMood = diaryEntry.emoteRate;
+    print(_dateTime);
   }
 
   void dispose(){
@@ -155,66 +158,96 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        //date
-                        Expanded(
-                          flex: 5,
+                       Expanded(
+                      flex: 5,
+                      child: Container(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Icon(
-                                  Icons.calendar_month,
-                                  color: Color(0xFFE86166),
-                                  size: 40,
-                                ),
-                              ),
-                              SizedBox(width: 5.0),
-                              Expanded(
-                                flex: 5,
-                                child: Text(
-                                DateFormat('E, MMM d, yyyy').format(DateTime.now()),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFE86166),
-                                ),
-                              ))
-                            ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.calendar_month,
+                            color: Color(0xFFE86166),
+                            size: 40,
                           ),
-                        ),
-                        SizedBox(width: 20),
-                        //time
-                        Expanded(
-                          flex: 4,
+                          SizedBox(width: 5.0),
+                          Container(
+                              child: MaterialButton(
+                            onPressed: () async {
+                              DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: _dateTime,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2025),
+                              );
+                              if (newDate == null) return;
+                              final newDateTime = DateTime(
+                                newDate.year,
+                                newDate.month,
+                                newDate.day,
+                                _dateTime.hour,
+                                _dateTime.minute,
+                              );
+                              setState(() {
+                                _dateTime = newDateTime;
+                              });
+                            },
+                            child: Text(
+                              DateFormat.yMMMEd().format(_dateTime),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFE86166),
+                              ),
+                            ),
+                          ))
+                        ],
+                      )),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Container(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Icon(
-                                  Icons.watch_later,
-                                  color: Color(0xFFE86166),
-                                  size: 40,
-                                ),
-                              ),
-                              SizedBox(width: 5.0),
-                              Expanded(
-                                flex: 5,
-                                child: Text(
-                                  TimeOfDay.now().format(context).toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFE86166),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.watch_later,
+                            color: Color(0xFFE86166),
+                            size: 40,
                           ),
-                        ),
+                          SizedBox(width: 5.0),
+                          Container(
+                              child: MaterialButton(
+                            onPressed: () async {
+                              TimeOfDay? newTime = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.fromDateTime(_dateTime),
+                              );
+                              if (newTime == null) return;
+                              final newDateTime = DateTime(
+                                _dateTime.year,
+                                _dateTime.month,
+                                _dateTime.day,
+                                newTime.hour,
+                                newTime.minute,
+                              );
+                              setState(() {
+                                _dateTime = newDateTime;
+                              });
+                            },
+                            child: Text(
+                              _timeOfDay.format(context).toString(),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFE86166),
+                              ),
+                            ),
+                          ))
+                        ],
+                      )),
+                    ),
                       ],
                     ),
                   ),
@@ -357,7 +390,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
       diaryList[diaryId].diaryID = diaryId;
       diaryList[diaryId].diaryTitle = titleController.text;
       diaryList[diaryId].emoteRate = selectedMood;
-      diaryList[diaryId].diaryDateTime = DateTime.now().toString();
+      diaryList[diaryId].diaryDateTime = _dateTime.toString();
       diaryList[diaryId].diaryDetails = paragraphController.text;
     },);
     

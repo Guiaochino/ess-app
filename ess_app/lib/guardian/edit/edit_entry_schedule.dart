@@ -1,48 +1,39 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/guardian/schedule/schedule_home.dart';
+import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+class EditEntrySchedule extends StatefulWidget {
+  final int editIndex;
+  const EditEntrySchedule({required this.editIndex});
 
-import '../schedule/schedule_home.dart';
-
-class CreateSchedule extends StatefulWidget {
   @override
-  State<CreateSchedule> createState() => _CreateScheduleState();
+  State<EditEntrySchedule> createState() => _EditEntryScheduleState(scheduleId: editIndex);
 }
 
-class _CreateScheduleState extends State<CreateSchedule> {
-  // @override
-  // void initState() {
-  //   //if no existing data, get the template list
-  //   if (_myBox.get("CURRENT_SCHEDULE_LIST") == null) {
-  //     db.createDefaultData();
-  //     print("no database items");
-  //   }
-  //   //if theres an existing data, load it
-  //   else {
-  //     db.loadData();
-  //     print(db.ScheduleList);
-  //   }
-  //   super.initState();
-  // }
+class _EditEntryScheduleState extends State<EditEntrySchedule> {
+  int scheduleId = 0;
+  _EditEntryScheduleState({required this.scheduleId});
 
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay.now();
   final titleController = TextEditingController();
   final paragraphController = TextEditingController();
+  late Schedule scheduleEntry;
 
-  // void saveSchedule() {
-  //   db.ScheduleList.add([
-  //     titleController.text,
-  //     paragraphController.text,
-  //     false,
-  //     parseDateToString(_dateTime),
-  //   ]);
-  //   print(titleController.text);
-  //   print(paragraphController.text);
-  //   db.updateDataBase();
-  // }
+  void initState(){
+    print(scheduleId);
+
+    scheduleEntry = scheduleList[scheduleId];
+    titleController.text = scheduleEntry.schedTitle;
+    paragraphController.text = scheduleEntry.schedDetails;
+    _dateTime = parseStringToDate(scheduleEntry.schedDateTime);
+  }
+  void dispose(){
+    titleController.dispose();
+    paragraphController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +86,7 @@ class _CreateScheduleState extends State<CreateSchedule> {
               ),
             ),
             SizedBox(height: 20.0),
-            //diary title
+            //sched title
             Container(
               height: 50,
               child: Container(
@@ -301,7 +292,7 @@ class _CreateScheduleState extends State<CreateSchedule> {
       dismissOnBackKeyPress: false,
       headerAnimationLoop: false,
       animType: AnimType.SCALE,
-      title: 'Schedule Added!',
+      title: 'Edited Successfully!',
       titleTextStyle: TextStyle(
         color: Colors.green,
         fontSize: 25,
@@ -317,7 +308,6 @@ class _CreateScheduleState extends State<CreateSchedule> {
     );
   }
 
-  //error
   AwesomeDialog errorDialog(BuildContext context) {
     return AwesomeDialog(
       context: context,
@@ -348,8 +338,7 @@ class _CreateScheduleState extends State<CreateSchedule> {
       autoHide: Duration(seconds: 3),
     );
   }
-
-  //saving diary
+  //saving sched
   void saveSchedule() {
 
     //null or empty entries
@@ -369,21 +358,21 @@ class _CreateScheduleState extends State<CreateSchedule> {
 
       
 
-      //add to diaryList
-      scheduleList.add(
-        Schedule(
-          schedID: scheduleList.length + 1, // auto increment
-          schedTitle: titleController.text,
-          schedIsDone: false,
-          schedDateTime: _dateTime.toString(),
-          schedDetails: paragraphController.text,
-        )
-      );
-      print('Schedule Entry Added');
+      //save to scheduleList
+      setState(() {
+        scheduleList[scheduleId].schedID = scheduleId;
+        scheduleList[scheduleId].schedTitle = titleController.text;
+        scheduleList[scheduleId].schedDateTime = _dateTime.toString();
+        scheduleList[scheduleId].schedDetails = paragraphController.text;
+      },);
+      
+      print('sched Entry Edited');
       successDialog(context).show();
     }
     else{
       errorDialog(context).show();
     }
+
+    
   }
 }

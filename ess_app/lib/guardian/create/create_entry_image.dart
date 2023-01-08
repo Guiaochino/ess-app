@@ -1,9 +1,9 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/memories.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+// import 'package:image_picker_web/image_picker_web.dart';
 import '../memory/memory_home_page.dart';
 import 'dart:io';
 
@@ -17,7 +17,7 @@ class CreateEntryImage extends StatefulWidget {
 class _CreateEntryImageState extends State<CreateEntryImage> {
 
   File? _imageSelected;
-  Uint8List? _imageSelectedPC;
+  // Uint8List? _imageSelectedPC;
   final imagePicker = ImagePicker(); // imagepicker controller
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
@@ -80,7 +80,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: 
-                      _imageSelectedPC == null ?
+                      _imageSelected == null ?
                       Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
@@ -128,8 +128,8 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.memory(
-                              _imageSelectedPC!,
+                            child: Image.file(
+                              _imageSelected!,
                               fit: BoxFit.cover,
                             ),
                             ),
@@ -263,12 +263,12 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
     print('details : ' + paragraphController.text);
 
     //add to memoryList
-    if(_imageSelectedPC != '' && _imageSelectedPC != null){
+    if(_imageSelected != '' && _imageSelected != null){
       memoryList.add(
       Memory(
         memoryID: memoryList.length + 1, // auto increment
         memoryTitle: titleController.text,
-        memoryImg: _imageSelectedPC.toString(),
+        memoryImg: _imageSelected.toString(),
         memoryDateTime: DateTime.now().toString(),
         memoryDetails: paragraphController.text,
       )
@@ -312,7 +312,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
     );
   }
 
-  //
+  //error
   AwesomeDialog errorDialog(BuildContext context) {
     return AwesomeDialog(
       context: context,
@@ -363,17 +363,17 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
             SimpleDialogOption(
               onPressed: () {
                 print('files');
-                getImageFiles();
+                // getImageFiles();
                 Navigator.of(context).pop();
               },
               child: Text('Select from files'),
             ),
-            if(_imageSelectedPC != null)
+            if(_imageSelected != null)
             SimpleDialogOption(
               onPressed: () {
                 print('remove');
                 setState(() {
-                  _imageSelectedPC = null;
+                  _imageSelected = null;
                   Navigator.of(context).pop();
                 });
               },
@@ -386,22 +386,22 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   }
   
   //camera
-  Future getCameraImage() async{
-    //g
-    final image = await imagePicker.getImage(source: ImageSource.camera);
-    setState(() {
-      _imageSelected = File(image!.path);
-    });
+  // Future getCameraImage() async{
+  //   //g
+  //   final image = await imagePicker.getImage(source: ImageSource.camera);
+  //   setState(() {
+  //     _imageSelected = File(image!.path);
+  //   });
     
-  }
-  //image picker from files
-  Future getImageFiles() async{
-    //for pc
-    final image = await ImagePickerWeb.getImageAsBytes();
-    setState(() {
-      _imageSelectedPC = image;
-    });
-  }
+  // }
+  // //image picker from files
+  // Future getImageFiles() async{
+  //   //for pc
+  //   final image = await ImagePickerWeb.getImageAsBytes();
+  //   setState(() {
+  //     _imageSelectedPC = image;
+  //   });
+  // }
 }
 
 

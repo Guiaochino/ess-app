@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/memories.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+// import 'package:image_picker_web/image_picker_web.dart';
 
 class EditEntryImage extends StatefulWidget {
   final int editIndex;
@@ -21,7 +21,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
   _EditEntryImageState({required this.memoryId});
 
   File? _imageSelected;
-  Uint8List? _imageSelectedPC;
+  // Uint8List? _imageSelectedPC;
   final imagePicker = ImagePicker(); // imagepicker controller
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
@@ -93,7 +93,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: 
-                      _imageSelectedPC == null ?
+                      _imageSelected == null ?
                       Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
@@ -141,8 +141,8 @@ class _EditEntryImageState extends State<EditEntryImage> {
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.memory(
-                              _imageSelectedPC!,
+                            child: Image.file(
+                              _imageSelected!,
                               fit: BoxFit.cover,
                             ),
                             ),
@@ -313,17 +313,17 @@ class _EditEntryImageState extends State<EditEntryImage> {
             SimpleDialogOption(
               onPressed: () {
                 print('files');
-                getImageFiles();
+                // getImageFiles();
                 Navigator.of(context).pop();
               },
               child: Text('Select from files'),
             ),
-            if(_imageSelectedPC != null)
+            if(_imageSelected != null)
             SimpleDialogOption(
               onPressed: () {
                 print('remove');
                 setState(() {
-                  _imageSelectedPC = null;
+                  _imageSelected = null;
                   Navigator.of(context).pop();
                 });
               },
@@ -336,22 +336,22 @@ class _EditEntryImageState extends State<EditEntryImage> {
   }
   
   //camera
-  Future getCameraImage() async{
-    //g
-    final image = await imagePicker.getImage(source: ImageSource.camera);
-    setState(() {
-      _imageSelected = File(image!.path);
-    });
+  // Future getCameraImage() async{
+  //   //g
+  //   final image = await imagePicker.getImage(source: ImageSource.camera);
+  //   setState(() {
+  //     _imageSelected = File(image!.path);
+  //   });
     
-  }
-  //image picker from files
-  Future getImageFiles() async{
-    //for pc
-    final image = await ImagePickerWeb.getImageAsBytes();
-    setState(() {
-      _imageSelectedPC = image;
-    });
-  }
+  // }
+  // //image picker from files
+  // Future getImageFiles() async{
+  //   //for pc
+  //   final image = await ImagePickerWeb.getImageAsBytes();
+  //   setState(() {
+  //     _imageSelectedPC = image;
+  //   });
+  // }
 
   //success dialog
   AwesomeDialog successDialog(BuildContext context) {
@@ -395,7 +395,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
       paragraphController.text = 'No Details';
     }
     
-    if(_imageSelectedPC != '' && _imageSelectedPC != null){
+    if(_imageSelected != '' && _imageSelected != null){
       print('id: ' + memoryId.toString());
       print('title : ' + titleController.text);
       print('dateTime: '+ DateTime.now().toString());

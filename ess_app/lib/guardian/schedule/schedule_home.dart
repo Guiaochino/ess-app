@@ -41,14 +41,19 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'YOUR SCHEDULES',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          title: Text(
+            'Schedules',
+            style: TextStyle(
+              color: Colors.black, 
+              fontWeight: FontWeight.w700,
+              fontSize: 25.0,
+              letterSpacing: 2.0,
+            ),
+          ),
+          backgroundColor: Color.fromARGB(255, 255, 197, 6),
+          foregroundColor: Colors.black,
+          centerTitle: true,
         ),
-        backgroundColor: Color.fromARGB(255, 255, 197, 6),
-        foregroundColor: Colors.black,
-        centerTitle: true,
-      ),
       drawer: MainDrawer(),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Color.fromARGB(255, 255, 197, 6),
@@ -252,9 +257,18 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                           itemBuilder: (context, index) {
                             final schedule = schedules[index];
                             return ScheduleTabListView(
+                              entryID: schedule.schedID,
                               title: schedule.schedTitle,
                               dateTime: schedule.schedDateTime,
                               details: schedule.schedDetails,
+                              isDone: schedule.schedIsDone,
+                              editTapped: (context){
+
+                              },
+                              deleteTapped: (context){
+                                
+                              },
+
                             );
                             
                           },
