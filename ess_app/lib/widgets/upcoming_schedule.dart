@@ -13,69 +13,75 @@ class UpSchedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromARGB(255, 158, 106, 255),
-                Color.fromARGB(255, 106, 115, 247),
-              ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+        tileColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        leading: Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 47, 92, 150).withOpacity(0.1),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
-            borderRadius: BorderRadius.circular(12.0)),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Icon(
-            Icons.notifications_active,
-            size: 30,
-            color: Colors.white,
+            child: Icon(
+              Icons.notifications_active,
+              size: 30,
+              color: Color.fromARGB(255, 47, 92, 150), 
+            ),
+          ),
+        //schedule date
+        title: Text(
+          scheduleDate,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Montserrat',
+            fontSize: 20,
+            color: Colors.black
           ),
         ),
-      ),
-      //schedule date
-      title: Text(
-        scheduleDate,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.left,
-        style: TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: 20,
-          color: Colors.black
-        ),
-      ),
-      //schedule details
-      subtitle: Text(
-        scheduleDetails,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.left,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-          color: Colors.grey[600]
-        ),
-      ),
-      trailing: Container(
-        decoration: BoxDecoration(
-          color: Colors.redAccent,
-          borderRadius: BorderRadius.circular(12)
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          //schedule time
-          child: Text(
-            scheduleTime,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-              color: Colors.grey[200],
-            )
+        //schedule details
+        subtitle: Text(
+          scheduleDetails,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 12,
+            fontFamily: 'Montserrat',
+            color: Colors.grey[600],
           ),
+        ),
+        trailing: Container(
+          decoration: BoxDecoration(
+            color: Colors.redAccent,
+            borderRadius: BorderRadius.circular(12)
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            //schedule time
+            child: Text(
+              scheduleTime,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                fontFamily: 'Montserrat',
+                color: Colors.grey[200],
+              )
+            ),
+          )
         )
-      )
+      ),
     );
   }
 }

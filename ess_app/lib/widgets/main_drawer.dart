@@ -23,7 +23,8 @@ class MainDrawer extends StatelessWidget {
                   'G e r i A s s i s',
                   style: TextStyle(
                     fontSize: 35,
-                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w800,
                     color: Colors.white
                   ),
                 )),
