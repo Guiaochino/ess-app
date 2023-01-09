@@ -11,6 +11,7 @@ class ReminderTabListView extends StatelessWidget {
   final String reminderTitle;
   final String reminderDateTime;
   final String reminderDetails;
+  final bool isDone;
   final Function(BuildContext)? deleteTapped;
   final Function(BuildContext)? editTapped;
 
@@ -20,7 +21,7 @@ class ReminderTabListView extends StatelessWidget {
     required this.reminderDateTime,
     required this.reminderDetails,
     required this.deleteTapped,
-    required this.editTapped,
+    required this.editTapped, required this.isDone,
     
   });
 
@@ -84,7 +85,8 @@ class ReminderTabListView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Colors.black,
+                      decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
+                      color: isDone? Colors.grey[800]:Colors.black,
                       fontWeight: FontWeight.w700,
                       fontSize: 20,
                       ),
@@ -94,6 +96,7 @@ class ReminderTabListView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
+                      decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
                       fontSize:15,
@@ -104,7 +107,7 @@ class ReminderTabListView extends StatelessWidget {
                     maxLines: 1,
                     style: TextStyle(
                       color: Color(0xFFE86166),
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w800,
                       fontSize: 20,
                     ),
                   ),

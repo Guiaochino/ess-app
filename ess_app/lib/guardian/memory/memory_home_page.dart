@@ -1,3 +1,5 @@
+import 'package:ess_app/guardian/create/create_entry_reminder.dart';
+import 'package:ess_app/widgets/category_appbar.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../widgets/main_drawer.dart';
@@ -18,101 +20,38 @@ class MemoryHomePage extends StatelessWidget {
       initialIndex: activePage,
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-              'Memories',
-              style: TextStyle(
-                color: Colors.black, 
-                fontWeight: FontWeight.w700,
-                fontSize: 25.0,
-                letterSpacing: 2.0,
-              ),
-            ),
-          backgroundColor: Color.fromARGB(255, 255, 197, 6),
-          foregroundColor: Colors.black,
-          centerTitle: true,
-        ),
         drawer: MainDrawer(),
-        floatingActionButton: SpeedDial(
-          animatedIcon: AnimatedIcons.menu_close,
+        floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Color(0xFFF2BA05),
           foregroundColor: Colors.black,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          spacing: 12,
-          children: [
-            SpeedDialChild(
-              child: Icon(
-                Icons.add_a_photo,
-                color: Colors.white,
-              ),
-              label: 'Add Image',
-              backgroundColor: Colors.grey[800],
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CreateEntryImage()));
-              },
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.note_add, color: Colors.white),
-              label: 'Add Diary Entry',
-              backgroundColor: Colors.grey[800],
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CreateEntryDiary()));
-              },
-            )
-          ],
+          label: Text('Add Reminder'),
+          icon: Icon(Icons.notification_add),
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CreateReminder()));
+          },
         ),
-        body: Column(
-          children: [
-            TabBar(
-              unselectedLabelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
-                letterSpacing: 2.0,
-              ),
-              unselectedLabelColor: Colors.grey[600],
-              automaticIndicatorColorAdjustment: true,
-              indicatorWeight: 5.0,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorColor: Color(0xFFF2BA05),
-              tabs: [
-                Tab(
-                  height: 90,
-                  icon: Icon(
-                    Icons.collections,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                  text: 'IMAGES',
-                ),
-                Tab(
-                  height: 90,
-                  icon: Icon(
-                    Icons.my_library_books,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                  text: 'DIARY',
-                ),
+        body: NestedScrollView(
+          floatHeaderSlivers: true,
+          headerSliverBuilder: ((context, innerBoxIsScrolled) => [
+            categoryAppBar(
+              title: 'Memories',
+              icon1: Icons.photo_album_outlined,
+              icon2: Icons.book_outlined,
+              tabLabel1: 'INCOMING',
+              tabLabel2: 'PAST',
+            ),
+          ]),
+          body: Expanded(
+            child: TabBarView(
+              children: [
+                MemoryImageTab(),
+                MemoryDiaryTab(),
               ],
-              labelColor: Colors.black,
-              labelStyle: TextStyle(
-                fontWeight: FontWeight.w700,
-                letterSpacing: 10.0,
-              ),
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  MemoryImageTab(),
-                  MemoryDiaryTab(),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        )
+      )
     );
   }
 }

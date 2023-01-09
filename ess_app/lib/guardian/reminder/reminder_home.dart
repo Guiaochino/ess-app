@@ -1,3 +1,5 @@
+import 'package:ess_app/utils/colors.dart';
+import 'package:ess_app/widgets/category_appbar.dart';
 import "package:flutter/material.dart";
 import '../../widgets/main_drawer.dart';
 import '../create/create_entry_reminder.dart';
@@ -6,9 +8,7 @@ import 'reminder_past_tab.dart';
 
 class ReminderHomePage extends StatelessWidget {
   final int activePage;
-  const ReminderHomePage({
-    required this.activePage,
-    super.key});
+  const ReminderHomePage({required this.activePage, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,20 +16,6 @@ class ReminderHomePage extends StatelessWidget {
       initialIndex: activePage,
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Reminders',
-            style: TextStyle(
-              color: Colors.black, 
-              fontWeight: FontWeight.w700,
-              fontSize: 25.0,
-              letterSpacing: 2.0,
-            ),
-          ),
-          backgroundColor: Color.fromARGB(255, 255, 197, 6),
-          foregroundColor: Colors.black,
-          centerTitle: true,
-        ),
         drawer: MainDrawer(),
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Color(0xFFF2BA05),
@@ -41,54 +27,26 @@ class ReminderHomePage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => CreateReminder()));
           },
         ),
-        body: Column(
-          children: [
-            TabBar(
-              unselectedLabelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
-                letterSpacing: 2.0,
-              ),
-              unselectedLabelColor: Colors.grey[600],
-              automaticIndicatorColorAdjustment: true,
-              indicatorWeight: 5.0,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorColor: Color(0xFFF2BA05),
-              tabs: [
-                Tab(
-                  height: 90,
-                  icon: Icon(
-                    Icons.notifications_active,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                  text: 'INCOMING',
-                ),
-                Tab(
-                  height: 90,
-                  icon: Icon(
-                    Icons.notifications_off,
-                    color: Colors.black,
-                    size: 30,
-                  ),
-                  text: 'PAST',
-                ),
+        body: NestedScrollView(
+          floatHeaderSlivers: true,
+          headerSliverBuilder: ((context, innerBoxIsScrolled) => [
+            categoryAppBar(
+              title: 'Reminders',
+              icon1: Icons.notifications_active,
+              icon2: Icons.notifications_off,
+              tabLabel1: 'INCOMING',
+              tabLabel2: 'PAST',
+            ),
+          ]),
+          body: Expanded(
+            child: TabBarView(
+              children: [
+                ReminderIncomingTab(),
+                ReminderPastTab(),
               ],
-              labelColor: Colors.black,
-              labelStyle: TextStyle(
-                fontWeight: FontWeight.w700,
-                letterSpacing: 10.0,
-              ),
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  ReminderIncomingTab(),
-                  ReminderPastTab(),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        )
       ),
     );
   }

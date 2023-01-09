@@ -1,4 +1,5 @@
 import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -47,16 +48,17 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
               color: Colors.black, 
               fontWeight: FontWeight.w700,
               fontSize: 25.0,
-              letterSpacing: 2.0,
+              letterSpacing: 1.0,
+              fontFamily: 'Montserrat'
             ),
           ),
-          backgroundColor: Color.fromARGB(255, 255, 197, 6),
+          backgroundColor: AppColors.firstColor,
           foregroundColor: Colors.black,
           centerTitle: true,
         ),
       drawer: MainDrawer(),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Color.fromARGB(255, 255, 197, 6),
+        backgroundColor: AppColors.firstColor,
         foregroundColor: Colors.black,
         label: Text('Add Schedule'),
         icon: Icon(Icons.add_box),
@@ -67,7 +69,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: AppColors.backColor
         ),
         child: Column(
           children: [
@@ -79,7 +81,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                 child: TableCalendar(
                   
                   locale: 'en_US',
-                  rowHeight: 60,
+                  rowHeight: 50,
                   daysOfWeekHeight: 25,
                   headerStyle: HeaderStyle(
                     decoration: BoxDecoration(
@@ -118,7 +120,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                       fontSize: 15
                     ),
                     weekendDecoration: BoxDecoration(
-                      color: Color.fromARGB(255, 240, 240, 240),
+                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -128,7 +130,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                       fontSize: 15,
                     ),
                     defaultDecoration: BoxDecoration(
-                      color: Color.fromARGB(255, 240, 240, 240),
+                      color: Colors.white,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -199,83 +201,81 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                     topRight: Radius.circular(30.0),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'UPCOMING',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 30),
-                          ),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Schedule',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 25),
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: Container(
-                          child: schedules.isEmpty? 
-                          Column(
-                            children: [
-                              SizedBox(height: 20),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.event_busy_rounded,
-                                      size: 150,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      'No Schedule.',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                  ],
-                                ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: schedules.isEmpty? 
+                        Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.0),
                               ),
-                            ],
-                          )
-                          //listview builder of onclick date events
-                          :ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: schedules.length,
-                          itemBuilder: (context, index) {
-                            final schedule = schedules[index];
-                            return ScheduleTabListView(
-                              entryID: schedule.schedID,
-                              title: schedule.schedTitle,
-                              dateTime: schedule.schedDateTime,
-                              details: schedule.schedDetails,
-                              isDone: schedule.schedIsDone,
-                              editTapped: (context){
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.event_busy_rounded,
+                                    size: 150,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    'No Schedule.',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 25),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                        //listview builder of onclick date events
+                        :ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: schedules.length,
+                        itemBuilder: (context, index) {
+                          final schedule = schedules[index];
+                          return ScheduleTabListView(
+                            tileIndex: index,
+                            builderLength: schedules.length,
+                            entryID: schedule.schedID,
+                            title: schedule.schedTitle,
+                            dateTime: schedule.schedDateTime,
+                            details: schedule.schedDetails,
+                            isDone: schedule.schedIsDone,
+                            editTapped: (context){
+                            },
+                            deleteTapped: (context){
+                              
+                            }, 
 
-                              },
-                              deleteTapped: (context){
-                                
-                              },
-
-                            );
-                            
-                          },
-                        )),
-                      )
-                    ],
-                  ),
+                          );
+                          
+                        },
+                      )),
+                    )
+                  ],
                 ),
               ),
             ),

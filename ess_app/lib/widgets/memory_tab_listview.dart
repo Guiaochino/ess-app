@@ -61,9 +61,9 @@ class MemoryTabListView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Container(
-            height: 250,
+            height: 180,
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: Colors.white,
               borderRadius: BorderRadius.circular(15),
             ),
             child: Center(
@@ -84,17 +84,7 @@ class MemoryTabListView extends StatelessWidget {
                               color: iconColor(emoteRate),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, 
-                              vertical: 5.0,
-                            ),
-                            child: Container(
-                              width: 5,
-                              height: 50,
-                              color: Colors.black,
-                            ),
-                          ),
+                          SizedBox(width: 20),
                           Expanded(
                             child: Align(
                               alignment: Alignment.centerLeft,
@@ -102,7 +92,7 @@ class MemoryTabListView extends StatelessWidget {
                                 diaryTitle,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontSize: 25, 
+                                  fontSize: 20, 
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -122,12 +112,12 @@ class MemoryTabListView extends StatelessWidget {
                           child: Container(
                             child: Text(
                               diaryDetails,
-                              maxLines: 4,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.justify,
                               style: TextStyle(
                                 fontSize: 15, 
-                                color: Colors.grey,
+                                color: Colors.grey[600],
                               ),
                             ),
                           ),
@@ -156,7 +146,7 @@ class MemoryTabListView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12)
                           ),
                           child: Center(
-                            child: Text('View Details',
+                            child: Text('Read more',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,

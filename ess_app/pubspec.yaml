@@ -51,6 +51,7 @@ dependencies:
   image_picker_web: ^2.1.1
   awesome_dialog: ^2.2.1
   smooth_page_indicator: 
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_test:

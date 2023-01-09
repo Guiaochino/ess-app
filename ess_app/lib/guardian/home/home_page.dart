@@ -116,50 +116,6 @@ class _guardianHomePageState extends State<guardianHomePage> {
                                   ),
                                 ],
                               ),
-                              // child: Padding(
-                              //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                              //   child: Row(
-                              //     children: [
-                              //       Expanded(
-                              //         flex: 3,
-                              //         child: Container(
-                              //             child: Column(
-                              //           crossAxisAlignment:
-                              //               CrossAxisAlignment.start,
-                              //           children: [
-                              //             Text(
-                              //               DateFormat.yMMMEd().format(DateTime.now()).toString(),
-                              //               style: TextStyle(
-                              //                   fontSize: 15,
-                              //                   fontWeight: FontWeight.bold,
-                              //                   color: Colors.grey[800]),
-                              //             ),
-                              //             SizedBox(height: 5.0),
-                              //             Text(
-                              //               'Hell',
-                              //               style: TextStyle(
-                              //                   fontWeight: FontWeight.w900,
-                              //                   fontSize: 25,
-                              //                   letterSpacing: 2,
-                              //                   color: Colors.black),
-                              //             ),
-                                          
-                              //           ],
-                              //         )),
-                              //       ),
-                              //       Expanded(
-                              //         flex: 1,
-                              //         child: Container(
-                              //           child: Icon(
-                              //             Icons.account_circle_rounded,
-                              //             size: 55,
-                              //             color: Colors.black,
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
                             ),
                           ),
                         ),
@@ -169,7 +125,6 @@ class _guardianHomePageState extends State<guardianHomePage> {
               ),
             ),
           ),
-          
           //categories
           SliverToBoxAdapter(
             child: Padding(

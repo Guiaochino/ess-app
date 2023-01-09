@@ -63,6 +63,7 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
                       reminderTitle: reminder.reminderTitle,
                       reminderDateTime: reminder.reminderDateTime,
                       reminderDetails: reminder.reminderDetails,
+                      isDone: reminder.reminderIsDone,
                       deleteTapped: (context){
                         // deleteDialog(context, index).show();
                         deleteReminderEntry(index);

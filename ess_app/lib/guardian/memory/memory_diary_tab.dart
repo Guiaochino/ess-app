@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/memory_tab_listview.dart';
@@ -21,7 +22,7 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
     return Container(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: AppColors.backColor
         ),
         child: Column(
           children: [
@@ -92,7 +93,7 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
       context: context,
       dialogType: DialogType.QUESTION,
       borderSide: BorderSide(
-        color: Color(0xFFE86166),
+        color: AppColors.secondColor,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,
@@ -130,7 +131,7 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
       context: context,
       dialogType: DialogType.SUCCES,
       borderSide: BorderSide(
-        color: Color(0xFFE86166),
+        color: AppColors.secondColor,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,

@@ -1,4 +1,5 @@
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import '../guardian/home/home_page.dart';
 import '../guardian/reminder/reminder_home.dart';
@@ -16,120 +17,101 @@ class MainDrawer extends StatelessWidget {
         child: ListView(
           children: [
             Container(
-              color: Color(0xFFE86166),
+              color: AppColors.firstColor,
               child: DrawerHeader(
                 child: Center(
                     child: Text(
                   'G e r i A s s i s',
                   style: TextStyle(
-                    fontSize: 35,
+                    fontSize: 30,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w800,
-                    color: Colors.white
+                    color: Colors.black,
                   ),
                 )),
               ),
             ),
-            SizedBox(height: 20),
-            ListTile(
-              leading: Icon(Icons.home,
-              size: 35,
-              color: Colors.black,
-              ),
-              minLeadingWidth: 60,
-              title: Text(
-                'Home',
-                style: TextStyle(
-                  fontSize: 20, 
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => guardianHomePage()));
+            SizedBox(height: 10),
+            drawerTile(
+              icon: Icons.home, 
+              title: 'Home', 
+              navigation: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => guardianHomePage()));
               },
             ),
-            SizedBox(height: 20),
-            ListTile(
-              leading: Icon(Icons.photo_album,
-              size: 35,
-              color: Colors.black,
-              ),
-              minLeadingWidth: 60,
-              title: Text(
-                'Memories',
-                style: TextStyle(
-                  fontSize: 20, 
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-              onTap: () {
+            SizedBox(height: 10),
+            drawerTile(
+              icon: Icons.photo_album, 
+              title: 'Memories', 
+              navigation: () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
               },
             ),
-            SizedBox(height: 20),
-            ListTile(
-              leading: Icon(Icons.calendar_month,
-              size: 35,
-              color: Colors.black,
-              ),
-              minLeadingWidth: 60,
-              title: Text(
-                'Schedules',
-                style: TextStyle(
-                  fontSize: 20, 
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ScheduleHomePage()));
+            SizedBox(height: 10),
+            drawerTile(
+              icon: Icons.calendar_month, 
+              title: 'Schedules', 
+              navigation: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ScheduleHomePage()));
               },
             ),
-            SizedBox(height: 20),
-            ListTile(
-              leading: Icon(Icons.checklist,
-              size: 35,
-              color: Colors.black,
-              ),
-              minLeadingWidth: 60,
-              title: Text(
-                'Reminders',
-                style: TextStyle(
-                  fontSize: 20, 
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ReminderHomePage(activePage: 0,)));
+            SizedBox(height: 10),
+            drawerTile(
+              icon: Icons.checklist, 
+              title: 'Reminders', 
+              navigation: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ReminderHomePage(activePage: 0,)));
               },
             ),
             SizedBox(height: 10.0),
             Container(height: 1.0, color: Colors.grey[600]),
             SizedBox(height: 10.0),
-            ListTile(
-              leading: Icon(Icons.settings,
-              size: 35,
-              color: Colors.black,
-              ),
-              minLeadingWidth: 60,
-              title: Text(
-                'Settings',
-                style: TextStyle(
-                  fontSize: 20, 
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SettingsHomePage()));
+            drawerTile(
+              icon: Icons.settings, 
+              title: 'Settings', 
+              navigation: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingsHomePage()));
               },
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class drawerTile extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Function()? navigation;
+  const drawerTile({
+    Key? key, required this.title, required this.icon, required this.navigation,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      selectedColor: AppColors.firstColor,
+      selectedTileColor: AppColors.firstColor.withOpacity(0.1),
+      leading: Icon(
+        icon,
+        size: 35,
+        color: Colors.black,
+      ),
+      minLeadingWidth: 40,
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 20, 
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      onTap: navigation
     );
   }
 }
