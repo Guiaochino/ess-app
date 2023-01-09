@@ -1,3 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ess_app/dataList/schedules.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -284,8 +286,104 @@ class _CreateScheduleState extends State<CreateSchedule> {
           ],
         )))));
   }
-  void saveSchedule(){
-    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ScheduleHomePage()));
+  //success dialog
+  AwesomeDialog successDialog(BuildContext context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.SUCCES,
+      borderSide: BorderSide(
+        color: Color(0xFFE86166),
+        width: 2,
+      ),
+      width: MediaQuery.of(context).size.width * 0.9,
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+      dismissOnTouchOutside: true,
+      dismissOnBackKeyPress: false,
+      headerAnimationLoop: false,
+      animType: AnimType.SCALE,
+      title: 'Schedule Added!',
+      titleTextStyle: TextStyle(
+        color: Colors.green,
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+      onDissmissCallback:(type) {
+        Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => ScheduleHomePage()));
+      },
+      padding: EdgeInsets.all(15),
+      showCloseIcon: false,
+      autoHide: Duration(seconds: 3),
+    );
+  }
+
+  //error
+  AwesomeDialog errorDialog(BuildContext context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.ERROR,
+      borderSide: BorderSide(
+        color: Color(0xFFE86166),
+        width: 2,
+      ),
+      width: MediaQuery.of(context).size.width * 0.9,
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+      dismissOnTouchOutside: true,
+      dismissOnBackKeyPress: false,
+      headerAnimationLoop: false,
+      animType: AnimType.SCALE,
+      title: 'Invalid Date',
+      desc: 'Date and Time must be in future.',
+      titleTextStyle: TextStyle(
+        color: Colors.red,
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+      descTextStyle: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+      ),
+      padding: EdgeInsets.all(15),
+      showCloseIcon: false,
+      autoHide: Duration(seconds: 3),
+    );
+  }
+
+  //saving diary
+  void saveSchedule() {
+
+    //null or empty entries
+    if(titleController.text == null || titleController.text == ''){
+      titleController.text = 'No Title';
+    }
+    if(paragraphController.text == null || paragraphController.text == ''){
+      paragraphController.text = 'No Details';
+    }
+    
+
+    if(_dateTime.isAfter(DateTime.now())){
+
+      print('title : ' + titleController.text);
+      print('dateTime: '+ _dateTime.toString());
+      print('details : ' + paragraphController.text);
+
+      
+
+      //add to diaryList
+      scheduleList.add(
+        Schedule(
+          schedID: scheduleList.length + 1, // auto increment
+          schedTitle: titleController.text,
+          schedIsDone: false,
+          schedDateTime: _dateTime.toString(),
+          schedDetails: paragraphController.text,
+        )
+      );
+      print('Schedule Entry Added');
+      successDialog(context).show();
+    }
+    else{
+      errorDialog(context).show();
+    }
   }
 }

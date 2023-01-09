@@ -57,7 +57,7 @@ String convertDateTimeToString(DateTime dateTime) {
 //datetime converter using parse
 //string to dateTime
 DateTime parseStringToDate(String dateTime) {
-  DateTime tempDate = DateFormat("dd-MM-yyyy H:mm:ss").parse(dateTime);
+  DateTime tempDate = DateFormat("yyyy-MM-dd H:mm:ss").parse(dateTime);
   return tempDate;
 }
 

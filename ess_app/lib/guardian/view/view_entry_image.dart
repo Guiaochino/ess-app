@@ -1,8 +1,9 @@
+import 'package:ess_app/guardian/edit/edit_entry_image.dart';
 import 'package:flutter/material.dart';
 import '../memory/memory_home_page.dart';
 
 class ViewEntryImage extends StatelessWidget {
-
+  final int entryIndex;
   final String title;
   final String dateTime;
   final String imgPath;
@@ -11,10 +12,11 @@ class ViewEntryImage extends StatelessWidget {
   
   const ViewEntryImage({
     super.key,
+    required this.entryIndex,
     required this.title,    
     required this.dateTime,
     required this.imgPath,
-    required this.details,
+    required this.details, 
   });
   
 
@@ -29,7 +31,7 @@ class ViewEntryImage extends StatelessWidget {
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => MemoryHomePage()));
+                MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -43,6 +45,8 @@ class ViewEntryImage extends StatelessWidget {
             child: IconButton(
               onPressed: () {
                 //edit
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => EditEntryImage(editIndex: entryIndex)));
               },
               icon: Icon(
                 Icons.edit,

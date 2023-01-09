@@ -16,18 +16,17 @@ class MemoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width - 40;
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         decoration: BoxDecoration(
             color: Color(0xFFE86166), borderRadius: BorderRadius.circular(15)),
-        width: 200,
+        width: width,
         child: Stack(
           fit: StackFit.expand, 
           children: [
             Container(
-              height: 50,
-              width: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12), 
                 color: Colors.black

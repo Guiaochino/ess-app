@@ -5,17 +5,25 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../guardian/memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
+  final int diaryIndex;
   final String diaryTitle;
   final String diaryDateTime;
-  final String diaryRecording;
   final String diaryDetails;
+  final int emoteRate;
+  final Function(BuildContext)? deleteTapped;
+  final Function(BuildContext)? editTapped;
 
   MemoryTabListView({
+    required this.diaryIndex,
     required this.diaryTitle,
     required this.diaryDateTime,
-    required this.diaryRecording,
     required this.diaryDetails,
+    required this.emoteRate,
+    required this.deleteTapped, 
+    required this.editTapped,
   });
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +34,7 @@ class MemoryTabListView extends StatelessWidget {
           motion: DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: ((context) {
-                //edit
-              }),
+              onPressed: editTapped,
               backgroundColor: Colors.blue,
               icon: Icons.edit_note,
               label: 'Edit',
@@ -42,9 +48,7 @@ class MemoryTabListView extends StatelessWidget {
           motion: DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: ((context) {
-                //delete
-              }),
+              onPressed: deleteTapped, //delete function
               icon: Icons.delete_forever,
               label: 'Delete',
               backgroundColor: Colors.red,
@@ -57,10 +61,10 @@ class MemoryTabListView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Container(
-            height: 250,
+            height: 180,
             decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
             ),
             child: Center(
               child: Padding(
@@ -72,21 +76,15 @@ class MemoryTabListView extends StatelessWidget {
                       height: 50,
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.drive_file_rename_outline,
-                            size: 50,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, 
-                              vertical: 5.0,
-                            ),
-                            child: Container(
-                              width: 5,
-                              height: 50,
-                              color: Colors.black,
+                          SizedBox(width: 10),
+                          Center(
+                            child: Icon(
+                              icon(emoteRate),
+                              size: 50,
+                              color: iconColor(emoteRate),
                             ),
                           ),
+                          SizedBox(width: 20),
                           Expanded(
                             child: Align(
                               alignment: Alignment.centerLeft,
@@ -94,7 +92,7 @@ class MemoryTabListView extends StatelessWidget {
                                 diaryTitle,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontSize: 25, 
+                                  fontSize: 20, 
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -114,12 +112,12 @@ class MemoryTabListView extends StatelessWidget {
                           child: Container(
                             child: Text(
                               diaryDetails,
-                              maxLines: 4,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.justify,
                               style: TextStyle(
                                 fontSize: 15, 
-                                color: Colors.grey,
+                                color: Colors.grey[600],
                               ),
                             ),
                           ),
@@ -133,9 +131,9 @@ class MemoryTabListView extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => ViewEntryDiary(
+                              entryIndex: diaryIndex,
                               title: diaryTitle,
                               dateTime: diaryDateTime,
-                              recPath: diaryRecording,
                               details: diaryDetails,
                             ),
                           ));
@@ -148,7 +146,7 @@ class MemoryTabListView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12)
                           ),
                           child: Center(
-                            child: Text('View Details',
+                            child: Text('Read more',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
@@ -167,5 +165,61 @@ class MemoryTabListView extends StatelessWidget {
         ),
       ),
     );
+  }
+  //get icon
+  IconData icon(int index){
+    IconData iconRate = Icons.sentiment_neutral_outlined;
+    switch (index){
+      case 1:
+      iconRate = Icons.sentiment_very_dissatisfied_outlined;
+      break;
+      case 2:
+      iconRate = Icons.sentiment_very_dissatisfied;
+      break;
+      case 3:
+      iconRate = Icons.sentiment_dissatisfied;
+      break;
+      case 4:
+      iconRate = Icons.sentiment_neutral_rounded;
+      break;
+      case 5:
+      iconRate = Icons.sentiment_satisfied;
+      break;
+      case 6:
+      iconRate = Icons.sentiment_satisfied_outlined;
+      break;
+      case 7:
+      iconRate = Icons.sentiment_very_satisfied_outlined;
+      break;
+    }
+    return iconRate;
+  }
+
+   Color iconColor(int index){
+    Color iconColor = Colors.grey;
+    switch (index){
+      case 1:
+      iconColor = Colors.red;
+      break;
+      case 2:
+      iconColor = Color.fromARGB(255, 204, 0, 112);
+      break;
+      case 3:
+      iconColor = Color.fromARGB(255, 192, 0, 160);
+      break;
+      case 4:
+      iconColor = Color.fromARGB(255, 255, 197, 6);
+      break;
+      case 5:
+      iconColor = Color.fromARGB(255, 10, 72, 187);
+      break;
+      case 6:
+      iconColor = Color.fromARGB(255, 241, 110, 35);
+      break;
+      case 7:
+      iconColor = Color.fromARGB(255, 12, 148, 0);
+      break;
+    }
+    return iconColor;
   }
 }

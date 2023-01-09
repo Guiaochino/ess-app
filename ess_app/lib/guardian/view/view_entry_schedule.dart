@@ -1,46 +1,24 @@
+import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
+import 'package:ess_app/guardian/schedule/schedule_home.dart';
+import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
-import '../schedule/schedule_home.dart';
+class ViewEntrySchedule extends StatelessWidget {
+  final int entryIndex;
+  final String title;
+  final String dateTime;
+  final bool isDone;
+  final String details;
 
-class ViewSchedule extends StatefulWidget {
-  @override
-  State<ViewSchedule> createState() => _ViewScheduleState();
-}
-
-class _ViewScheduleState extends State<ViewSchedule> {
-  // @override
-  // void initState() {
-  //   //if no existing data, get the template list
-  //   if (_myBox.get("CURRENT_SCHEDULE_LIST") == null) {
-  //     db.createDefaultData();
-  //     print("no database items");
-  //   }
-  //   //if theres an existing data, load it
-  //   else {
-  //     db.loadData();
-  //     print(db.ScheduleList);
-  //   }
-  //   super.initState();
-  // }
-
-  DateTime _dateTime = DateTime.now();
-  TimeOfDay _timeOfDay = TimeOfDay.now();
-  final titleController = TextEditingController();
-  final paragraphController = TextEditingController();
-
-  // void saveSchedule() {
-  //   db.ScheduleList.add([
-  //     titleController.text,
-  //     paragraphController.text,
-  //     false,
-  //     parseDateToString(_dateTime),
-  //   ]);
-  //   print(titleController.text);
-  //   print(paragraphController.text);
-  //   db.updateDataBase();
-  // }
+  const ViewEntrySchedule({
+    required this.entryIndex,
+    required this.title,     
+    required this.dateTime,
+    required this.isDone,
+    required this.details,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +46,8 @@ class _ViewScheduleState extends State<ViewSchedule> {
               padding: const EdgeInsets.only(right: 10.0),
               child: IconButton(
                 onPressed: () {
-                  //edit
+                  Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => EditEntrySchedule(editIndex: entryIndex)));
                 },
                 icon: Icon(
                   Icons.edit,
@@ -93,7 +72,7 @@ class _ViewScheduleState extends State<ViewSchedule> {
                   "What's the event?",
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    fontSize: 35,
+                    fontSize: 30,
                     shadows: [
                       Shadow(
                         blurRadius: 10.0,
@@ -106,29 +85,17 @@ class _ViewScheduleState extends State<ViewSchedule> {
               ),
             ),
             SizedBox(height: 20.0),
-            //diary title
+            //schedule title
             Container(
-              height: 50,
-              child: Container(
-                width: 300,
-                child: TextField(
-                  controller: titleController,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  decoration: InputDecoration(
-                      iconColor: Colors.black,
-                      prefixIcon: Icon(Icons.event, size: 30),
-                      border: UnderlineInputBorder(),
-                      hintText: 'populate Event Title',
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      )),
+              width: 300,
+              child: Text(
+                title,            
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                  overflow: TextOverflow.ellipsis,
+                  fontWeight: FontWeight.bold
                 ),
               ),
             ),
@@ -143,8 +110,7 @@ class _ViewScheduleState extends State<ViewSchedule> {
                   children: [
                     Expanded(
                       flex: 5,
-                      child: Container(
-                          child: Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
@@ -154,63 +120,49 @@ class _ViewScheduleState extends State<ViewSchedule> {
                           ),
                           SizedBox(width: 5.0),
                           Container(
-                              child: MaterialButton(
-                            onPressed: () async {
-                              DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: _dateTime,
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2025),
-                              );
-                              if (newDate == null) return;
-                              final newDateTime = DateTime(
-                                newDate.year,
-                                newDate.month,
-                                newDate.day,
-                                _dateTime.hour,
-                                _dateTime.minute,
-                              );
-                              setState(() {
-                                _dateTime = newDateTime;
-                              });
-                            },
                             child: Text(
-                              DateFormat.yMMMEd().format(_dateTime),
+                              extractDatefromDTString(dateTime),
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFFE86166),
                               ),
-                            ),
-                          ))
+                            )
+                          )
                         ],
-                      )),
+                      ),
                     ),
                     Expanded(
-                      flex: 4,
+                      flex: 1,
+                      child: Container(),
+                    ),
+                    Expanded(
+                      flex: 5,
                       child: Container(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.watch_later,
-                            color: Color(0xFFE86166),
-                            size: 40,
-                          ),
-                          SizedBox(width: 5.0),
-                          Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.watch_later,
+                              color: Color(0xFFE86166),
+                              size: 40,
+                            ),
+                            SizedBox(width: 5.0),
+                            Container(
                               child: Text(
-                                _timeOfDay.format(context).toString(),
+                                extractTimefromDTString(dateTime),
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFFE86166),
                                 ),
-                              ))
-                        ],
-                      )),
+                              )
+                            )
+                          ],
+                        )
+                      ),
                     ),
                   ],
                 ),
@@ -225,7 +177,7 @@ class _ViewScheduleState extends State<ViewSchedule> {
                   color: Colors.white,
                   child: TextFormField(
                     enabled: false,
-                    controller: paragraphController,
+                    initialValue: details,
                     maxLines: 40,
                     keyboardType: TextInputType.multiline,
                     style: TextStyle(

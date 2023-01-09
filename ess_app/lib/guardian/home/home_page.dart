@@ -1,5 +1,8 @@
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../dataList/memories.dart';
 import '../../widgets/main_drawer.dart';
@@ -17,18 +20,19 @@ class guardianHomePage extends StatefulWidget {
 }
 
 class _guardianHomePageState extends State<guardianHomePage> {
+  final _pageController = PageController();
   List<Memory> memories = memoryList;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Color.fromRGBO(238, 238, 238, 1),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             iconTheme: IconThemeData(color: Colors.black),
             backgroundColor: Color(0xFFF2BA05),
             elevation: 0,
-            expandedHeight: 200,
+            expandedHeight: 150,
             floating: false,
             pinned: true,
             centerTitle: false,
@@ -38,7 +42,8 @@ class _guardianHomePageState extends State<guardianHomePage> {
                 color: Colors.black, 
                 fontWeight: FontWeight.w700,
                 fontSize: 25.0,
-                letterSpacing: 2.0
+                letterSpacing: 1.0,
+                fontFamily: 'Montserrat'
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
@@ -48,7 +53,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       gradient: LinearGradient(
                         colors: [
                           Color.fromARGB(255, 238, 200, 76),
-                          Color(0xFFF2BA05),
+                          AppColors.firstColor,
                         ],
                         stops: [
                           0.20,
@@ -58,80 +63,59 @@ class _guardianHomePageState extends State<guardianHomePage> {
                         end: Alignment.bottomCenter,
                       ),
                     ),
-                    child: ListView(
+                    child: Column(
                       children: [
                         //items in flexappbar
                         SizedBox(
-                          height: 60.0,
+                          height: 30.0,
                         ),
                         //full container of hello guardian and icon
-                        Container(
+                        Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            // child: ListTile(
-                            //   title: Padding(
-                            //     child: Text(
-                            //       'Hello and Welcome,',
-                            //       // DateFormat.yMMMEd()
-                            //       //     .format(DateTime.now())
-                            //       //     .toString(),
-                            //       style: TextStyle(
-                            //           fontSize: 20,
-                            //           fontWeight: FontWeight.bold,
-                            //           color: Colors.grey[800]),
-                            //     ),
-                            //   ),
-                            //   subtitle: Text(
-                            //     'Chino Tiamzon',
-                            //     style: TextStyle(
-                            //         fontWeight: FontWeight.w900,
-                            //         fontSize: 30,
-                            //         letterSpacing: 4,
-                            //         color: Colors.white),
-                            //   ),
-                            // ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                                    child: Container(
-                                        child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          DateFormat.yMMMEd().format(DateTime.now()).toString(),
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey[800]),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        DateFormat.yMMMEd().format(DateTime.now()).toString(),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.grey[800],
                                         ),
-                                        SizedBox(height: 5.0),
-                                        Text(
-                                          'Hello, GuardianName',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 25,
-                                              letterSpacing: 2,
-                                              color: Colors.black),
+                                      ),
+                                      Text(
+                                        'Hi Mychal!',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 25,
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black
                                         ),
-                                      ],
-                                    )),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
+                                  Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 47, 92, 150).withOpacity(0.1),
+                                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                                    ),
                                     child: Icon(
-                                      Icons.account_circle_rounded,
-                                      size: 55,
-                                      color: Colors.black,
+                                      Icons.person,
+                                      size: 40,
+                                      color: Colors.grey[800], 
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -141,11 +125,10 @@ class _guardianHomePageState extends State<guardianHomePage> {
               ),
             ),
           ),
-          
           //categories
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(top: 30.0),
+              padding: const EdgeInsets.only(top: 20.0),
               child: Container(
                 height: 120,
                 child: Padding(
@@ -153,132 +136,41 @@ class _guardianHomePageState extends State<guardianHomePage> {
                   child: Row(
                     children: [
                       //memories button
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        onTap: () {
+                      mainButtons(
+                        pageRedirect: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => MemoryHomePage()));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFE86166),
-                                  Color.fromARGB(255, 235, 113, 117),
-                                ],
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.topRight,
-                              ),
-                            ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.photo_album_outlined,
-                                  size: 50, color: Colors.white),
-                              Text(
-                                "Memories",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    color: Colors.white),
-                              )
-                            ],
-                          ),
-                        ),
+                                builder: (context) => MemoryHomePage(activePage: 0,)));
+                        }, 
+                        imgAsset: 'images/memory.jpg', 
+                        title: 'Memories',
                       ),
-                    ),
-                    SizedBox(width: 10.0),
-                    //schedules button
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                        onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ScheduleHomePage()));
-                      },
-                        child: Container(
-                          padding: EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFE86166),
-                                  Color.fromARGB(255, 235, 113, 117),
-                                ],
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.topRight,
-                              ),
-                            ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.calendar_month_outlined,
-                                  size: 50, color: Colors.white),
-                              Text(
-                                "Schedules",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    color: Colors.white),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10.0),
-                    //reminders button
-                    Expanded(
-                      flex:1,
-                      child: GestureDetector(
-                        onTap: () {
+                      SizedBox(width: 10.0),
+                      //schedules button
+                      mainButtons(
+                        pageRedirect: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ReminderHomePage()));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFE86166),
-                                  Color.fromARGB(255, 235, 113, 117),
-                                ],
-                                
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.topRight,
-                              ),
-                            ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.pending_actions_outlined,
-                                  size: 50, color: Colors.white),
-                              Text(
-                                "Reminders",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+                                builder: (context) => ScheduleHomePage()));
+                        }, 
+                        imgAsset: 'images/schedule.jpg', 
+                        title: 'Schedules',
                       ),
-                    ),
+                      SizedBox(width: 10.0),
+                      //reminders button
+                    mainButtons(
+                        pageRedirect: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => MemoryHomePage(activePage: 0,)));
+                        }, 
+                        imgAsset: 'images/reminder.jpg', 
+                        title: 'Reminders',
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
           ),
+          //overview
           SliverToBoxAdapter(
             child: Expanded(
               child: Container(
@@ -286,166 +178,52 @@ class _guardianHomePageState extends State<guardianHomePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     children: [
-                      SizedBox(height: 30),
+                      SizedBox(height: 10),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "OVERVIEW",
+                          "Overview",
                           style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20,
-                              color: Colors.black),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontFamily: 'Montserrat',
+                          ),
                         ),
                       ),
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 10.0),
                       Row(
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Image Memories',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[800]),
-                                    ),
-                                    Text(
-                                      '0',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 25,
-                                        color: Colors.black
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                          statCard(
+                            title: 'Images',
+                            icon: Icons.photo,
+                            iconColor: Color.fromARGB(255, 223, 171, 1),
+                            statNum: 123,
                           ),
                           SizedBox(width: 10.0),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Diary Memories',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[800]),
-                                    ),
-                                    Text(
-                                      '0',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 25,
-                                        color: Colors.black
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                          statCard(
+                            title: 'Diaries',
+                            icon: Icons.book_sharp,
+                            iconColor: AppColors.secondColor,
+                            statNum: 132,
                           ),
                         ],
                       ),
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Schedules',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[800]),
-                                    ),
-                                    Text(
-                                      '0',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 25,
-                                        color: Colors.black
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                          statCard(
+                            title: 'Schedules',
+                            icon: Icons.calendar_month_outlined,
+                            iconColor: Color.fromARGB(255, 47, 92, 150),
+                            statNum: 425,
                           ),
                           SizedBox(width: 10.0),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Reminders',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[800]),
-                                    ),
-                                    Text(
-                                      '0',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 25,
-                                        color: Colors.black
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                          statCard(
+                            title: 'Reminders',
+                            icon: Icons.notifications_active,
+                            iconColor: Color.fromARGB(255, 145, 20, 167),
+                            statNum: 425,
                           ),
                         ],
                       ),
@@ -461,62 +239,43 @@ class _guardianHomePageState extends State<guardianHomePage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              height: 280,
+              height: 320,
               child: Column(
                 children: [
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 20.0),
                   //title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'MOST RECENT MEMORIES',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 20),
-                          ),
-                        ),
-                        Container(
-                          child: MaterialButton(
-                            color: Color(0xFFF2BA05),
-                            highlightColor: Color(0xFFE86166),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MemoryHomePage()));
-                            },
-                            child: Text(
-                              'View all',
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                  categoryHeading(
+                    title: 'Recent Memories', 
+                    pageRedirect: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => MemoryHomePage(activePage: 0,)));
+                    },
                   ),
                   SizedBox(height: 20.0),
                   Expanded(
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 3,
-                      itemBuilder: ((context, index) {
-                        final memory = memories[index];
-                        return MemoryCard(
-                          title: memory.memoryTitle,
-                          details: memory.memoryDetails,
-                          imageDirectory: memory.memoryImg,
-                          dateTime: memory.memoryDateTime,
-                        );
-                      }),
-                    )
+                    child: Container(
+                      height: MediaQuery.of(context).size.width - 40,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: 3,
+                        itemBuilder: ((context, index) {
+                          final memory = memories[index];
+                          return MemoryCard(
+                            title: memory.memoryTitle,
+                            details: memory.memoryDetails,
+                            imageDirectory: memory.memoryImg,
+                            dateTime: memory.memoryDateTime,
+                          );
+                        }),
+                      ),
+                    ),
                   ),
+                  SizedBox(height:10.0),
+                  SmoothPageIndicator(
+                    controller: _pageController, 
+                    count: 3,
+                    effect: ExpandingDotsEffect(activeDotColor: Color.fromARGB(255, 228, 175, 0)),
+                    )
                 ],
               ),
             ),
@@ -529,70 +288,42 @@ class _guardianHomePageState extends State<guardianHomePage> {
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 20.0),
                   //title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "UPCOMING SCHEDULES",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 20),
-                          ),
-                        ),
-                        Container(
-                          child: MaterialButton(
-                            color: Color(0xFFF2BA05),
-                            highlightColor: Color(0xFFE86166),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ScheduleHomePage()));
-                            },
-                            child: Text(
-                              'View all',
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                  categoryHeading(title: 'Upcoming Schedules', 
+                    pageRedirect: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ScheduleHomePage()));
+                    },
                   ),
                   SizedBox(height: 20.0),
                   //schedule cards
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     child: Expanded(
-                        child: Column(
+                      child: Column(
                       children: [
                         //schedule cards, change function values to change inputs
                         UpSchedCard(
-                          scheduleDate: "December 7 , 2022",
+                          scheduleDate: "Dec 07 - Monday",
                           scheduleDetails: "Breakfast with you hehe",
-                          scheduleTime: "07:00",
+                          scheduleTime: "07:00 AM",
                         ),
                         SizedBox(height: 10.0),
                         UpSchedCard(
-                          scheduleDate: "December 8 , 2022",
+                          scheduleDate: "Dec 08 - Tuesday",
                           scheduleDetails: "Lunch with you hehe",
-                          scheduleTime: "12:00",
+                          scheduleTime: "12:00 PM",
                         ),
                         SizedBox(height: 10.0),
                         UpSchedCard(
-                          scheduleDate: "December 12 , 2022",
+                          scheduleDate: "Dec 12 - Saturday",
                           scheduleDetails: "Dinner with you hehe",
-                          scheduleTime: "18:00",
+                          scheduleTime: "08:00 PM",
                         ),
                       ],
-                    )),
+                    )
+                    ),
                   )
                 ],
               ),
@@ -607,170 +338,32 @@ class _guardianHomePageState extends State<guardianHomePage> {
               height: 300,
               child: Column(
                 children: [
-                  SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      //title
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "YOUR REMINDERS",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 20),
-                          ),
-                        ),
-                        Container(
-                          child: MaterialButton(
-                            color: Color(0xFFF2BA05),
-                            highlightColor: Color(0xFFE86166),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ReminderHomePage()));
-                            },
-                            child: Text(
-                              'View all',
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                  SizedBox(height: 20),
+                  categoryHeading(
+                    title: 'Daily Reminders',
+                    pageRedirect: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ReminderHomePage(activePage: 0,)));
+                    },
                   ),
                   SizedBox(height: 20.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       children: [
-                    //upcoming tile
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ReminderHomePage()));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white
+                        //upcoming tile
+                        reminderTile(
+                          title: 'Upcoming', 
+                          badge: 5, 
+                          icon: Icons.event_note,
                         ),
-                        child: ListTile(
-                        leading: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.event_note,
-                              size: 40,
-                              color: Color(0xFFE86166),
-                            ),
-                          ],
+                        SizedBox(height: 10),
+                        //completed tile
+                        reminderTile(
+                          title: 'Completed', 
+                          badge: 12,
+                          icon: Icons.event_available,
                         ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 3.0),
-                          child: Text(
-                            "UPCOMING",
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20,
-                              color: Color(0xFFE86166),
-                            ),
-                          ),
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Text(
-                            "4 Tasks",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 30,
-                              color: Color(0xFFE86166),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ),
-                    ),
-                    SizedBox(height: 10.0),
-                    //completed tile
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ReminderHomePage()));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white
-                        ),
-                        child: ListTile(
-                        leading: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.event_available,
-                              size: 40,
-                              color: Color(0xFFE86166),
-                            ),
-                          ],
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 3.0),
-                          child: Text(
-                            "COMPLETED",
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20,
-                              color: Color(0xFFE86166),
-                            ),
-                          ),
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          // task number text
-                          child: Text(
-                            "15 Tasks",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 30,
-                              color: Color(0xFFE86166),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ),
-                    ),
                       ],
                     ),
                   )
@@ -782,6 +375,271 @@ class _guardianHomePageState extends State<guardianHomePage> {
       ),
       //drawer
       drawer: MainDrawer(),
+    );
+  }
+}
+
+class reminderTile extends StatelessWidget {
+  final String title;
+  final int badge;
+  final IconData icon;
+  const reminderTile({
+    Key? key, required this.title, required this.badge, required this.icon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      height: 60,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 145, 20, 167).withOpacity(0.1),
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+              child: Icon(
+                icon,
+                size: 30,
+                color: Color.fromARGB(255, 145, 20, 167), 
+              ),
+            ),
+            Text(
+              title,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Montserrat',
+                fontSize: 20,
+                color: Colors.black
+              ),
+            ),
+            Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                color: AppColors.secondColor.withOpacity(0.1),
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+              child: Center(
+                child: Text(
+                  badge.toString(),
+                  style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Montserrat',
+                  fontSize: 20,
+                  color: AppColors.secondColor 
+                ),
+                ),
+              )
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class categoryHeading extends StatelessWidget {
+  final String title;
+  final Function()? pageRedirect;
+  const categoryHeading({
+    Key? key, required this.title, required this.pageRedirect,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontWeight: FontWeight.w600, 
+                fontSize: 20,
+                fontFamily: 'Montserrat',
+              ),
+            ),
+          ),
+          Container(
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
+                overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  )
+                )
+              ),
+              onPressed: pageRedirect,
+              child: Text(
+                'View all',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class statCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color iconColor;
+  final int statNum;
+  
+  const statCard({
+    Key? key, required this.title, required this.icon, required this.iconColor, required this.statNum,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12)
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      color: iconColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                    child: Icon(
+                      icon,
+                      color: iconColor, 
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[800],
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                statNum.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 25,
+                  color: Colors.black,
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class mainButtons extends StatelessWidget {
+  final Function()? pageRedirect;
+  final String imgAsset;
+  final String title;
+  const mainButtons({
+    Key? key, 
+    required this.pageRedirect,
+    required this.imgAsset, 
+    required this.title,
+
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 1,
+      child: GestureDetector(
+        onTap: pageRedirect,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFE86166),
+                  Color.fromARGB(255, 235, 113, 117),
+                ],
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+              ),
+            ),
+          child: Stack(
+            fit: StackFit.expand, 
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12), 
+                  color: Colors.black
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: Image.asset(
+                      imgAsset,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
