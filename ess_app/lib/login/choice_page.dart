@@ -1,3 +1,4 @@
+import 'package:ess_app/guardian/home/home_page.dart';
 import 'package:flutter/material.dart';
 
 import 'login_page.dart';
@@ -89,7 +90,7 @@ class _ChoicePageState extends State<ChoicePage> {
                   child: MaterialButton(
                     onPressed: () {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                          MaterialPageRoute(builder: (context) => guardianHomePage()));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),

@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat'
       ),
       // test commit
-      home: ReminderHomePage(activePage: 0,),
+      home: MainPage(),
     );
   }
 }

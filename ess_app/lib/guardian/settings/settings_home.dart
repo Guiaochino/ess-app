@@ -1,4 +1,6 @@
 import 'package:ess_app/guardian/settings/change_password/email_verification.dart';
+import 'package:ess_app/login/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../home/home_page.dart';
@@ -249,7 +251,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   ),
                   //logiut button
                   GestureDetector(
-                    onTap: openLogoutDialog,
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
+                      openLogoutDialog();
+                    },
                     child: Container(
                       height: 80,
                       child: Row(
@@ -357,7 +362,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       ),
       actions: [
         TextButton(
-          onPressed: (){}, 
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => LoginPage()));
+          }, 
           child: Text(
             'Logout',
             style: TextStyle(
