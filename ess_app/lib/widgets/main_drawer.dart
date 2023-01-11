@@ -1,8 +1,10 @@
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-
 import '../guardian/home/home_page.dart';
 import '../guardian/reminder/reminder_home.dart';
+import '../guardian/schedule/schedule_home.dart';
+import '../guardian/settings/settings_home.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -10,78 +12,106 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Color.fromARGB(255, 255, 197, 6),
+      backgroundColor: Color.fromARGB(255, 245, 242, 242),
       child: Container(
         child: ListView(
           children: [
-            DrawerHeader(
-              child: Center(
-                  child: Text(
-                'G e r i A s s i s',
-                style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.w700,
-                ),
-              )),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text(
-                'Home',
-                style: TextStyle(fontSize: 20),
+            Container(
+              color: AppColors.firstColor,
+              child: DrawerHeader(
+                child: Center(
+                    child: Text(
+                  'G e r i A s s i s',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black,
+                  ),
+                )),
               ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => guardianHomePage()));
-              },
             ),
-            ListTile(
-              leading: Icon(Icons.photo_album),
-              title: Text(
-                'Memories',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
+            SizedBox(height: 10),
+            drawerTile(
+              icon: Icons.home, 
+              title: 'Home', 
+              navigation: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => MemoryHomePage()));
+                    MaterialPageRoute(builder: (context) => guardianHomePage()));
               },
             ),
-            ListTile(
-              leading: Icon(Icons.calendar_month),
-              title: Text(
-                'Schedules',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => guardianHomePage()));
+            SizedBox(height: 10),
+            drawerTile(
+              icon: Icons.photo_album, 
+              title: 'Memories', 
+              navigation: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
               },
             ),
-            ListTile(
-              leading: Icon(Icons.checklist),
-              title: Text(
-                'Reminders',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ReminderHomePage()));
+            SizedBox(height: 10),
+            drawerTile(
+              icon: Icons.calendar_month, 
+              title: 'Schedules', 
+              navigation: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ScheduleHomePage()));
               },
             ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text(
-                'Settings',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => guardianHomePage()));
+            SizedBox(height: 10),
+            drawerTile(
+              icon: Icons.checklist, 
+              title: 'Reminders', 
+              navigation: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ReminderHomePage(activePage: 0,)));
+              },
+            ),
+            SizedBox(height: 10.0),
+            Container(height: 1.0, color: Colors.grey[600]),
+            SizedBox(height: 10.0),
+            drawerTile(
+              icon: Icons.settings, 
+              title: 'Settings', 
+              navigation: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingsHomePage()));
               },
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class drawerTile extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Function()? navigation;
+  const drawerTile({
+    Key? key, required this.title, required this.icon, required this.navigation,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      selectedColor: AppColors.firstColor,
+      selectedTileColor: AppColors.firstColor.withOpacity(0.1),
+      leading: Icon(
+        icon,
+        size: 35,
+        color: Colors.black,
+      ),
+      minLeadingWidth: 40,
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 20, 
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      onTap: navigation
     );
   }
 }

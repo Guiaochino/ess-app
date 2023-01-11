@@ -1,3 +1,5 @@
+import 'package:ess_app/guardian/create/create_entry_reminder.dart';
+import 'package:ess_app/widgets/category_appbar.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../widgets/main_drawer.dart';
@@ -7,22 +9,17 @@ import 'memory_diary_tab.dart';
 import 'memory_image_tab.dart';
 
 class MemoryHomePage extends StatelessWidget {
-  const MemoryHomePage({super.key});
+  final int activePage;
+  const MemoryHomePage({
+    required this.activePage,
+    super.key});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: activePage,
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'M E M O R Y  P A G E',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          ),
-          backgroundColor: Color.fromARGB(255, 255, 197, 6),
-          foregroundColor: Colors.black,
-          centerTitle: true,
-        ),
         drawer: MainDrawer(),
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
@@ -57,46 +54,27 @@ class MemoryHomePage extends StatelessWidget {
             )
           ],
         ),
-        body: Column(
-          children: [
-            TabBar(
-              automaticIndicatorColorAdjustment: true,
-              indicatorWeight: 5.0,
-              indicatorColor: Color(0xFFE86166),
-              tabs: [
-                Tab(
-                  height: 100,
-                  icon: Icon(
-                    Icons.collections,
-                    color: Colors.black,
-                    size: 40,
-                  ),
-                  text: 'IMAGES',
-                ),
-                Tab(
-                  height: 100,
-                  icon: Icon(
-                    Icons.my_library_books,
-                    color: Colors.black,
-                    size: 40,
-                  ),
-                  text: 'DIARY',
-                ),
+        body: NestedScrollView(
+          floatHeaderSlivers: true,
+          headerSliverBuilder: ((context, innerBoxIsScrolled) => [
+            categoryAppBar(
+              title: 'Memories',
+              icon1: Icons.photo_album_outlined,
+              icon2: Icons.book_outlined,
+              tabLabel1: 'Images',
+              tabLabel2: 'Diary',
+            ),
+          ]),
+          body: Expanded(
+            child: TabBarView(
+              children: [
+                MemoryImageTab(),
+                MemoryDiaryTab(),
               ],
-              labelColor: Colors.black,
-              labelStyle: TextStyle(fontWeight: FontWeight.w900),
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  MemoryImageTab(),
-                  MemoryDiaryTab(),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        )
+      )
     );
   }
 }
