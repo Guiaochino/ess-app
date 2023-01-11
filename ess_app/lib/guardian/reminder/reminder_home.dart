@@ -24,7 +24,7 @@ class ReminderHomePage extends StatelessWidget {
           icon: Icon(Icons.notification_add),
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CreateReminder()));
+                MaterialPageRoute(builder: (context) => CreateEntryReminder()));
           },
         ),
         body: NestedScrollView(

@@ -6,6 +6,7 @@ import '../memory/memory_home_page.dart';
 
 class ViewEntryDiary extends StatelessWidget {
   final int entryIndex;
+  final int emoteRate;
   final String title;
   final String dateTime;
   final String details;
@@ -15,7 +16,7 @@ class ViewEntryDiary extends StatelessWidget {
     required this.title,     
     required this.dateTime,
     required this.details,
-    super.key
+    super.key, required this.emoteRate
   });
 
   @override
@@ -90,15 +91,25 @@ class ViewEntryDiary extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Container(
                     width: 300,
-                    child: Text(
-                      title,            
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.black,
-                        overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.bold
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          icon(emoteRate),
+                          size: 50,
+                          color: iconColor(emoteRate),
+                          ),
+                        SizedBox(width: 10),
+                        Text(
+                          title,            
+                          style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.black,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -216,5 +227,59 @@ class ViewEntryDiary extends StatelessWidget {
         )
       )
     );
+  }
+  IconData icon(int index){
+    IconData iconRate = Icons.sentiment_neutral_outlined;
+    switch (index){
+      case 1:
+      iconRate = Icons.sentiment_very_dissatisfied_outlined;
+      break;
+      case 2:
+      iconRate = Icons.sentiment_very_dissatisfied;
+      break;
+      case 3:
+      iconRate = Icons.sentiment_dissatisfied;
+      break;
+      case 4:
+      iconRate = Icons.sentiment_neutral_rounded;
+      break;
+      case 5:
+      iconRate = Icons.sentiment_satisfied;
+      break;
+      case 6:
+      iconRate = Icons.sentiment_satisfied_outlined;
+      break;
+      case 7:
+      iconRate = Icons.sentiment_very_satisfied_outlined;
+      break;
+    }
+    return iconRate;
+  }
+  Color iconColor(int index){
+    Color iconColor = Colors.grey;
+    switch (index){
+      case 1:
+      iconColor = Colors.red;
+      break;
+      case 2:
+      iconColor = Color.fromARGB(255, 204, 0, 112);
+      break;
+      case 3:
+      iconColor = Color.fromARGB(255, 192, 0, 160);
+      break;
+      case 4:
+      iconColor = Color.fromARGB(255, 255, 197, 6);
+      break;
+      case 5:
+      iconColor = Color.fromARGB(255, 10, 72, 187);
+      break;
+      case 6:
+      iconColor = Color.fromARGB(255, 241, 110, 35);
+      break;
+      case 7:
+      iconColor = Color.fromARGB(255, 12, 148, 0);
+      break;
+    }
+    return iconColor;
   }
 }

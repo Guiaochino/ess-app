@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/diaries.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../memory/memory_home_page.dart';
@@ -14,7 +15,6 @@ class CreateEntryDiary extends StatefulWidget {
 class _CreateEntryDiaryState extends State<CreateEntryDiary> {
   
   DateTime _dateTime = DateTime.now();
-  TimeOfDay _timeOfDay = TimeOfDay.now();
   int selectedMood = 0; // selected mood index
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
@@ -26,9 +26,12 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -44,6 +47,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
       ),
       body: SafeArea(
         child: Container(
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -57,7 +61,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 35,
+                        fontSize: 30,
                         shadows: [
                           Shadow(
                             blurRadius: 5.0,
@@ -99,7 +103,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                   child: Container(
                     height: 50,
                     child: Container(
-                      width: 250,
+                      width: width - 60,
                       child: TextField(
                         controller: titleController,
                         textAlign: TextAlign.center,
@@ -144,7 +148,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                             size: 40,
                           ),
                           SizedBox(width: 5.0),
-                          Container(
+                          Expanded(
                               child: MaterialButton(
                             onPressed: () async {
                               DateTime? newDate = await showDatePicker(
@@ -190,7 +194,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                             size: 40,
                           ),
                           SizedBox(width: 5.0),
-                          Container(
+                          Expanded(
                               child: MaterialButton(
                             onPressed: () async {
                               TimeOfDay? newTime = await showTimePicker(
@@ -266,7 +270,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                       saveDiaryEntry();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFFF2BA05)),
+                      backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
                       overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
@@ -276,7 +280,6 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                     ),
                     child: Container(
                       height: 80,
-                      
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -286,6 +289,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
+                          width > 280?
                           Text(
                             'Save',
                             style: TextStyle(
@@ -293,7 +297,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ): Container()
                         ],
                       ),
                     ),

@@ -23,7 +23,6 @@ class categoryAppBar extends StatelessWidget {
         style: TextStyle(
           color: Colors.black, 
           fontWeight: FontWeight.w700,
-          fontSize: 25.0,
           letterSpacing: 1.0,
           fontFamily: 'Montserrat'
         ),
@@ -38,8 +37,8 @@ class categoryAppBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Color.fromARGB(255, 206, 205, 205),
+                borderRadius: BorderRadius.circular(25),
+                color: Color.fromARGB(255, 230, 228, 228),
               ),
               child: Column(
                 children: [
@@ -56,11 +55,11 @@ class categoryAppBar extends StatelessWidget {
                         fontFamily: 'Montserrat',
                       ),
                       labelColor: Colors.black,
-                      unselectedLabelColor: AppColors.secondColor,
+                      unselectedLabelColor: Colors.black ,
                       automaticIndicatorColorAdjustment: true,
                       indicator: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(20),
                       ),
 
                       tabs: [

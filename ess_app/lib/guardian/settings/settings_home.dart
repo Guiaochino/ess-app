@@ -93,10 +93,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                       children: [
                         Icon(
                           Icons.sports_kabaddi,
-                          size: 75,
+                          size: 50,
                           color: Colors.black,
                         ),
-                        SizedBox(width: 5.0),
+                        SizedBox(width: 10.0),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -108,7 +108,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                                   guardianName,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),
                                 ),
@@ -116,7 +116,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                                   'Edit personal details',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700,
-                                      fontSize: 15,
+                                      fontSize: 12,
                                       color: Colors.grey[600]),
                                 ),
                               ],
@@ -154,49 +154,46 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                         this.patientName = patientName;
                       });
                     },
-                    child: Container(
-                      height: 100,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.elderly_woman,
-                            size: 75,
-                            color: Colors.black,
-                          ),
-                          SizedBox(width: 5.0),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    patientName,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ),
-                                  Text(
-                                    'Edit personal details',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
-                                        color: Colors.grey[600]),
-                                  ),
-                                ],
-                              ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.elderly_woman,
+                          size: 50,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 10.0),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  patientName,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  'Edit personal details',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                      color: Colors.grey[600]),
+                                ),
+                              ],
                             ),
                           ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 30,
-                            color: Colors.black,
-                          ),
-                        ],
-                      ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 30,
+                          color: Colors.black,
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 10.0),
@@ -211,45 +208,44 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 10.0),
                   //change password container
                   GestureDetector(
                     onTap:(){
                       Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => EmailVerificationChangePass()));
                     },
-                    child: Container(
-                      height: 80,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.lock_reset_rounded,
-                            size: 40,
-                            color: Colors.black,
-                          ),
-                          SizedBox(width: 30.0),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Text(
-                                'Change Password',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.lock_reset_rounded,
+                          size: 40,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 30.0),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Text(
+                              'Change Password',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
                             ),
                           ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 30,
-                            color: Colors.black,
-                          ),
-                        ],
-                      ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 30,
+                          color: Colors.black,
+                        ),
+                      ],
                     ),
                   ),
-                  //logiut button
+                  SizedBox(height: 10.0),
+                  //logout button
                   GestureDetector(
                     onTap: () async {
                       await FirebaseAuth.instance.signOut();
@@ -278,13 +274,13 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                               ),
                             ),
                           ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 30,
-                            color: Colors.black,
-                          ),
-                        ],
-                      ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 30,
+                          color: Colors.black,
+                        ),
+                      ],
                     ),
                   ),
                 ],
