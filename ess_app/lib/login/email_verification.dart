@@ -126,6 +126,9 @@ class _EmailVerificationState extends State<EmailVerification> {
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: MaterialButton(
                             onPressed: () {
+                              
+                              // TODO: sent verification to email provided
+
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
                                       EmailVerificationSent()));

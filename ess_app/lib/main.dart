@@ -17,6 +17,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 Future main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat'
       ),
       // test commit
-      home: ReminderHomePage(activePage: 0,),
+      home: MainPage(),
     );
   }
 }
