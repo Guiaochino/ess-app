@@ -1,4 +1,8 @@
+import 'dart:js';
+
+import 'package:ess_app/login/email_verification.dart';
 import 'package:ess_app/login/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -9,6 +13,12 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+
+  final TextEditingController user_su_controller = TextEditingController();
+  final TextEditingController email_su_controller = TextEditingController();
+  final TextEditingController pass_su_controller = TextEditingController();
+  final TextEditingController pass_con_su_controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -65,40 +75,6 @@ class _CreateAccountState extends State<CreateAccount> {
                       )),
                   child: ListView(
                     children: [
-                      //Username
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 30,
-                          left: 30,
-                          right: 30,
-                        ),
-                        child: Container(
-                            child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: TextField(
-                              style: (TextStyle(
-                                  fontSize: 18.0,
-                                  height: 1.0,
-                                  color: Colors.black)),
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      )),
-                                  hintText: 'Username',
-                                  contentPadding: EdgeInsets.only(
-                                    top: 25,
-                                    bottom: 25,
-                                    left: 10,
-                                    right: 10,
-                                  ))),
-                        )),
-                      ),
                       //Email
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -106,6 +82,7 @@ class _CreateAccountState extends State<CreateAccount> {
                             child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: TextField(
+                              controller: email_su_controller,
                               style: (TextStyle(
                                   fontSize: 18.0,
                                   height: 1.0,
@@ -136,6 +113,7 @@ class _CreateAccountState extends State<CreateAccount> {
                             child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: TextField(
+                              controller: pass_su_controller,
                               style: (TextStyle(
                                   fontSize: 18.0,
                                   height: 1.0,
@@ -166,6 +144,7 @@ class _CreateAccountState extends State<CreateAccount> {
                             child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: TextField(
+                              controller: pass_con_su_controller,
                               style: (TextStyle(
                                   fontSize: 18.0,
                                   height: 1.0,
@@ -198,8 +177,10 @@ class _CreateAccountState extends State<CreateAccount> {
                           padding: const EdgeInsets.all(10.0),
                           child: MaterialButton(
                             onPressed: () {
+                              singup();
+                              // navigate to login again
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
+                                builder: (context) => LoginPage()));
                             },
                             child: Container(
                                 padding: EdgeInsets.all(20),
@@ -252,4 +233,17 @@ class _CreateAccountState extends State<CreateAccount> {
           ),
         ));
   }
+  
+  Future singup() async {
+    // Add user
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email : email_su_controller.text.trim(),
+        password : pass_su_controller.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+  }
+
 }

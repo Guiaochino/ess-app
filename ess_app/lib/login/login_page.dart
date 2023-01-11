@@ -203,10 +203,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future signin() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(), 
-      password: passwordController.text.trim()
-    );
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(), 
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
-
 }

@@ -1,4 +1,6 @@
 import 'package:ess_app/guardian/settings/change_password/email_verification.dart';
+import 'package:ess_app/login/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../home/home_page.dart';
@@ -245,25 +247,31 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   SizedBox(height: 10.0),
                   //logout button
                   GestureDetector(
-                    onTap: openLogoutDialog,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.logout_outlined,
-                          size: 40,
-                          color: Colors.black,
-                        ),
-                        SizedBox(width: 30.0),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Text(
-                              'Logout',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
+                      openLogoutDialog();
+                    },
+                    child: Container(
+                      height: 80,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout_outlined,
+                            size: 40,
+                            color: Colors.black,
+                          ),
+                          SizedBox(width: 30.0),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Text(
+                                'Logout',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
                             ),
                           ),
                         ),
@@ -350,7 +358,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       ),
       actions: [
         TextButton(
-          onPressed: (){}, 
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => LoginPage()));
+          }, 
           child: Text(
             'Logout',
             style: TextStyle(
