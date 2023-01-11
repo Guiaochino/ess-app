@@ -2,6 +2,8 @@ import 'package:ess_app/guardian/home/home_page.dart';
 import 'package:flutter/material.dart';
 
 import 'login_page.dart';
+import '../guardian/home/home_page.dart';
+import '../patient/home/home_page.dart';
 
 class ChoicePage extends StatefulWidget {
   const ChoicePage({Key? key}) : super(key: key);
@@ -53,8 +55,8 @@ class _ChoicePageState extends State<ChoicePage> {
                       borderRadius: BorderRadius.circular(20)),
                   child: MaterialButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => patientHomePage()));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),

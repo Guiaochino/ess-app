@@ -9,6 +9,7 @@ import 'package:ess_app/guardian/settings/settings_home.dart';
 import 'package:ess_app/login/choice_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 import 'guardian/home/home_page.dart';
 import 'login/landing_page.dart';
