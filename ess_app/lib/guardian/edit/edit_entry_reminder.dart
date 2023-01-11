@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/reminders.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -44,9 +45,11 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: (IconButton(
             onPressed: () {
@@ -61,6 +64,7 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
       ),
       body: SafeArea(
         child: Container(
+          color:AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -74,7 +78,7 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 35,
+                        fontSize: 30,
                         shadows: [
                           Shadow(
                             blurRadius: 10.0,
@@ -93,7 +97,7 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                   child: Container(
                     height: 50,
                     child: Container(
-                      width: 300,
+                      width: width - 60,
                       child: TextField(
                         controller: titleController,
                         textAlign: TextAlign.center,
@@ -130,13 +134,15 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Spacer(),
                             Icon(
                               Icons.watch_later,
                               color: Color(0xFFE86166),
                               size: 55,
                             ),
                             SizedBox(width: 5.0),
-                            Container(
+                            Expanded(
+                              flex: 4,
                               child: MaterialButton(
                                 onPressed: () async {
                               TimeOfDay? newTime = await showTimePicker(
@@ -160,13 +166,14 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                                   DateFormat.jm().format(_dateTime),
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontSize: 30,
+                                    fontSize: 25,
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xFFE86166),
                                   ),
                                 ),
                               ),
-                            )
+                            ),
+                            Spacer()
                           ],
                         )
                       ),
@@ -202,10 +209,10 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 2,
-                  child:Container(),
-                ),
+                height > 670?
+                Spacer(
+                  flex: 1,
+                ): Container(),
                 SizedBox(height: 20),
                 //save button
                 Padding(
@@ -235,6 +242,7 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
+                          width > 280 ?
                           Text(
                             'Save',
                             style: TextStyle(
@@ -242,7 +250,7 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                          ),
+                          ): Container(),
                         ],
                       ),
                     ),

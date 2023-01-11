@@ -1,4 +1,6 @@
+import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/utils/colors.dart';
+import 'package:ess_app/widgets/diary_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -20,8 +22,11 @@ class guardianHomePage extends StatefulWidget {
 }
 
 class _guardianHomePageState extends State<guardianHomePage> {
-  final _pageController = PageController();
+  final _imagePageController = PageController();
+  final _diaryPageController = PageController();
+
   List<Memory> memories = memoryList;
+  List <Diary> diaries = diaryList;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,54 +72,56 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       children: [
                         //items in flexappbar
                         SizedBox(
-                          height: 30.0,
+                          height: 40.0,
                         ),
                         //full container of hello guardian and icon
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        DateFormat.yMMMEd().format(DateTime.now()).toString(),
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Montserrat',
-                                          color: Colors.grey[800],
+                            child: Center(
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          DateFormat.yMMMEd().format(DateTime.now()).toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Montserrat',
+                                            color: Colors.grey[800],
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        'Hi Mychal!',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 25,
-                                          fontFamily: 'Montserrat',
-                                          color: Colors.black
+                                        Text(
+                                          'Hi Mychal!',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 25,
+                                            fontFamily: 'Montserrat',
+                                            color: Colors.black
+                                          ),
                                         ),
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 60,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromARGB(255, 47, 92, 150).withOpacity(0.1),
+                                        borderRadius: BorderRadius.all(Radius.circular(12)),
                                       ),
-                                    ],
-                                  ),
-                                  Container(
-                                    height: 60,
-                                    width: 60,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 47, 92, 150).withOpacity(0.1),
-                                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 40,
+                                        color: Colors.grey[800], 
+                                      ),
                                     ),
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 40,
-                                      color: Colors.grey[800], 
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -159,7 +166,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     mainButtons(
                         pageRedirect: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => MemoryHomePage(activePage: 0,)));
+                                builder: (context) => ReminderHomePage(activePage: 0,)));
                         }, 
                         imgAsset: 'images/reminder.jpg', 
                         title: 'Reminders',
@@ -256,11 +263,12 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     child: Container(
                       height: MediaQuery.of(context).size.width - 40,
                       child: PageView.builder(
-                        controller: _pageController,
+                        controller: _imagePageController,
                         itemCount: 3,
                         itemBuilder: ((context, index) {
                           final memory = memories[index];
                           return MemoryCard(
+                            imageId: index,
                             title: memory.memoryTitle,
                             details: memory.memoryDetails,
                             imageDirectory: memory.memoryImg,
@@ -272,7 +280,54 @@ class _guardianHomePageState extends State<guardianHomePage> {
                   ),
                   SizedBox(height:10.0),
                   SmoothPageIndicator(
-                    controller: _pageController, 
+                    controller: _imagePageController, 
+                    count: 3,
+                    effect: ExpandingDotsEffect(activeDotColor: Color.fromARGB(255, 228, 175, 0)),
+                    )
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 320,
+              child: Column(
+                children: [
+                  SizedBox(height: 20.0),
+                  //title
+                  categoryHeading(
+                    title: 'Recent Diaries', 
+                    pageRedirect: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => MemoryHomePage(activePage: 0,)));
+                    },
+                  ),
+                  SizedBox(height: 20.0),
+                  Expanded(
+                    child: Container(
+                      height: MediaQuery.of(context).size.width - 40,
+                      child: PageView.builder(
+                        controller: _diaryPageController,
+                        itemCount: 3,
+                        itemBuilder: ((context, index) {
+                          final diary = diaries[index];
+                          return DiaryCard(
+                            diaryId: diary.diaryID,
+                            title: diary.diaryTitle,
+                            details: diary.diaryDetails,
+                            dateTime: diary.diaryDateTime, 
+                            emoteRate: diary.emoteRate,
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height:10.0),
+                  SmoothPageIndicator(
+                    controller: _diaryPageController, 
                     count: 3,
                     effect: ExpandingDotsEffect(activeDotColor: Color.fromARGB(255, 228, 175, 0)),
                     )
@@ -516,6 +571,8 @@ class statCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    var width = MediaQuery.of(context).size.width;
     return Expanded(
       flex: 1,
       child: Container(
@@ -531,8 +588,9 @@ class statCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  SizedBox(width: 10),
                   Container(
                     height: 40,
                     width: 40,
@@ -546,15 +604,20 @@ class statCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[800],
-                      fontFamily: 'Montserrat',
-                    ),
+                  Expanded(
+                    child: width > 320? Text(
+                      title,
+                      overflow:TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[800],
+                        fontFamily: 'Montserrat',
+                      ),
+                    ): Container(),
                   ),
+                  SizedBox(width: 10),
                 ],
               ),
               Text(

@@ -133,6 +133,7 @@ class MemoryTabListView extends StatelessWidget {
                             builder: (context) => ViewEntryDiary(
                               entryIndex: diaryIndex,
                               title: diaryTitle,
+                              emoteRate: emoteRate,
                               dateTime: diaryDateTime,
                               details: diaryDetails,
                             ),
@@ -195,7 +196,7 @@ class MemoryTabListView extends StatelessWidget {
     return iconRate;
   }
 
-   Color iconColor(int index){
+  Color iconColor(int index){
     Color iconColor = Colors.grey;
     switch (index){
       case 1:

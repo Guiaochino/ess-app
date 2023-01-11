@@ -39,7 +39,7 @@ class ScheduleTabListView extends StatelessWidget {
             onPressed: editTapped,
             backgroundColor: Colors.blue,
             icon: Icons.edit_note,
-            label: tileIndex.toString(),
+            label: 'Edit',
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20),
                 bottomRight: Radius.circular(20)),
@@ -52,7 +52,7 @@ class ScheduleTabListView extends StatelessWidget {
           SlidableAction(
             onPressed: deleteTapped,
             icon: Icons.delete_forever,
-            label: builderLength.toString(),
+            label: 'Delete',
             backgroundColor: Colors.red,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -176,106 +176,6 @@ class ScheduleTabListView extends StatelessWidget {
           ),
         ),
       )
-          
-          
-  
-          // child: ListTile(
-          //   onTap: () {
-          //     Navigator.of(context).push(
-          //       MaterialPageRoute(builder: (context) => ViewEntrySchedule(
-          //         entryIndex: entryID,
-          //         title: title,
-          //         dateTime: dateTime,
-          //         isDone: isDone,
-          //         details: details,
-          //       )));
-          //   },
-          //   leading: Icon(
-          //     Icons.schedule,
-          //     size: 50,
-          //     color: Colors.black,
-          //   ),
-          //   title: Text(
-          //     title,
-          //     style: TextStyle(
-          //       color: Colors.black,
-          //       fontWeight: FontWeight.w900,
-          //       fontSize: 25,
-          //       ),
-          //     ),
-          //   subtitle: Text(
-          //     extractTimefromDTString(dateTime),
-          //     style: TextStyle(
-          //       color: Colors.grey[600],
-          //       fontWeight: FontWeight.bold,
-          //       fontSize: 20,
-          //     ),
-          //   ),
-          //   trailing: Icon(
-          //     Icons.arrow_forward_ios,
-          //     size: 30,
-          //   ),
-          //   contentPadding: EdgeInsets.symmetric(horizontal: 20),
-          // ),
     );
   }
 }
-// child: Column(
-//                 children: [
-//                   //1st column - icon and title
-//                   Container(
-//                     height: 50,
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         Expanded(
-//                           child: Container(
-//                             child: Row(
-//                               children: [
-//                                 Container(
-//                                   child: Align(
-//                                     alignment: Alignment.center,
-//                                     child: Text(
-//                                       TimeOfDay.now()
-//                                           .format(context)
-//                                           .toString(),
-//                                       overflow: TextOverflow.ellipsis,
-//                                       style: TextStyle(
-//                                           fontSize: 25,
-//                                           fontWeight: FontWeight.w600),
-//                                     ),
-//                                   ),
-//                                 ),
-//                                 Padding(
-//                                   padding: const EdgeInsets.symmetric(
-//                                       horizontal: 10.0, vertical: 5.0),
-//                                   child: Container(
-//                                     width: 5,
-//                                     height: 50,
-//                                     color: Colors.black,
-//                                   ),
-//                                 ),
-//                                 Expanded(
-//                                   child: Container(
-//                                     child: Align(
-//                                       alignment: Alignment.centerLeft,
-//                                       child: Text(
-//                                         "sampleTitle",
-//                                         overflow: TextOverflow.ellipsis,
-//                                         style: TextStyle(
-//                                             fontSize: 25,
-//                                             fontWeight: FontWeight.w600),
-//                                       ),
-//                                     ),
-//                                   ),
-//                                 )
-//                               ],
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-                  
-//                 ],
-//               ),

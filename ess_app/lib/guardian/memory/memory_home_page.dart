@@ -21,15 +21,38 @@ class MemoryHomePage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         drawer: MainDrawer(),
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Color(0xFFF2BA05),
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          backgroundColor: Color.fromARGB(255, 255, 197, 6),
           foregroundColor: Colors.black,
-          label: Text('Add Reminder'),
-          icon: Icon(Icons.notification_add),
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CreateReminder()));
-          },
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          spacing: 12,
+          children: [
+            SpeedDialChild(
+              child: Icon(
+                Icons.add_a_photo,
+                color: Colors.white,
+              ),
+              label: 'Add Image',
+              backgroundColor: Colors.grey[800],
+
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CreateEntryImage()));
+              },
+              // onTap: () => add image function
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.note_add, color: Colors.white),
+              label: 'Add Diary Entry',
+              backgroundColor: Colors.grey[800],
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CreateEntryDiary()));
+              },
+            )
+          ],
         ),
         body: NestedScrollView(
           floatHeaderSlivers: true,
@@ -38,8 +61,8 @@ class MemoryHomePage extends StatelessWidget {
               title: 'Memories',
               icon1: Icons.photo_album_outlined,
               icon2: Icons.book_outlined,
-              tabLabel1: 'INCOMING',
-              tabLabel2: 'PAST',
+              tabLabel1: 'Images',
+              tabLabel2: 'Diary',
             ),
           ]),
           body: Expanded(

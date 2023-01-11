@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/memories.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/utils/colors.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,9 +44,11 @@ class _EditEntryImageState extends State<EditEntryImage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: (IconButton(
             onPressed: () {
@@ -60,6 +63,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
       ),
       body: SafeArea(
         child: Container(
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -70,11 +74,11 @@ class _EditEntryImageState extends State<EditEntryImage> {
                     padding: const EdgeInsets.all(10.0),
                     child: (
                       Text(
-                        'Nice Image you got here!',
+                        'Edit memory',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
-                          fontSize: 35,
+                          fontSize: 30,
                           shadows: [
                             Shadow(
                               blurRadius: 5.0,
@@ -113,15 +117,17 @@ class _EditEntryImageState extends State<EditEntryImage> {
                                 Icon(
                                   Icons.add_photo_alternate,
                                   color: Colors.black,
-                                  size: 100,
+                                  size: height > 645? 100: 40,
                                 ),
+                                height > 670 && width > 280 ?
                                 Text(
                                   'ADD IMAGE',
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 25, 
                                     fontWeight: FontWeight.w600,
                                   ),
-                                )
+                                ): Container()
                               ],
                             ),
                           ),
@@ -158,7 +164,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
                   child: Container(
                     height: 50,
                     child: Container(
-                      width: 250,
+                      width: width - 60,
                       child: TextField(
                         controller: titleController,
                         textAlign: TextAlign.center,
@@ -239,6 +245,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
+                          width > 280?
                           Text(
                             'Save',
                             style: TextStyle(
@@ -246,7 +253,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ): Container()
                         ],
                       ),
                     ),

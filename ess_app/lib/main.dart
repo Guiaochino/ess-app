@@ -1,9 +1,11 @@
 import 'package:ess_app/guardian/create/create_entry_diary.dart';
 import 'package:ess_app/guardian/create/create_entry_image.dart';
 import 'package:ess_app/guardian/create/create_entry_reminder.dart';
+import 'package:ess_app/guardian/create/create_entry_schedule.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
 import 'package:ess_app/guardian/schedule/schedule_home.dart';
+import 'package:ess_app/guardian/settings/settings_home.dart';
 import 'package:ess_app/login/choice_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +50,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat'
       ),
       // test commit
-      home: ReminderHomePage(activePage: 0,),
+      home: guardianHomePage(),
     );
   }
 }

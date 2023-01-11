@@ -1,4 +1,6 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +66,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
         icon: Icon(Icons.add_box),
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => CreateSchedule()));
+              .push(MaterialPageRoute(builder: (context) => CreateEntrySchedule()));
         },
       ),
       body: Container(
@@ -300,6 +302,85 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
       schedules = filteredDates;
     });
   }
+  // delete? yes or no
+  AwesomeDialog deleteDialog(BuildContext context, int index) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.QUESTION,
+      borderSide: BorderSide(
+        color: AppColors.secondColor,
+        width: 2,
+      ),
+      width: MediaQuery.of(context).size.width * 0.9,
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+      dismissOnTouchOutside: true,
+      dismissOnBackKeyPress: false,
+      headerAnimationLoop: false,
+      animType: AnimType.SCALE,
+      title: 'Delete Entry?',
+      titleTextStyle: TextStyle(
+        overflow: TextOverflow.ellipsis,
+        color: Colors.green,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      desc: 'Are you sure you want to delete this diary entry?',
+      btnOkText: 'Yes',
+      btnOkColor: Color(0xFFE86166),
+      btnCancelColor: Colors.blue,
+      btnCancelText: 'No',
+      btnOkOnPress: () {
+        print('yes');
+      },
+      btnCancelOnPress: () {
+        print('no');
+      },
+      padding: EdgeInsets.all(15),
+      showCloseIcon: false,
+    );
+  }
 
- 
+  //delete successfully
+  AwesomeDialog deleteSuccessDialog(BuildContext context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.SUCCES,
+      borderSide: BorderSide(
+        color: AppColors.secondColor,
+        width: 2,
+      ),
+      width: MediaQuery.of(context).size.width * 0.9,
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+      dismissOnTouchOutside: true,
+      dismissOnBackKeyPress: false,
+      headerAnimationLoop: false,
+      animType: AnimType.SCALE,
+      title: 'Deleted Successfully',
+      titleTextStyle: TextStyle(
+        overflow: TextOverflow.ellipsis,
+        color: Colors.green,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      onDissmissCallback:(type) {
+        // Navigator.of(context).pop();
+        
+      },
+      padding: EdgeInsets.all(15),
+      showCloseIcon: false,
+      autoHide: Duration(seconds: 3),
+    );
+  }
+  void deleteDiaryEntry(int index) {
+
+      print('Deleted diary at index ' + index.toString());
+      setState(() {
+        scheduleList.removeAt(index);
+      });
+      deleteSuccessDialog(context).show();
+  }
+  void editDiaryEntry(BuildContext context, int index) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => EditEntrySchedule(editIndex: index)));
+  }
 }
