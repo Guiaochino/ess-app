@@ -1,10 +1,10 @@
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import '../guardian/home/home_page.dart';
-import '../guardian/reminder/reminder_home.dart';
-import '../guardian/schedule/schedule_home.dart';
-import '../guardian/settings/settings_home.dart';
+import '../home/home_page.dart';
+import '../reminder/reminder_home.dart';
+import '../schedule/schedule_home.dart';
+import '../settings/settings_home.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});

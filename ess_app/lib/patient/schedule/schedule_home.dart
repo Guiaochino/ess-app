@@ -1,13 +1,13 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/schedules.dart';
-import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
+import 'package:ess_app/patient/create/create_entry_schedule.dart';
+import 'package:ess_app/patient/edit/edit_entry_schedule.dart';
+import 'package:ess_app/patient/widgets/main_drawer.dart';
+import 'package:ess_app/patient/widgets/schedule_tab_listview.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../widgets/main_drawer.dart';
-import '../widgets/schedule_tab_listview.dart';
-import '../create/create_entry_schedule.dart';
 
 class ScheduleHomePage extends StatefulWidget {
   const ScheduleHomePage({super.key});

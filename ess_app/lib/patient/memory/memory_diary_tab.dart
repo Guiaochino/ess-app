@@ -1,32 +1,34 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
+import 'package:ess_app/dataList/diaries.dart';
+import 'package:ess_app/patient/edit/edit_entry_diary.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import '../../dataList/reminders.dart';
-import '../widgets/reminder_tab_listview.dart';
 
-class ReminderPastTab extends StatefulWidget {
-  const ReminderPastTab({super.key});
+import '../widgets/memory_tab_listview.dart';
+
+class MemoryDiaryTab extends StatefulWidget {
+  const MemoryDiaryTab({super.key});
 
   @override
-  State<ReminderPastTab> createState() => _ReminderPastTabState();
+  State<MemoryDiaryTab> createState() => _MemoryDiaryTabState();
 }
 
-class _ReminderPastTabState extends State<ReminderPastTab> {
-  List<Reminder> reminders = reminderList.where((i) => i.reminderIsDone).toList();
+class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
+  List<Diary> diaries = diaryList;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[300],
+          color: AppColors.backColor
         ),
         child: Column(
           children: [
             SizedBox(height: 10.0),
           //container for gridview
             Expanded(
-              child: reminders.isEmpty?
+              child: diaries.isEmpty?
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -37,12 +39,12 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
                     child: Column(
                       children: [
                         Icon(
-                          Icons.notifications_off,
+                          Icons.description,
                           size: 200,
                           color: Colors.black,
                         ),
                         Text(
-                          'No Reminders',
+                          'No Diary Entry',
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -54,43 +56,43 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
                 ],
               )
               :Container(
+                //builder of listview
                 child: ListView.builder(
-                  itemCount: reminders.length,
+                  itemCount: diaries.length,
                   itemBuilder: ((context, index) {
-                    final reminder = reminders[index];
-                    return ReminderTabListView(
-                      reminderIndex: reminder.reminderID,
-                      reminderTitle: reminder.reminderTitle,
-                      reminderDateTime: reminder.reminderDateTime,
-                      reminderDetails: reminder.reminderDetails,
-                      isDone: reminder.reminderIsDone,
+                    final diary = diaries[index];
+                    return MemoryTabListView(
+                      diaryIndex: diary.diaryID,
+                      diaryTitle: diary.diaryTitle,
+                      diaryDateTime: diary.diaryDateTime,
+                      diaryDetails: diary.diaryDetails,
+                      emoteRate: diary.emoteRate,
                       deleteTapped: (context){
                         // deleteDialog(context, index).show();
-                        deleteReminderEntry(index);
+                        deleteDiaryEntry(index);
                         
                         print('tapped');
                       },
                       editTapped:(context){
-                        editReminderEntry(context, reminder.reminderID);
+                        editDiaryEntry(context, diary.diaryID);
                       }
                     );
                   }),
                 ),
               ),
             ),
-          ],
+          ]
         ),
       ),
     );
   }
-
-   // delete? yes or no
+  // delete? yes or no
   AwesomeDialog deleteDialog(BuildContext context, int index) {
     return AwesomeDialog(
       context: context,
       dialogType: DialogType.QUESTION,
       borderSide: BorderSide(
-        color: Color(0xFFE86166),
+        color: AppColors.secondColor,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,
@@ -121,13 +123,14 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
       showCloseIcon: false,
     );
   }
+
   //delete successfully
   AwesomeDialog deleteSuccessDialog(BuildContext context) {
     return AwesomeDialog(
       context: context,
       dialogType: DialogType.SUCCES,
       borderSide: BorderSide(
-        color: Color(0xFFE86166),
+        color: AppColors.secondColor,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,
@@ -153,16 +156,19 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
     );
   }
 
-  void deleteReminderEntry(int index) {
+  //deleting entry in list
+  void deleteDiaryEntry(int index) {
 
     print('Deleted diary at index ' + index.toString());
     setState(() {
-      reminderList.removeAt(index);
+      diaryList.removeAt(index);
     });
     deleteSuccessDialog(context).show();
   }
-  void editReminderEntry(BuildContext context, int index) {
+  void editDiaryEntry(BuildContext context, int index) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => EditEntryReminder(editIndex: index)));
+      MaterialPageRoute(builder: (context) => EditEntryDiary(editIndex: index)));
   }
 }
+
+

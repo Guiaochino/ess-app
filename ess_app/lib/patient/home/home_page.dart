@@ -1,10 +1,10 @@
 import 'package:ess_app/dataList/reminders.dart';
 import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/patient/widgets/main_drawer.dart';
+import 'package:ess_app/patient/widgets/reminder_tab_listview.dart';
+import 'package:ess_app/patient/widgets/schedule_tab_listview.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
-import 'package:ess_app/widgets/main_drawer.dart';
-import 'package:ess_app/widgets/reminder_tab_listview.dart';
-import 'package:ess_app/widgets/schedule_tab_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';

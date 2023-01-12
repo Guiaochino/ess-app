@@ -1,15 +1,15 @@
 import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/utils/colors.dart';
-import 'package:ess_app/widgets/diary_card.dart';
+import 'package:ess_app/guardian/widgets/diary_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../dataList/memories.dart';
-import '../../widgets/main_drawer.dart';
-import '../../widgets/memory_card.dart';
-import '../../widgets/upcoming_schedule.dart';
+import '../widgets/main_drawer.dart';
+import '../widgets/memory_card.dart';
+import '../widgets/upcoming_schedule.dart';
 import '../memory/memory_home_page.dart';
 import '../reminder/reminder_home.dart';
 import '../schedule/schedule_home.dart';
