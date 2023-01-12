@@ -1,555 +1,259 @@
+import 'package:ess_app/dataList/reminders.dart';
+import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/utils/colors.dart';
+import 'package:ess_app/utils/dateTime_formatter.dart';
+import 'package:ess_app/widgets/main_drawer.dart';
+import 'package:ess_app/widgets/reminder_tab_listview.dart';
+import 'package:ess_app/widgets/schedule_tab_listview.dart';
 import 'package:flutter/material.dart';
-
-import '../../patient/memory/memory_home_page.dart';
-import '../../patient/reminder/reminder_home.dart';
-import '../../widgets/main_drawer.dart';
-import '../../widgets/memory_card.dart';
-import '../../widgets/upcoming_schedule.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:intl/intl.dart';
 
 class patientHomePage extends StatefulWidget {
-  const patientHomePage({Key? key}) : super(key: key);
+  const patientHomePage({super.key});
 
   @override
   State<patientHomePage> createState() => _patientHomePageState();
 }
 
 class _patientHomePageState extends State<patientHomePage> {
+  List<Reminder> reminders = reminderList.where((i) => i.reminderIsDone == false).toList();
+  List<Schedule> schedules = scheduleList;
+  @override
+  //filter dates onload
+  void initState() {
+    final filteredDates = scheduleList.where((schedule) {
+      final dateTime = extractDatefromDTString(schedule.schedDateTime);
+      final input = extractDatefromDTString(DateTime.now().toString());
+      return dateTime.contains(input); 
+
+    }).toList();
+    print(filteredDates);
+    setState(() {
+      schedules = filteredDates;
+    });
+    super.initState();
+  }
+ 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Text('HOME'),
-            centerTitle: true,
-            iconTheme: IconThemeData(color: Colors.black),
-            backgroundColor: Color(0xFFE86166),
-            elevation: 0,
-            expandedHeight: 200,
-            floating: false,
-            pinned: true,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  //open notif
-                },
-                icon: Icon(
-                  Icons.notifications,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Expanded(
+      backgroundColor: AppColors.backColor,
+      appBar: AppBar(
+        foregroundColor: Colors.black,
+        backgroundColor: AppColors.firstColor,
+        centerTitle: true,
+        title: Text(
+          DateFormat.MMMMEEEEd().format(DateTime.now()).toString(),
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            fontFamily: 'Montserrat',
+            color: Colors.black
+          ),
+        ),
+      ),
+      drawer: MainDrawer(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //appbar
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text(
+              //         'Hello, Akachiii',
+              //         style: TextStyle(
+              //           fontWeight: FontWeight.w600,
+              //           fontSize: 18,
+              //           fontFamily: 'Montserrat',
+              //           color: Colors.black
+              //         ),
+              //       ),
+              //       Container(
+              //         height: 50,
+              //         width: 50,
+              //         decoration: BoxDecoration(
+              //           color: AppColors.secondColor.withOpacity(0.1),
+              //           borderRadius: BorderRadius.all(Radius.circular(12)),
+              //         ),
+              //         child: Icon(
+              //           Icons.person,
+              //           size: 30,
+              //           color: AppColors.secondColor, 
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              SizedBox(height: 20),
+              //datetimeline
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                      colors: [
-                        Color(0xFFF2BA05),
-                        Color(0xFFE86166),
-                      ],
-                      stops: [
-                        0.50,
-                        1,
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    )),
-                    child: ListView(
-                      children: [
-                        //items in flexappbar
-                        SizedBox(
-                          height: 60.0,
-                        ),
-                        //full container of hello guardian and icon
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              // gradient: LinearGradient(
-                              //   colors: [
-                              //     Color.fromARGB(255, 255, 0, 0),
-                              //     Color.fromARGB(255, 255, 196, 0),
-                              //   ],
-                              //   begin: Alignment.centerRight,
-                              //   end: Alignment.centerLeft,
-                              // ),
-                              color: Color.fromARGB(255, 245, 244, 244),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    child: Icon(
-                                      Icons.account_circle_rounded,
-                                      size: 75,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20.0, top: 20, bottom: 20),
-                                    child: Container(
-                                        child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Hello,',
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                        Text(
-                                          'Patient',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 35,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
-            ),
-          ),
-          //categories
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Container(
-                height: 80,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    //memories button
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: MaterialButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const MemoryHomePage()));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFE86166),
-                                  Color.fromARGB(255, 245, 133, 59),
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              )),
-                          child: Row(
-                            children: [
-                              Icon(Icons.photo_album_outlined,
-                                  size: 30, color: Colors.white),
-                              SizedBox(width: 10),
-                              Text(
-                                "Memories",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.white),
-                              )
-                            ],
-                          ),
+                  width: width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Today's Events",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          fontFamily: 'Montserrat',
+                          color: Colors.black
                         ),
                       ),
-                    ),
-                    //schedules button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Container(
-                        padding: EdgeInsets.all(20.0),
+                      SizedBox(height: 10),     
+                      Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFE86166),
-                                Color.fromARGB(255, 245, 133, 59),
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            )),
-                        child: Row(
-                          children: [
-                            Icon(Icons.calendar_month_outlined,
-                                size: 30, color: Colors.white),
-                            SizedBox(width: 10),
-                            Text(
-                              "Schedules",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white),
-                            )
-                          ],
+                          color: AppColors.secondColor,
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
                         ),
-                      ),
-                    ),
-                    //reminders button
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: MaterialButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const ReminderHomePage()));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFE86166),
-                                  Color.fromARGB(255, 245, 133, 59),
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              )),
-                          child: Row(
+                        child: schedules.isEmpty? 
+                        Center(
+                          child: Column(
                             children: [
-                              Icon(Icons.pending_actions_outlined,
-                                  size: 30, color: Colors.white),
-                              SizedBox(width: 10),
-                              Text(
-                                "Reminders",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white,
+                              SizedBox(height: 20),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
-                              )
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.event_busy_rounded,
+                                      size: 70,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      'No Schedule.',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
                             ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          //memories
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                height: 250,
-                child: Column(
-                  children: [
-                    //title
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 20.0),
-                          child: Text(
-                            'YOUR RECENT MEMORIES',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 20),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 20.0),
-                          child: Text(
-                            'See all',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.grey[600]),
                           ),
                         )
-                      ],
-                    ),
-                    Expanded(
-                        child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 3,
-                      itemBuilder: ((context, index) {
-                        return MemoryCard(
-                            imageDirectory: 'images/InternetSecurity.png');
-                      }),
-                    ))
-                  ],
-                ),
-              ),
-            ),
-          ),
-          //UPCOMING SCHEDULE
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                height: 380,
-                child: Column(
-                  children: [
-                    //title
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 20.0),
-                          child: Text(
-                            "UPCOMING SCHEDULE",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 20),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 20.0),
-                          child: MaterialButton(
-                            onPressed: () {},
-                            child: Text(
-                              'See all',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    //schedule cards
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Expanded(
-                          child: Column(
-                        children: [
-                          //schedule cards, change function values to change inputs
-                          UpSchedCard(
-                            scheduleDate: "December 7 , 2022",
-                            scheduleDetails: "Breakfast with you hehe",
-                            scheduleTime: "07:00",
-                          ),
-                          SizedBox(height: 20.0),
-                          UpSchedCard(
-                            scheduleDate: "December 8 , 2022",
-                            scheduleDetails: "Lunch with you hehe",
-                            scheduleTime: "12:00",
-                          ),
-                          SizedBox(height: 20.0),
-                          UpSchedCard(
-                            scheduleDate: "December 12 , 2022",
-                            scheduleDetails: "Dinner with you hehe",
-                            scheduleTime: "18:00",
-                          ),
-                        ],
-                      )),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          //YOURREMINDERS
-          SliverToBoxAdapter(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              height: 300,
-              child: Column(
-                children: [
-                  Row(
-                    //title
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 20.0),
-                        child: Text(
-                          "YOUR REMINDERS",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w800, fontSize: 20),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 20.0),
-                        child: MaterialButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const ReminderHomePage()));
-                          },
-                          child: Text(
-                            'See all',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.grey),
-                          ),
-                        ),
-                      ),
+                        //listview builder of onclick date events
+                        :ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: schedules.length,
+                        itemBuilder: (context, index) {
+                          final schedule = schedules[index];
+                          return ScheduleTabListView(
+                            tileIndex: index,
+                            builderLength: schedules.length,
+                            entryID: schedule.schedID,
+                            title: schedule.schedTitle,
+                            dateTime: schedule.schedDateTime,
+                            details: schedule.schedDetails,
+                            isDone: schedule.schedIsDone,
+                            editTapped: (context){
+                            },
+                            deleteTapped: (context){
+                            }, 
+                          );
+                        },
+                      ))               
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Expanded(
-                        child: Column(
-                      children: [
-                        //upcoming tile
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const ReminderHomePage()));
-                          },
-                          child: Container(
-                            height: 100.0,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFFE86166),
-                                    Color.fromARGB(255, 245, 133, 59),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                )),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Icon(
-                                    Icons.date_range,
-                                    size: 70,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0, horizontal: 10.0),
-                                  child: Container(
-                                    child: Text(
-                                      "UPCOMING",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 20.0, bottom: 20.0, right: 15.0),
-                                  child: Container(
-                                    child: Text('6 Tasks',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 25,
-                                          color: Colors.grey[200],
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20.0),
-                        //completed tile
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const ReminderHomePage()));
-                          },
-                          child: Container(
-                            height: 100.0,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFFE86166),
-                                    Color.fromARGB(255, 245, 133, 59),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                )),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
-                                  child: Icon(
-                                    Icons.event_available,
-                                    size: 70,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 20.0, horizontal: 10.0),
-                                  child: Container(
-                                    child: Text(
-                                      "COMPLETED",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 20.0, bottom: 20.0, right: 15.0),
-                                  child: Container(
-                                    child: Text('4 Tasks',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 25,
-                                          color: Colors.grey[200],
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-                  )
-                ],
+                ),
               ),
-            ),
+              SizedBox(height: 20),
+              Container(
+                height: 400,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                        'Upcoming Reminders',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600, 
+                          fontSize: 20,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: reminders.isEmpty?
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.notifications_off,
+                                  size: 200,
+                                  color: Colors.black,
+                                ),
+                                Text(
+                                  'No Reminders',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                      :Container(
+                        child: ListView.builder(
+                          itemCount: reminders.length,
+                          itemBuilder: ((context, index) {
+                            final reminder = reminders[index];
+                            return ReminderTabListView(
+                              reminderIndex: reminder.reminderID,
+                              reminderTitle: reminder.reminderTitle,
+                              reminderDateTime: reminder.reminderDateTime,
+                              reminderDetails: reminder.reminderDetails,
+                              isDone: reminder.reminderIsDone,
+                              deleteTapped: (context){
+                                // deleteDialog(context, index).show();
+                                
+                                print('tapped');
+                              },
+                              editTapped:(context){
+                              }
+                            );
+                          }),
+                        ),
+                      ),
+                    ),
+        
+                  ],
+                ),
+              )
+              //scheds
+              
+              //reminders
+              
+              //listview of buttons
+            ],
           ),
-        ],
+        ),
       ),
-      //drawer
-      drawer: MainDrawer(),
     );
   }
 }

@@ -274,15 +274,15 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                               ),
                             ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                      ],
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 30,
+                            color: Colors.black,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
