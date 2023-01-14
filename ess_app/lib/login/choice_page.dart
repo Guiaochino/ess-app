@@ -1,9 +1,7 @@
 import 'package:ess_app/guardian/home/home_page.dart';
+import 'package:ess_app/patient/home/home_page.dart';
 import 'package:flutter/material.dart';
-
 import 'login_page.dart';
-import '../guardian/home/home_page.dart';
-import '../patient/home/home_page.dart';
 
 class ChoicePage extends StatefulWidget {
   const ChoicePage({Key? key}) : super(key: key);
