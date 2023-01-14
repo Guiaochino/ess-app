@@ -1,18 +1,19 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
+import 'package:ess_app/dataList/reminders.dart';
+import 'package:ess_app/patient/edit/edit_entry_reminder.dart';
 import 'package:flutter/material.dart';
-import '../../dataList/reminders.dart';
 import '../widgets/reminder_tab_listview.dart';
 
-class ReminderPastTab extends StatefulWidget {
-  const ReminderPastTab({super.key});
+class ReminderIncomingTab extends StatefulWidget {
+  const ReminderIncomingTab({super.key});
 
   @override
-  State<ReminderPastTab> createState() => _ReminderPastTabState();
+  State<ReminderIncomingTab> createState() => _ReminderIncomingTabState();
 }
 
-class _ReminderPastTabState extends State<ReminderPastTab> {
-  List<Reminder> reminders = reminderList.where((i) => i.reminderIsDone).toList();
+class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
+  
+  List<Reminder> reminders = reminderList.where((i) => i.reminderIsDone == false).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +85,7 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
     );
   }
 
-   // delete? yes or no
+  // delete? yes or no
   AwesomeDialog deleteDialog(BuildContext context, int index) {
     return AwesomeDialog(
       context: context,
@@ -121,6 +122,7 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
       showCloseIcon: false,
     );
   }
+
   //delete successfully
   AwesomeDialog deleteSuccessDialog(BuildContext context) {
     return AwesomeDialog(
@@ -152,6 +154,7 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
       autoHide: Duration(seconds: 3),
     );
   }
+
 
   void deleteReminderEntry(int index) {
 

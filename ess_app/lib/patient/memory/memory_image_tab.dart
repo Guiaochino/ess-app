@@ -1,6 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/guardian/edit/edit_entry_image.dart';
-import 'package:ess_app/guardian/view/view_entry_image.dart';
+import 'package:ess_app/patient/edit/edit_entry_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../dataList/memories.dart';

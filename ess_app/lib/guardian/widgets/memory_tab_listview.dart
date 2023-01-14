@@ -2,7 +2,7 @@ import 'package:ess_app/guardian/view/view_entry_diary.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import '../guardian/memory/memory_home_page.dart';
+import '../memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
   final int diaryIndex;
