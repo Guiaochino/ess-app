@@ -4,7 +4,7 @@ import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import '../guardian/reminder/reminder_home.dart';
+import '../reminder/reminder_home.dart';
 
 class ReminderTabListView extends StatelessWidget {
   final int reminderIndex;

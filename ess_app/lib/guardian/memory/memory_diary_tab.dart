@@ -5,7 +5,7 @@ import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/memory_tab_listview.dart';
+import '../widgets/memory_tab_listview.dart';
 
 class MemoryDiaryTab extends StatefulWidget {
   const MemoryDiaryTab({super.key});

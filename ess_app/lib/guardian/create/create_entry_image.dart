@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/memories.dart';
+import 'package:ess_app/utils/colors.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,9 +31,11 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: (IconButton(
             onPressed: () {
@@ -47,6 +50,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
       ),
       body: SafeArea(
         child: Container(
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -61,7 +65,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
-                          fontSize: 35,
+                          fontSize: 30,
                           shadows: [
                             Shadow(
                               blurRadius: 5.0,
@@ -100,15 +104,16 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                                 Icon(
                                   Icons.add_photo_alternate,
                                   color: Colors.black,
-                                  size: 100,
+                                  size: height > 645? 100: 40,
                                 ),
+                                height > 670 && width > 280 ?
                                 Text(
                                   'ADD IMAGE',
                                   style: TextStyle(
                                     fontSize: 25, 
                                     fontWeight: FontWeight.w600,
                                   ),
-                                )
+                                ): Container()
                               ],
                             ),
                           ),
@@ -145,7 +150,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                   child: Container(
                     height: 50,
                     child: Container(
-                      width: 250,
+                      width: width - 60,
                       child: TextField(
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -205,7 +210,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                       saveMemoryEntry();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFFF2BA05)),
+                      backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
                       overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
@@ -225,6 +230,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
+                          width > 280?
                           Text(
                             'Save',
                             style: TextStyle(
@@ -232,7 +238,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ): Container()
                         ],
                       ),
                     ),

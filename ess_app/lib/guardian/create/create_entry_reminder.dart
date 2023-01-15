@@ -1,19 +1,20 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/memories.dart';
 import 'package:ess_app/dataList/reminders.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
 import '../reminder/reminder_home.dart';
 
-class CreateReminder extends StatefulWidget {
-  const CreateReminder({Key? key}) : super(key: key);
+class CreateEntryReminder extends StatefulWidget {
+  const CreateEntryReminder({Key? key}) : super(key: key);
 
   @override
-  State<CreateReminder> createState() => _CreateReminderState();
+  State<CreateEntryReminder> createState() => _CreateEntryReminderState();
 }
 
-class _CreateReminderState extends State<CreateReminder> {
+class _CreateEntryReminderState extends State<CreateEntryReminder> {
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay.now();
   final titleController = TextEditingController(); //title textfield controller
@@ -28,9 +29,11 @@ class _CreateReminderState extends State<CreateReminder> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: (IconButton(
             onPressed: () {
@@ -45,6 +48,7 @@ class _CreateReminderState extends State<CreateReminder> {
       ),
       body: SafeArea(
         child: Container(
+          color:AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -58,7 +62,7 @@ class _CreateReminderState extends State<CreateReminder> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 35,
+                        fontSize: 30,
                         shadows: [
                           Shadow(
                             blurRadius: 10.0,
@@ -77,7 +81,7 @@ class _CreateReminderState extends State<CreateReminder> {
                   child: Container(
                     height: 50,
                     child: Container(
-                      width: 300,
+                      width: width - 60,
                       child: TextField(
                         textAlign: TextAlign.center,
                         controller: titleController,
@@ -112,45 +116,48 @@ class _CreateReminderState extends State<CreateReminder> {
                       flex: 5,
                       child: Container(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            Spacer(),
                             Icon(
                               Icons.watch_later,
                               color: Color(0xFFE86166),
                               size: 55,
                             ),
                             SizedBox(width: 5.0),
-                            Container(
+                            Expanded(
+                              flex: 4,
                               child: MaterialButton(
                                 onPressed: () async {
-                              TimeOfDay? newTime = await showTimePicker(
-                                context: context,
-                                initialTime: _timeOfDay,
-                              );
-                              if (newTime == null) return;
-                              final newDateTime = DateTime(
-                                _dateTime.year,
-                                _dateTime.month,
-                                _dateTime.day,
-                                newTime.hour,
-                                newTime.minute,
-                              );
-                              setState(() {
-                                _dateTime = newDateTime;
-                                print(_dateTime);
-                              });
-                            },
+                                  TimeOfDay? newTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: _timeOfDay,
+                                  );
+                                  if (newTime == null) return;
+                                  final newDateTime = DateTime(
+                                    _dateTime.year,
+                                    _dateTime.month,
+                                    _dateTime.day,
+                                    newTime.hour,
+                                    newTime.minute,
+                                  );
+                                  setState(() {
+                                    _dateTime = newDateTime;
+                                    print(_dateTime);
+                                  });
+                                },
                                 child: Text(
                                   DateFormat.jm().format(_dateTime),
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontSize: 30,
+                                    fontSize: 25,
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xFFE86166),
                                   ),
                                 ),
                               ),
-                            )
+                            ),
+                            Spacer(),
                           ],
                         )
                       ),
@@ -186,10 +193,10 @@ class _CreateReminderState extends State<CreateReminder> {
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 2,
-                  child:Container(),
-                ),
+                height > 670?
+                Spacer(
+                  flex: 1,
+                ): Container(),
                 SizedBox(height: 20),
                 //save button
                 Padding(
@@ -199,7 +206,7 @@ class _CreateReminderState extends State<CreateReminder> {
                       saveReminderEntry();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFFF2BA05)),
+                      backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
                       overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
@@ -219,6 +226,7 @@ class _CreateReminderState extends State<CreateReminder> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
+                          width > 280 ?
                           Text(
                             'Save',
                             style: TextStyle(
@@ -226,7 +234,7 @@ class _CreateReminderState extends State<CreateReminder> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                          ),
+                          ): Container(),
                         ],
                       ),
                     ),

@@ -2,7 +2,7 @@ import 'package:ess_app/guardian/view/view_entry_diary.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import '../guardian/memory/memory_home_page.dart';
+import '../memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
   final int diaryIndex;
@@ -133,6 +133,7 @@ class MemoryTabListView extends StatelessWidget {
                             builder: (context) => ViewEntryDiary(
                               entryIndex: diaryIndex,
                               title: diaryTitle,
+                              emoteRate: emoteRate,
                               dateTime: diaryDateTime,
                               details: diaryDetails,
                             ),
@@ -195,7 +196,7 @@ class MemoryTabListView extends StatelessWidget {
     return iconRate;
   }
 
-   Color iconColor(int index){
+  Color iconColor(int index){
     Color iconColor = Colors.grey;
     switch (index){
       case 1:

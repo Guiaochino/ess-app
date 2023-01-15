@@ -1,7 +1,7 @@
 import 'package:ess_app/utils/colors.dart';
-import 'package:ess_app/widgets/category_appbar.dart';
+import 'package:ess_app/guardian/widgets/category_appbar.dart';
 import "package:flutter/material.dart";
-import '../../widgets/main_drawer.dart';
+import '../widgets/main_drawer.dart';
 import '../create/create_entry_reminder.dart';
 import 'reminder_incoming_tab.dart';
 import 'reminder_past_tab.dart';
@@ -24,7 +24,7 @@ class ReminderHomePage extends StatelessWidget {
           icon: Icon(Icons.notification_add),
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CreateReminder()));
+                MaterialPageRoute(builder: (context) => CreateEntryReminder()));
           },
         ),
         body: NestedScrollView(

@@ -4,7 +4,7 @@ import 'package:ess_app/guardian/view/view_entry_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../dataList/memories.dart';
-import '../../widgets/memory_image_card.dart';
+import '../widgets/memory_image_card.dart';
 
 class MemoryImageTab extends StatefulWidget {
   const MemoryImageTab({super.key});

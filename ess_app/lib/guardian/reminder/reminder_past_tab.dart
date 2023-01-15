@@ -2,7 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:flutter/material.dart';
 import '../../dataList/reminders.dart';
-import '../../widgets/reminder_tab_listview.dart';
+import '../widgets/reminder_tab_listview.dart';
 
 class ReminderPastTab extends StatefulWidget {
   const ReminderPastTab({super.key});

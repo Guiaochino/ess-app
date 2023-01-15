@@ -5,6 +5,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -49,11 +50,13 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
   
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
-        title: Text(diaryEntry.diaryID.toString()),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
@@ -68,6 +71,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
       ),
       body: SafeArea(
         child: Container(
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -77,11 +81,11 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'How is your day?',
+                      'Edit Diary',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 35,
+                        fontSize: 30,
                         shadows: [
                           Shadow(
                             blurRadius: 5.0,
@@ -96,7 +100,6 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                 SizedBox(height: 20.0),
                 // mood radio buttons -
                 Container(
-                  color: Colors.grey[400],
                   height: 60,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -124,7 +127,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                   child: Container(
                     height: 50,
                     child: Container(
-                      width: 250,
+                      width: width - 60,
                       child: TextField(
                         controller: titleController,
                         textAlign: TextAlign.center,
@@ -170,7 +173,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                             size: 40,
                           ),
                           SizedBox(width: 5.0),
-                          Container(
+                          Expanded(
                               child: MaterialButton(
                             onPressed: () async {
                               DateTime? newDate = await showDatePicker(
@@ -216,7 +219,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                             size: 40,
                           ),
                           SizedBox(width: 5.0),
-                          Container(
+                          Expanded(
                               child: MaterialButton(
                             onPressed: () async {
                               TimeOfDay? newTime = await showTimePicker(
@@ -312,6 +315,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
+                          width > 280?
                           Text(
                             'Save',
                             style: TextStyle(
@@ -319,7 +323,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ): Container()
                         ],
                       ),
                     ),
