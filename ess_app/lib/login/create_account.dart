@@ -2,6 +2,7 @@ import 'dart:js';
 
 import 'package:ess_app/login/email_verification.dart';
 import 'package:ess_app/login/login_page.dart';
+import 'package:ess_app/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,8 @@ class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController email_su_controller = TextEditingController();
   final TextEditingController pass_su_controller = TextEditingController();
   final TextEditingController pass_con_su_controller = TextEditingController();
+
+  final AuthServices _auth = AuthServices();
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +116,7 @@ class _CreateAccountState extends State<CreateAccount> {
                             child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: TextField(
+                            obscureText: true,
                               controller: pass_su_controller,
                               style: (TextStyle(
                                   fontSize: 18.0,
@@ -144,6 +148,7 @@ class _CreateAccountState extends State<CreateAccount> {
                             child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: TextField(
+                            obscureText: true,
                               controller: pass_con_su_controller,
                               style: (TextStyle(
                                   fontSize: 18.0,
@@ -176,9 +181,15 @@ class _CreateAccountState extends State<CreateAccount> {
                             child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: MaterialButton(
-                            onPressed: () {
-                              singup();
-                              // navigate to login again
+                            onPressed: () async {
+                              dynamic result = await _auth.SignUpEmailPassword(email_su_controller.text.trim(), pass_su_controller.text.trim());
+                              if (result == null) {
+                                print("Error occured. Please try again later");
+                              } else {
+                                print(result);
+                              }
+
+                              // navigate back to login
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => LoginPage()));
                             },
@@ -232,18 +243,6 @@ class _CreateAccountState extends State<CreateAccount> {
             )),
           ),
         ));
-  }
-  
-  Future singup() async {
-    // Add user
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email : email_su_controller.text.trim(),
-        password : pass_su_controller.text.trim(),
-      );
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
   }
 
 }
