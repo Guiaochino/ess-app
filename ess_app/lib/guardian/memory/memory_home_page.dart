@@ -1,5 +1,7 @@
 import 'package:ess_app/guardian/create/create_entry_reminder.dart';
 import 'package:ess_app/guardian/widgets/category_appbar.dart';
+import 'package:ess_app/guardian/widgets/category_tab.dart';
+import 'package:ess_app/utils/colors.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../widgets/main_drawer.dart';
@@ -20,6 +22,21 @@ class MemoryHomePage extends StatelessWidget {
       initialIndex: activePage,
       length: 2,
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: AppColors.firstColor,
+          foregroundColor: Colors.black,
+          centerTitle: true,
+          title: Text(
+            'Memory',
+            style: TextStyle(
+              color: Colors.black, 
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.0,
+              fontFamily: 'Montserrat'
+            ),
+          ), 
+        ),
         drawer: MainDrawer(),
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
@@ -54,26 +71,24 @@ class MemoryHomePage extends StatelessWidget {
             )
           ],
         ),
-        body: NestedScrollView(
-          floatHeaderSlivers: true,
-          headerSliverBuilder: ((context, innerBoxIsScrolled) => [
-            categoryAppBar(
-              title: 'Memories',
+        body: Column(
+          children: [
+            categoryTab(
               icon1: Icons.photo_album_outlined,
               icon2: Icons.book_outlined,
-              tabLabel1: 'Images',
-              tabLabel2: 'Diary',
+              tabLabel1: 'IMAGES',
+              tabLabel2: 'DIARY',
             ),
-          ]),
-          body: Expanded(
-            child: TabBarView(
-              children: [
-                MemoryImageTab(),
-                MemoryDiaryTab(),
-              ],
+            Expanded(
+              child: TabBarView(
+                children: [
+                  MemoryImageTab(),
+                  MemoryDiaryTab(),
+                ],
+              ),
             ),
-          ),
-        )
+          ],
+        ),
       )
     );
   }

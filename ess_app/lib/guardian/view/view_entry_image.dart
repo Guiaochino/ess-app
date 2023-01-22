@@ -1,4 +1,5 @@
 import 'package:ess_app/guardian/edit/edit_entry_image.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import '../memory/memory_home_page.dart';
 
@@ -25,7 +26,7 @@ class ViewEntryImage extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: 
           IconButton(
@@ -59,6 +60,7 @@ class ViewEntryImage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -75,7 +77,7 @@ class ViewEntryImage extends StatelessWidget {
                         fontSize: 30,
                         shadows: [
                           Shadow(
-                            blurRadius: 10.0,
+                            blurRadius: 5.0,
                             color: Colors.grey,
                             offset: Offset(5.0, 5.0),
                           ),
@@ -105,9 +107,16 @@ class ViewEntryImage extends StatelessWidget {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                imgPath,
-                                fit: BoxFit.cover,
+                              child: GestureDetector(
+                                child: Image.asset(
+                                  imgPath,
+                                  fit: BoxFit.cover,
+                                ),
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (_){
+                                    return ImageScreen(imgPath: imgPath);
+                                  }));
+                                },
                               ),
                             ),
                           ),
@@ -148,6 +157,7 @@ class ViewEntryImage extends StatelessWidget {
                       color: Colors.white,
                       child: TextFormField(
                         initialValue: details,
+                        enabled: false,
                         textAlign: TextAlign.justify,
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,
@@ -176,6 +186,30 @@ class ViewEntryImage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+class ImageScreen extends StatelessWidget {
+  final String imgPath;
+  const ImageScreen({super.key, required this.imgPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        child: Center(
+          child: Hero(
+            tag: 'imageHero',
+            child: Image.asset(
+              imgPath,
+              fit: BoxFit.cover,
+            )
+          ),
+        ),
+        onTap: (){
+          Navigator.pop(context);
+        },
       ),
     );
   }
