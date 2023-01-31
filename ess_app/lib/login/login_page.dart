@@ -1,6 +1,7 @@
 import 'package:ess_app/login/create_account.dart';
 import 'package:ess_app/login/email_verification.dart';
 import 'package:ess_app/login/forgot_password.dart';
+import 'package:ess_app/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  final _auth = AuthServices();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -115,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextField(
+                      obscureText: true,
                       controller: passwordController, // Password Controller for inputs
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
@@ -157,7 +161,16 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: MaterialButton(
-                    onPressed: signin,
+                    onPressed: () async {
+                      dynamic result = await _auth.SignInEmailPassword(emailController.text.trim(), passwordController.text.trim());
+                      if (result == null) {
+                        print("Error in Signin");
+                      } else {
+                        print("Login Successfully!");
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ChoicePage()));
+                      }
+                    },
                     child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -202,14 +215,4 @@ class _LoginPageState extends State<LoginPage> {
         ));
   }
 
-  Future signin() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(), 
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
-  }
 }

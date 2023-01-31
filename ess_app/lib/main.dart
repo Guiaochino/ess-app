@@ -6,6 +6,8 @@ import 'package:ess_app/guardian/reminder/reminder_home.dart';
 import 'package:ess_app/guardian/schedule/schedule_home.dart';
 import 'package:ess_app/guardian/settings/settings_home.dart';
 import 'package:ess_app/login/choice_page.dart';
+import 'package:ess_app/models/user_model.dart';
+import 'package:ess_app/services/auth.dart';
 import 'package:ess_app/patient/home/home_page.dart';
 import 'package:ess_app/patient/memory/memory_home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,9 +17,13 @@ import 'guardian/home/home_page.dart';
 import 'login/landing_page.dart';
 import 'login/login_page.dart';
 
+// Model
+import 'models/user_model.dart';
+
 // Firebase Plugins
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:provider/provider.dart';
 
 Future main() async {
 
@@ -35,39 +41,35 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'GeriaAssis',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blueGrey,
-        fontFamily: 'Montserrat'
-      ),
-      home: patientHomePage()
+    return StreamProvider<UserModel?>.value(
+      value: AuthServices().user,
+      initialData: null,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "GeriAssis",
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+          fontFamily: "Montserrat"
+        ),
+        home: MainPage(),
+      ), 
     );
   }
 }
 
 class MainPage extends StatelessWidget {
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return ChoicePage();
-        } else {
-          return LoginPage();
-        }
-      },
-    ),
-  );
+  Widget build(BuildContext context) {
+    final user = Provider.of<UserModel?>(context);
+    
+    // Return to choice page or login page
+    if (user == null) {
+      return LoginPage();
+    } else {
+      return ChoicePage();
+    }
+    
+  }
+
 }
