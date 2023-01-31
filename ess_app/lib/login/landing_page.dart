@@ -28,7 +28,7 @@ class _LandingPageState extends State<LandingPage> {
                 SizedBox(height: 70.0),
                 Container(
                   child: Image.asset(
-                    'images/Dilemma.png',
+                    'assets/images/Dilemma.png',
                   ),
                 ),
                 SizedBox(height: 20.0),

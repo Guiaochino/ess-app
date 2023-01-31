@@ -1,6 +1,7 @@
 
 import 'package:ess_app/patient/edit/edit_entry_schedule.dart';
 import 'package:ess_app/patient/schedule/schedule_home.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +27,7 @@ class ViewEntrySchedule extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backColor,
           elevation: 0,
           leading: Padding(
             padding: const EdgeInsets.only(left: 10.0),
@@ -61,6 +62,7 @@ class ViewEntrySchedule extends StatelessWidget {
         ),
         body: SafeArea(
             child: Container(
+              color: AppColors.backColor,
                 child: Center(
                     child: Column(
           children: [
@@ -70,13 +72,14 @@ class ViewEntrySchedule extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: (Text(
-                  "What's the event?",
+                  "Schedule Details",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 30,
                     shadows: [
                       Shadow(
-                        blurRadius: 10.0,
+                        blurRadius: 5.0,
                         color: Colors.grey,
                         offset: Offset(5.0, 5.0),
                       ),

@@ -148,7 +148,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                           Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => MemoryHomePage(activePage: 0,)));
                         }, 
-                        imgAsset: 'images/memory.jpg', 
+                        imgAsset: 'assets/images/memory.jpg', 
                         title: 'Memories',
                       ),
                       SizedBox(width: 10.0),
@@ -158,7 +158,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                           Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => ScheduleHomePage()));
                         }, 
-                        imgAsset: 'images/schedule.jpg', 
+                        imgAsset: 'assets/images/schedule.jpg', 
                         title: 'Schedules',
                       ),
                       SizedBox(width: 10.0),
@@ -168,7 +168,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                           Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => ReminderHomePage(activePage: 0,)));
                         }, 
-                        imgAsset: 'images/reminder.jpg', 
+                        imgAsset: 'assets/images/reminder.jpg', 
                         title: 'Reminders',
                       ),
                     ],

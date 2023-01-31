@@ -181,7 +181,7 @@ class _EmailVerificationSentChangePassState extends State<EmailVerificationSentC
                         ),
                         child: Container(
                             child: Image.asset(
-                          'images/InternetSecurity.png',
+                          'assets/images/InternetSecurity.png',
                           height: 40,
                         )),
                       ))

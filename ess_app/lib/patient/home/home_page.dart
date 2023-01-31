@@ -1,5 +1,8 @@
 import 'package:ess_app/dataList/reminders.dart';
 import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/patient/memory/memory_home_page.dart';
+import 'package:ess_app/patient/reminder/reminder_home.dart';
+import 'package:ess_app/patient/schedule/schedule_home.dart';
 import 'package:ess_app/patient/widgets/main_drawer.dart';
 import 'package:ess_app/patient/widgets/reminder_tab_listview.dart';
 import 'package:ess_app/patient/widgets/schedule_tab_listview.dart';
@@ -92,6 +95,46 @@ class _patientHomePageState extends State<patientHomePage> {
               //     ],
               //   ),
               // ),
+              SizedBox(height: 20),
+              Container(
+                height: 120,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:20.0),
+                  child: Row(
+                    children: [
+                      //memories button
+                      mainButtons(
+                        pageRedirect: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => MemoryHomePage(activePage: 0,)));
+                        }, 
+                        imgAsset: 'assets/images/memory.jpg', 
+                        title: 'Memories',
+                      ),
+                      SizedBox(width: 10.0),
+                      //schedules button
+                      mainButtons(
+                        pageRedirect: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ScheduleHomePage()));
+                        }, 
+                        imgAsset: 'assets/images/schedule.jpg', 
+                        title: 'Schedules',
+                      ),
+                      SizedBox(width: 10.0),
+                      //reminders button
+                    mainButtons(
+                        pageRedirect: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ReminderHomePage(activePage: 0,)));
+                        }, 
+                        imgAsset: 'assets/images/reminder.jpg', 
+                        title: 'Reminders',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: 20),
               //datetimeline
               Padding(
@@ -250,6 +293,75 @@ class _patientHomePageState extends State<patientHomePage> {
               //reminders
               
               //listview of buttons
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class mainButtons extends StatelessWidget {
+  final Function()? pageRedirect;
+  final String imgAsset;
+  final String title;
+  const mainButtons({
+    Key? key, 
+    required this.pageRedirect,
+    required this.imgAsset, 
+    required this.title,
+
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 1,
+      child: GestureDetector(
+        onTap: pageRedirect,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFE86166),
+                  Color.fromARGB(255, 235, 113, 117),
+                ],
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+              ),
+            ),
+          child: Stack(
+            fit: StackFit.expand, 
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12), 
+                  color: Colors.black
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Opacity(
+                    opacity: 0.6,
+                    child: Image.asset(
+                      imgAsset,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
+              ),
             ],
           ),
         ),

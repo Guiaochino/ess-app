@@ -43,21 +43,20 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-            'Schedules',
-            style: TextStyle(
-              color: Colors.black, 
-              fontWeight: FontWeight.w700,
-              fontSize: 25.0,
-              letterSpacing: 1.0,
-              fontFamily: 'Montserrat'
-            ),
+      appBar:AppBar(
+        backgroundColor: AppColors.firstColor,
+        foregroundColor: Colors.black,
+        centerTitle: true,
+        title: Text(
+          'Schedule',
+          style: TextStyle(
+            color: Colors.black, 
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.0,
+            fontFamily: 'Montserrat'
           ),
-          backgroundColor: AppColors.firstColor,
-          foregroundColor: Colors.black,
-          centerTitle: true,
-        ),
+        ), 
+      ),
       drawer: MainDrawer(),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppColors.firstColor,

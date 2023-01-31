@@ -20,16 +20,10 @@ class MainDrawer extends StatelessWidget {
             Container(
               color: AppColors.firstColor,
               child: DrawerHeader(
-                child: Center(
-                    child: Text(
-                  'G e r i A s s i s',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black,
-                  ),
-                )),
+                child: Image.asset(
+                  'assets/images/geriAssisTransparent.png',
+                  fit: BoxFit.cover,
+                )
               ),
             ),
             SizedBox(height: 10),

@@ -1,5 +1,6 @@
 
 import 'package:ess_app/patient/edit/edit_entry_image.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import '../memory/memory_home_page.dart';
 
@@ -26,7 +27,7 @@ class ViewEntryImage extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: 
           IconButton(
@@ -60,6 +61,7 @@ class ViewEntryImage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -106,9 +108,19 @@ class ViewEntryImage extends StatelessWidget {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                imgPath,
-                                fit: BoxFit.cover,
+                              child: GestureDetector(
+                                child: Hero(
+                                  tag: 'imageHero',
+                                  child: Image.asset(
+                                    imgPath,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (_){
+                                    return ImageScreen(imgPath: imgPath);
+                                  }));
+                                },
                               ),
                             ),
                           ),
@@ -150,6 +162,7 @@ class ViewEntryImage extends StatelessWidget {
                       child: TextFormField(
                         initialValue: details,
                         textAlign: TextAlign.justify,
+                        enabled: false,
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
@@ -180,4 +193,31 @@ class ViewEntryImage extends StatelessWidget {
       ),
     );
   }
+  
 }
+class ImageScreen extends StatelessWidget {
+  final String imgPath;
+  const ImageScreen({super.key, required this.imgPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        child: Center(
+          child: Hero(
+            tag: 'imageHero',
+            child: Image.asset(
+              imgPath,
+              fit: BoxFit.cover,
+            )
+          ),
+        ),
+        onTap: (){
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+}
+
+

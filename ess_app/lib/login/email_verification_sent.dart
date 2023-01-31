@@ -179,7 +179,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                         ),
                         child: Container(
                             child: Image.asset(
-                          'images/InternetSecurity.png',
+                          'assets/images/InternetSecurity.png',
                           height: 40,
                         )),
                       ))

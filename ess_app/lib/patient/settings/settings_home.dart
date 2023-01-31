@@ -268,7 +268,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                                 'Logout',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               ),
