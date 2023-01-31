@@ -1,6 +1,3 @@
-import 'dart:js';
-
-import 'package:ess_app/login/email_verification.dart';
 import 'package:ess_app/login/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

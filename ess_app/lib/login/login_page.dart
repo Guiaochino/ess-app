@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Container(
                           alignment: Alignment.topLeft,
                           child: (Text(
-                            'Welcome to \nDementia \nAssistance \nApplication',
+                            'Welcome to \nGeriAssis',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Column(
                             children: [
                               SizedBox(height: 100),
-                              Image.asset('images/laboratoryAssistant.png'),
+                              Image.asset('assets/images/laboratoryAssistant.png'),
                             ],
                           )),
                     ],

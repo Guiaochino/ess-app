@@ -1,5 +1,6 @@
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class ViewReminder extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -55,6 +56,7 @@ class ViewReminder extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -64,14 +66,14 @@ class ViewReminder extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: (Text(
-                      'Add Daily Reminder',
+                      'Daily Reminder',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 35,
+                        fontSize: 30,
                         shadows: [
                           Shadow(
-                            blurRadius: 10.0,
+                            blurRadius: 5.0,
                             color: Colors.grey,
                             offset: Offset(5.0, 5.0),
                           ),
@@ -143,6 +145,7 @@ class ViewReminder extends StatelessWidget {
                       color: Colors.white,
                       child: TextFormField(
                         initialValue: details,
+                        enabled: false,
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(

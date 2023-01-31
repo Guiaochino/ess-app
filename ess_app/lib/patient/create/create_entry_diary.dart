@@ -57,7 +57,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'How is your day?',
+                      "What's on your mind?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
