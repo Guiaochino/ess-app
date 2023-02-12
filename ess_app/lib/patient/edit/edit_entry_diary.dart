@@ -100,7 +100,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                 SizedBox(height: 20.0),
                 // mood radio buttons -
                 Container(
-                  height: 60,
+                  height: 70,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: SingleChildScrollView(
@@ -344,7 +344,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
       context: context,
       dialogType: DialogType.SUCCES,
       borderSide: BorderSide(
-        color: Color(0xFFE86166),
+        color: Colors.green,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,

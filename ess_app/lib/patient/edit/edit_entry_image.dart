@@ -313,6 +313,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
             SimpleDialogOption(
               onPressed: () {
                 print('camera');
+                getCameraImage();
                   Navigator.of(context).pop();
               },
               child: Text('Use Camera'),
@@ -320,7 +321,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
             SimpleDialogOption(
               onPressed: () {
                 print('files');
-                // getImageFiles();
+                getGalleryImage();
                 Navigator.of(context).pop();
               },
               child: Text('Select from files'),
@@ -342,23 +343,31 @@ class _EditEntryImageState extends State<EditEntryImage> {
     );
   }
   
-  //camera
-  // Future getCameraImage() async{
-  //   //g
-  //   final image = await imagePicker.getImage(source: ImageSource.camera);
-  //   setState(() {
-  //     _imageSelected = File(image!.path);
-  //   });
-    
-  // }
-  // //image picker from files
-  // Future getImageFiles() async{
-  //   //for pc
-  //   final image = await ImagePickerWeb.getImageAsBytes();
-  //   setState(() {
-  //     _imageSelectedPC = image;
-  //   });
-  // }
+  Future getCameraImage() async{
+    //g
+    final image = await imagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      if(image == null){
+        _imageSelected = null;
+      }
+      else{
+        _imageSelected = File(image!.path);
+      }
+    });
+  }
+  //gallery
+  Future getGalleryImage() async{
+    //g
+    final image = await imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if(image == null){
+        _imageSelected = null;
+      }
+      else{
+        _imageSelected = File(image!.path);
+      }
+    });
+  }
 
   //success dialog
   AwesomeDialog successDialog(BuildContext context) {
@@ -366,7 +375,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
       context: context,
       dialogType: DialogType.SUCCES,
       borderSide: BorderSide(
-        color: Color(0xFFE86166),
+        color: Colors.green,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,

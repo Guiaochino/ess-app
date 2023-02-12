@@ -187,7 +187,7 @@ class _CreateEntryScheduleState extends State<CreateEntrySchedule> {
                                       });
                                     },
                                     child: Text(
-                                      _timeOfDay.format(context).toString(),
+                                      DateFormat.jm().format(_dateTime),
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontSize: 15,
@@ -295,7 +295,7 @@ class _CreateEntryScheduleState extends State<CreateEntrySchedule> {
       context: context,
       dialogType: DialogType.SUCCES,
       borderSide: BorderSide(
-        color: Color(0xFFE86166),
+        color: Colors.green,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,

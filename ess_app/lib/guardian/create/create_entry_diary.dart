@@ -57,7 +57,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'How is your day?',
+                      "What's on your mind?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
@@ -76,7 +76,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                 SizedBox(height: 20.0),
                 // mood radio buttons -
                 Container(
-                  height: 50,
+                  height: 70,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: SingleChildScrollView(
@@ -318,7 +318,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
       context: context,
       dialogType: DialogType.SUCCES,
       borderSide: BorderSide(
-        color: Color(0xFFE86166),
+        color: Colors.green,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,

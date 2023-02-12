@@ -62,114 +62,126 @@ class ScheduleTabListView extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Container(
-          child: TimelineTile(
-            alignment: TimelineAlign.manual,
-            lineXY: 0.25,
-            beforeLineStyle: LineStyle(
-              color: Colors.white.withOpacity(0.7)
-            ),
-            indicatorStyle: IndicatorStyle(
-              indicatorXY: 0.5,
-              drawGap: true,
-              width: 30,
-              height: 30,
-              indicator: 
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    color: isDone? Colors.green: Colors.red,
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+        child: MaterialButton(
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ViewEntrySchedule(
+                      entryIndex: tileIndex,
+                      title: title,
+                      dateTime: dateTime,
+                      details: details,
+                      isDone: isDone,
+                    )));
+          },
+          child: Container(
+            child: TimelineTile(
+              alignment: TimelineAlign.manual,
+              lineXY: 0.25,
+              beforeLineStyle: LineStyle(
+                color: Colors.white.withOpacity(0.7)
+              ),
+              indicatorStyle: IndicatorStyle(
+                indicatorXY: 0.5,
+                drawGap: true,
+                width: 30,
+                height: 30,
+                indicator: 
+                  Container(
+                    height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                      color: isDone? Colors.green: Colors.red,
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    child: Icon(
+                      isDone? Icons.done : Icons.more_horiz,
+                      size: 20,
+                      color: Colors.white
+                    ),
                   ),
-                  child: Icon(
-                    isDone? Icons.done : Icons.more_horiz,
-                    size: 20,
-                    color: Colors.white
-                  ),
-                ),
-            ),
-            isFirst: tileIndex == 0? true: false,
-            isLast: tileIndex == builderLength - 1? true: false,
-            startChild: Padding(
-              padding: const EdgeInsets.only(right: 5.0),
-              child: Container(
-                child: Text(
-                  extractTimefromDTString(dateTime),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15
+              ),
+              isFirst: tileIndex == 0? true: false,
+              isLast: tileIndex == builderLength - 1? true: false,
+              startChild: Padding(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: Container(
+                  child: Text(
+                    extractTimefromDTString(dateTime),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15
+                    ),
                   ),
                 ),
               ),
-            ),
-            endChild: Padding(
-              padding: const EdgeInsets.only(left: 10.0, top: 10, bottom: 10),
-              child: Container(
-                height: 60,
-                alignment: const Alignment(0.0, -0.70),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
+              endChild: Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 10, bottom: 10),
+                child: Container(
+                  height: 60,
+                  alignment: const Alignment(0.0, -0.70),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Text(
+                                  title,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
+                                    color: isDone? Colors.grey[300]: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
                               child: Text(
-                                title,
+                                details,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
                                   decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
                                   color: isDone? Colors.grey[300]: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              details,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
-                                color: isDone? Colors.grey[300]: Colors.white,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Container(
-                      height: 30,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: isDone? Colors.green: Colors.red,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          isDone? 'Completed': 'Upcoming',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 10
-                            ),
+                          ],
                         ),
                       ),
-                    )
-                  ],
+                      SizedBox(width: 10),
+                      Container(
+                        height: 30,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: isDone? Colors.green: Colors.red,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            isDone? 'Completed': 'Upcoming',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10
+                              ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

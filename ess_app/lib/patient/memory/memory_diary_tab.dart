@@ -130,7 +130,7 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
       context: context,
       dialogType: DialogType.SUCCES,
       borderSide: BorderSide(
-        color: AppColors.secondColor,
+        color: Colors.green,
         width: 2,
       ),
       width: MediaQuery.of(context).size.width * 0.9,
