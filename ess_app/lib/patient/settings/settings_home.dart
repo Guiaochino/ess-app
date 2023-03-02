@@ -16,8 +16,8 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   late TextEditingController guardianController;
   late TextEditingController patientController;
 
-  String guardianName = 'sampleGuardianName';
-  String patientName = 'samplePatientName';
+  String guardianName = 'GuardianName';
+  String patientName = 'PatientName';
 
   @override
   void initState(){

@@ -419,6 +419,7 @@ class _EditEntryImageState extends State<EditEntryImage> {
 
       //save to memoryList
       setState(() {
+        memoryList[memoryId].memoryImg = 'assets/images/011.jpg';
         memoryList[memoryId].memoryID = memoryId;
         memoryList[memoryId].memoryTitle = titleController.text;
         memoryList[memoryId].memoryDateTime = DateTime.now().toString();

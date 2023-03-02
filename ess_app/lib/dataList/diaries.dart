@@ -17,37 +17,37 @@ class Diary{
  List<Diary> diaryList = [
   Diary(
     diaryID: 000,
-    diaryTitle: 'Team Building',
+    diaryTitle: 'Rest Day',
     diaryDateTime: '2022-12-22 00:00:00.000',
-    diaryDetails: '4Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore',
+    diaryDetails: 'Ahhhh, what a peaceful day. This rest day is an opportunity to take a break from work, responsibilities, and daily stress, and to focus on self-care and relaxation. ',
     emoteRate: 5
   ),
   Diary(
     diaryID: 001,
-    diaryTitle: 'Standup Meeting',
+    diaryTitle: 'Sad day',
     diaryDateTime: '2022-12-19 01:00:00.000',
-    diaryDetails: '4Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore',
+    diaryDetails: 'This is a sad day for me. Im alone in this house for the day. They all went to Korea without me.',
     emoteRate: 2
   ),
   Diary(
     diaryID: 002,
-    diaryTitle: 'Dinner with fam',
+    diaryTitle: 'Dinner with familyyy',
     diaryDateTime: '2022-12-17 00:00:00.000',
-    diaryDetails: '4Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore',
+    diaryDetails: 'We had dinner at Morayta. The food was so good, i want to eat there again',
     emoteRate: 6
   ),
   Diary(
     diaryID: 003,
     diaryTitle: 'Christmas',
     diaryDateTime: '2022-12-25 00:00:00.000',
-    diaryDetails: '4Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore',
-    emoteRate: 1
+    diaryDetails: 'We spend our christmas here at Bulacan. Our whole family is here and Im so happy to spend my christmas with them',
+    emoteRate: 6
   ),
   Diary(
     diaryID: 004,
-    diaryTitle: 'Noche Buena',
-    diaryDateTime: '2022-12-24 00:00:00.000',
-    diaryDetails: '4Sit sint mollit enim cillum exercitation officia est pariatur. Proident ex id eu nostrud laborum incididunt ad sit est. Minim adipisicing nostrud enim consectetur. Veniam consectetur officia veniam est elit ullamco. Sunt ut ullamco magna incididunt dolor deserunt dolore',
+    diaryTitle: 'New Year',
+    diaryDateTime: '2023-01-01 00:00:00.000',
+    diaryDetails: 'This new year is the most memorable day in my 2023 so far. My whole family is here, the new year is not as noisy as the previous ones, we had fun talking to each other.',
     emoteRate: 7
   ),
 ];

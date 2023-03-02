@@ -88,11 +88,17 @@ flutter:
     - assets/images/Dilemma.png
     - assets/images/InternetSecurity.png
     - assets/images/laboratoryAssistant.png
-    - assets/images/001.png
-    - assets/images/002-1.png
-    - assets/images/003.png
+    - assets/images/001.jpg
+    - assets/images/002-1.jpg
+    - assets/images/003.jpg
     - assets/images/004.png
-    - assets/images/005.png
+    - assets/images/005.jpg
+    - assets/images/006.jpg
+    - assets/images/007.jpg
+    - assets/images/008.jpg
+    - assets/images/009.jpg
+    - assets/images/010.jpg
+    - assets/images/011.jpg
     
   #   - images/a_dot_ham.jpeg
 

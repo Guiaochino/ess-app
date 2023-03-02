@@ -266,9 +266,10 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                             details: schedule.schedDetails,
                             isDone: schedule.schedIsDone,
                             editTapped: (context){
+                              editScheduleEntry(context, index);
                             },
                             deleteTapped: (context){
-                              
+                              deleteScheduleEntry(index);
                             }, 
 
                           );
@@ -370,7 +371,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
       autoHide: Duration(seconds: 3),
     );
   }
-  void deleteDiaryEntry(int index) {
+  void deleteScheduleEntry(int index) {
 
       print('Deleted diary at index ' + index.toString());
       setState(() {
@@ -378,7 +379,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
       });
       deleteSuccessDialog(context).show();
   }
-  void editDiaryEntry(BuildContext context, int index) {
+  void editScheduleEntry(BuildContext context, int index) {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => EditEntrySchedule(editIndex: index)));
   }

@@ -152,6 +152,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                     child: Container(
                       width: width - 60,
                       child: TextField(
+                        controller: titleController,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 25,
@@ -181,6 +182,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                     child: Container(
                       color: Colors.white,
                       child: TextFormField(
+                        controller: paragraphController,
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
@@ -274,7 +276,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
       Memory(
         memoryID: memoryList.length + 1, // auto increment
         memoryTitle: titleController.text,
-        memoryImg: _imageSelected.toString(),
+        memoryImg: 'assets/images/010.jpg',
         memoryDateTime: DateTime.now().toString(),
         memoryDetails: paragraphController.text,
       )

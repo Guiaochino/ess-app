@@ -65,6 +65,9 @@ class MemoryImageCard extends StatelessWidget {
               )
             ));
           },
+          onLongPress: () {
+            _asyncSimpleDialog(context);
+          },
           child: Stack(fit: StackFit.expand, children: [
             Container(
               height: 50,
@@ -102,4 +105,31 @@ class MemoryImageCard extends StatelessWidget {
       ),
     );
   }
+  //dialog options
+  Future _asyncSimpleDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Add image from'),
+          children: [
+            SimpleDialogOption(
+              onPressed: () {
+                editTapped;
+              },
+              child: Text('Edit Memory'),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                deleteTapped;
+              },
+              child: Text('Delete Memory'),
+            )
+          ],
+        );
+      }
+    );
+  }
+
 }
