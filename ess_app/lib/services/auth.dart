@@ -1,6 +1,5 @@
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/database.dart';
-import 'package:ess_app/services/storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
@@ -36,16 +35,13 @@ class AuthServices {
       User? user = result.user;
 
       // create new document for user with uid
-      await DatabaseService(uid: user!.uid).createUserData("", "");
-      
+      await DatabaseService(uid: user!.uid).updateUserData("", "");
       return _userFromFirebase(user);
     } catch (err) {
       print (err.toString());
       return null;
     }   
   }
-
-  // verification
 
   // Signout
   Future SignOut() async {
