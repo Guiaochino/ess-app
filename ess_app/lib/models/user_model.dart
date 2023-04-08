@@ -1,21 +1,10 @@
 
-import 'package:ess_app/models/diary_model.dart';
-import 'package:ess_app/models/memory_model.dart';
-import 'package:ess_app/models/reminder_model.dart';
-import 'package:ess_app/models/schedule_model.dart';
-
 class UserModel {
 
   final String uid;
-  final String? email;
+  String? email = "";
   String guardianName = "";
   String patientName = "";
-  
-  // Initialize empty collections
-  List<DiaryModel> diaryList = <DiaryModel>[];
-  List<MemoryModel> memoryList = <MemoryModel>[];
-  List<ReminderModel> reminderList = <ReminderModel>[];
-  List<ScheduleModel> scheduleList = <ScheduleModel>[];
 
   // Getters & Setters
   // Set Guardian
@@ -29,6 +18,18 @@ class UserModel {
   }
 
   // constructor
-  UserModel({ required this.uid, this.email});
+  UserModel({ 
+    required this.uid, 
+    required this.email,
+  });
+
+  Map<String, dynamic> stringMapping() {
+    return {
+      if (uid != null) "uid": uid,
+      if (email != null) "email": email,
+      if (guardianName != null) "guardianName": guardianName,
+      if (patientName != null) "patientName": patientName,
+    };
+  }
   
 }

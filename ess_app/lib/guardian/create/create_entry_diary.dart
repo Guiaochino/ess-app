@@ -1,9 +1,14 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/dataList/diaries.dart';
+import 'package:ess_app/models/diary_model.dart';
+import 'package:ess_app/models/user_model.dart';
+import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../memory/memory_home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CreateEntryDiary extends StatefulWidget {
   const CreateEntryDiary({Key? key}) : super(key: key);
@@ -346,6 +351,8 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
   //saving diary
   void saveDiaryEntry() {
 
+    final user = FirebaseAuth.instance.currentUser!;
+
     //null or empty entries
     if(titleController.text == null || titleController.text == ''){
       titleController.text = 'No Title';
@@ -365,15 +372,16 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
     
 
     //add to diaryList
-    diaryList.add(
-      Diary(
-        diaryID: diaryList.length + 1, // auto increment
-        diaryTitle: titleController.text,
-        emoteRate: selectedMood,
-        diaryDateTime: _dateTime.toString(),
-        diaryDetails: paragraphController.text,
-      )
+    DiaryModel diary_entry = new DiaryModel(
+      diaryTitle: titleController.text, 
+      diaryDateTime: _dateTime.toString(), 
+      diaryDetails: paragraphController.text, 
+      emoteRate: selectedMood
     );
+
+    DatabaseService(uid: user.uid).addDiary(diary_entry);
+
+
     print('Diary Entry Added');
     successDialog(context).show();
   }
