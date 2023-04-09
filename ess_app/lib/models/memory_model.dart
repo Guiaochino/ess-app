@@ -1,15 +1,16 @@
 
+import 'package:flutter/cupertino.dart';
+
 class MemoryModel {
 
   // Model for memory. see memories.dart for references
-  int memoryID;
+  String uid = UniqueKey().toString();
   String memoryTitle;
   String memoryDateTime;
   String memoryImg;
   String memoryDetails;
 
   MemoryModel({
-    required this.memoryID,
     required this.memoryTitle,
     required this.memoryDateTime,
     required this.memoryImg,
@@ -18,7 +19,6 @@ class MemoryModel {
 
   Map<String, dynamic> stringMapping() {
     return {
-      'memoryID': memoryID,
       'memoryTitle': memoryTitle,
       'memoryDateTime': memoryDateTime,
       'memoryImg': memoryImg,
