@@ -6,9 +6,10 @@ class ReminderModel {
   // Model for reminders. See reminders.dart for refenrences
   String uid = UniqueKey().toString();
   String reminderTitle;
-  String reminderDateTime;
+  DateTime reminderDateTime;
   bool reminderIsDone;
   String reminderDetails;
+  bool isDeleted = false;
 
   ReminderModel({
     required this.reminderTitle,
@@ -19,10 +20,12 @@ class ReminderModel {
 
   Map<String, dynamic> stringMapping() {
     return {
+      'reminderID': uid,
       'reminderTitle': reminderTitle,
       'reminderDateTime': reminderDateTime,
       'reminderIsDone': reminderIsDone,
       'reminderDetails': reminderDetails,
+      'isDeleted': isDeleted,
     };
   }
 

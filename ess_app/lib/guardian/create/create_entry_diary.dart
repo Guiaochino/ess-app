@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ess_app/constants.dart';
 import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/models/user_model.dart';
@@ -23,6 +24,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
   int selectedMood = 0; // selected mood index
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
+  final user = FirebaseAuth.instance.currentUser!;
 
   void dispose(){
     titleController.dispose();
@@ -351,13 +353,11 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
   //saving diary
   void saveDiaryEntry() {
 
-    final user = FirebaseAuth.instance.currentUser!;
-
     //null or empty entries
-    if(titleController.text == null || titleController.text == ''){
+    if(titleController.text == ''){
       titleController.text = 'No Title';
     }
-    if(paragraphController.text == null || paragraphController.text == ''){
+    if(paragraphController.text == ''){
       paragraphController.text = 'No Details';
     }
     if(selectedMood == 0){
@@ -369,18 +369,15 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
     print('dateTime: '+ _dateTime.toString());
     print('details : ' + paragraphController.text);
 
-    
-
     //add to diaryList
     DiaryModel diary_entry = new DiaryModel(
       diaryTitle: titleController.text, 
-      diaryDateTime: _dateTime.toString(), 
+      diaryDateTime: _dateTime, 
       diaryDetails: paragraphController.text, 
       emoteRate: selectedMood
     );
 
-    DatabaseService(uid: user.uid).addDiary(diary_entry);
-
+    DatabaseService(uid: user.uid).addData(diaryCollection, diary_entry);
 
     print('Diary Entry Added');
     successDialog(context).show();

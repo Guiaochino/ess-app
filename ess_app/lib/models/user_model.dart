@@ -5,6 +5,7 @@ class UserModel {
   String? email = "";
   String guardianName = "";
   String patientName = "";
+  bool isDeleted = false;
 
   // Getters & Setters
   // Set Guardian
@@ -29,6 +30,7 @@ class UserModel {
       if (email != null) "email": email,
       if (guardianName != null) "guardianName": guardianName,
       if (patientName != null) "patientName": patientName,
+      "isDeleted": isDeleted,
     };
   }
   

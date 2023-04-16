@@ -6,9 +6,10 @@ class MemoryModel {
   // Model for memory. see memories.dart for references
   String uid = UniqueKey().toString();
   String memoryTitle;
-  String memoryDateTime;
+  DateTime memoryDateTime;
   String memoryImg;
   String memoryDetails;
+  bool isDeleted = false;
 
   MemoryModel({
     required this.memoryTitle,
@@ -19,10 +20,12 @@ class MemoryModel {
 
   Map<String, dynamic> stringMapping() {
     return {
+      'memoryID': uid,
       'memoryTitle': memoryTitle,
       'memoryDateTime': memoryDateTime,
       'memoryImg': memoryImg,
       'memoryDetails': memoryDetails,
+      'isDeleted': isDeleted,
     };
   }
 

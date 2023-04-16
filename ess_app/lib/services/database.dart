@@ -5,17 +5,13 @@ import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/models/user_model.dart';
+import 'package:ess_app/constants.dart';
 
 class DatabaseService {
 
   final String uid;
-  final String diaryCollection = 'diaries';
-  final String memoryCollection = 'memories';
-  final String reminderCollection = 'reminders';
-  final String scheduleCollection = 'schedules';
 
   DatabaseService({ required this.uid });
-
 
   // collection reference create if non existent or access if existing
   static FirebaseFirestore dbcon = FirebaseFirestore.instance;
@@ -33,42 +29,132 @@ class DatabaseService {
   }
 
   // Adding Data
-  // Diary Data Entry
-  Future addDiary(DiaryModel diaryData) async{
+  // Single Function to Add Data on different collection
+  Future addDatatoCollection(String collectionName, dynamic payload) async {
     return await userCollection.doc(this.uid)
-    .collection(diaryCollection)
-    .doc(diaryData.uid)
-    .set(diaryData.stringMapping());
+      .collection(collectionName)
+      .doc(payload.uid)
+      .set(payload.stringMapping());
   }
 
-  // Memory Data Entry
-  Future addMemory(MemoryModel memoryData) async {
-    return await userCollection.doc(this.uid)
-    .collection(memoryCollection)
-    .doc(memoryData.uid)
-    .set(memoryData.stringMapping());
+  // Main Function to Add Data
+  void addData(String collectionReference, dynamic payload) {
+    if (collectionReference == diaryCollection) {
+      addDatatoCollection(collectionReference, payload);
+    }
+    else if (collectionReference == memoryCollection) {
+      addDatatoCollection(collectionReference, payload);
+    }
+    else if (collectionReference == reminderCollection) {
+      addDatatoCollection(collectionReference, payload);
+    }
+    else if (collectionReference == scheduleCollection) {
+      addDatatoCollection(collectionReference, payload);
+    }
   }
 
-  // Reminder Data Entry
-  Future addReminder(ReminderModel reminderData) async {
-    return await userCollection.doc(this.uid)
-    .collection(reminderCollection)
-    .doc(reminderData.uid)
-    .set(reminderData.stringMapping());
+  // Retrive all by category
+  Future<List> getAllData(String collectionCaller) async {
+
+    // Check what data to be fetched if diary, memory, reminder, or schedule
+    if (collectionCaller == diaryCollection) {
+
+      List<DiaryModel> diaryList = [];
+
+      await userCollection
+        .doc(this.uid)
+        .collection(diaryCollection)
+        .get()
+        .then((QuerySnapshot snapshot) => {
+          for (var docSnap in snapshot.docs)
+            {diaryList.add(new DiaryModel(
+              diaryTitle: docSnap.get('diaryTitle'), 
+              diaryDateTime: docSnap.get('diaryDateTime'), 
+              diaryDetails: docSnap.get('diaryDetails'), 
+              emoteRate: docSnap.get('emoteRate'),
+              ))}
+        });
+
+      return diaryList;
+    }
+    else if (collectionCaller == memoryCollection) {
+
+      List<MemoryModel> memoryList = [];
+
+      await userCollection
+        .doc(this.uid)
+        .collection(memoryCollection)
+        .get()
+        .then((QuerySnapshot snapshot) => {
+          for (var docSnap in snapshot.docs)
+            {memoryList.add(new MemoryModel(
+              memoryTitle: docSnap.get('memoryTitle'), 
+              memoryDateTime: docSnap.get('memoryDateTime'), 
+              memoryImg: docSnap.get('memoryImg'), 
+              memoryDetails: docSnap.get('memoryDetails')))}
+        });
+
+      return memoryList;
+    }
+    else if (collectionCaller == reminderCollection) {
+
+      List<ReminderModel> reminderList = [];
+
+      await userCollection
+        .doc(this.uid)
+        .collection(reminderCollection)
+        .get()
+        .then((QuerySnapshot snapshot) => {
+          for (var docSnap in snapshot.docs)
+            {reminderList.add(new ReminderModel(
+              reminderTitle: docSnap.get('reminderTitle'), 
+              reminderDateTime: docSnap.get('reminderDateTime'), 
+              reminderIsDone: docSnap.get('reminderIsDone'), 
+              reminderDetails: docSnap.get('reminderDetails')))}
+        });
+      
+      return reminderList;
+    }
+    else if (collectionCaller == scheduleCollection) {
+
+      List<ScheduleModel> scheduleList = [];
+
+      await userCollection
+        .doc(this.uid)
+        .collection(scheduleCollection)
+        .get()
+        .then((QuerySnapshot snapshot) => {
+          for (var docSnap in snapshot.docs)
+            {scheduleList.add(new ScheduleModel(
+              schedTitle: docSnap.get('schedTitle'), 
+              schedDateTime: docSnap.get('schedDateTime'), 
+              schedIsDone: docSnap.get('schedIsDone'), 
+              schedDetails: docSnap.get('schedDetails')))}
+        });
+
+      return scheduleList;
+    } else {
+      return throw Exception();
+    }
   }
 
-  // Schedule Data Entry
-  Future addSchedule(ScheduleModel scheduleData) async {
-    return await userCollection.doc(this.uid)
-    .collection(scheduleCollection)
-    .doc(scheduleData.uid)
-    .set(scheduleData.stringMapping());
-  }
+  // Retrieve Data by ID
+  Future getDataByID(String collectionCaller, String selected_id) async {
+    if (collectionCaller == diaryCollection) {
+      var data =  await userCollection.doc(this.uid)
+        .collection(diaryCollection)
+        .doc(selected_id)
+        .get().then((value) => {
+          new DiaryModel(
+            diaryTitle: value.get('diaryTitle'), 
+            diaryDateTime: value.get('diaryDateTime'), 
+            diaryDetails: value.get('diaryDetails'), 
+            emoteRate: value.get('emoteRate'))
+        });
 
-  // Fetching or Reading Data
-  // TODO: retrieve data from firebase
-  // TODO: fetch_all data per category
-  // TODO: fetch data by ID per category
+      return data;
+    }
+  }
 
   // Updating Data by ID
   // Diary Update
