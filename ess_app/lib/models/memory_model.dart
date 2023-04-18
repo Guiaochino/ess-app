@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 class MemoryModel {
 
   // Model for memory. see memories.dart for references
-  String uid = UniqueKey().toString();
+  String uid;
   String memoryTitle;
   DateTime memoryDateTime;
   String memoryImg;
@@ -12,6 +12,7 @@ class MemoryModel {
   bool isDeleted = false;
 
   MemoryModel({
+    required this.uid,
     required this.memoryTitle,
     required this.memoryDateTime,
     required this.memoryImg,

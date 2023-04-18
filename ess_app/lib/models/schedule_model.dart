@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 class ScheduleModel {
 
   // model for schedule. see schedules.dart for references
-  String uid = UniqueKey().toString();
+  String uid;
   String schedTitle;
   DateTime schedDateTime;
   bool schedIsDone;
@@ -12,6 +12,7 @@ class ScheduleModel {
   bool isDeleted = false;
 
   ScheduleModel({
+    required this.uid,
     required this.schedTitle,
     required this.schedDateTime,
     required this.schedIsDone,

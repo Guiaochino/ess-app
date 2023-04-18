@@ -1,6 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
+import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,18 +20,9 @@ class MemoryDiaryTab extends StatefulWidget {
 
 class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
   var dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
-  late bool listEmptyState;
-  late int listLen;
-  late List<dynamic> diaryList;
 
   @override
   Widget build(BuildContext context) {
-    dbconn.getAllData(diaryCollection).then((value) {
-      setEmptyState(value.isEmpty);
-      setLen(value.length);
-      setDataList(value);
-    });
-
     return Container(
       child: Container(
         decoration: BoxDecoration(color: AppColors.backColor),
@@ -37,57 +30,38 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
           SizedBox(height: 10.0),
           //container for gridview
           Expanded(
-            child: listEmptyState
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.description,
-                              size: 200,
-                              color: Colors.black,
-                            ),
-                            Text(
-                              'No Diary Entry',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : Container(
-                    //builder of listview
-                    child: ListView.builder(
-                      itemCount: listLen,
-                      itemBuilder: ((context, index) {
-                        final diary = diaryList[index];
-                        return MemoryTabListView(
-                            diaryIndex: diary.diaryID,
-                            diaryTitle: diary.diaryTitle,
-                            diaryDateTime: diary.diaryDateTime,
-                            diaryDetails: diary.diaryDetails,
-                            emoteRate: diary.emoteRate,
-                            deleteTapped: (context) {
-                              // deleteDialog(context, index).show();
-                              deleteDiaryEntry(index);
-
-                              print('tapped');
-                            },
-                            editTapped: (context) {
-                              editDiaryEntry(context, diary.diaryID);
-                            });
-                      }),
-                    ),
-                  ),
+            child: Container(
+              //builder of listview
+              child: FutureBuilder<List<DocumentSnapshot>>(
+                future: dbconn.getAllData(diaryCollection),
+                builder: ((BuildContext context, AsyncSnapshot<List> snapshot) {
+                  if (snapshot.hasData) {
+                    List<DocumentSnapshot> documents =
+                        snapshot.data! as List<DocumentSnapshot>;
+                    return ListView.builder(
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) {
+                          documents.map((item) {
+                            return MemoryTabListView(
+                                diaryIndex: index,
+                                diaryTitle: item.get('diaryTitle'),
+                                diaryDateTime: item.get('diaryDateTime'),
+                                diaryDetails: item.get('diaryDetails'),
+                                emoteRate: item.get('emoteRate'),
+                                deleteTapped: (context) =>
+                                    print('Clicked Delete Button'),
+                                editTapped: (context) =>
+                                    print('Click Edit Button'));
+                          });
+                        });
+                  } else if (snapshot.hasError) {
+                    throw Exception('$snapshot.error');
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                }),
+              ),
+            ),
           ),
         ]),
       ),
@@ -95,7 +69,7 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
   }
 
   // delete? yes or no
-  AwesomeDialog deleteDialog(BuildContext context, int index) {
+  AwesomeDialog deleteDialog(BuildContext context, String index) {
     return AwesomeDialog(
       context: context,
       dialogType: DialogType.QUESTION,
@@ -164,29 +138,13 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
   }
 
   //deleting entry in list
-  void deleteDiaryEntry(int index) {
-    print('Deleted diary at index ' + index.toString());
-    setState(() {
-      diaryList.removeAt(index);
-    });
-    deleteSuccessDialog(context).show();
-  }
+  // void deleteDiaryEntry(String index) {
+  //   print('Deleted diary at index ' + index.toString());
+  //   deleteSuccessDialog(context).show();
+  // }
 
-  void editDiaryEntry(BuildContext context, int index) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => EditEntryDiary(editIndex: index)));
-  }
-
-  void setEmptyState(bool state) {
-    listEmptyState = state;
-  }
-
-  void setLen(int value) {
-    listLen = value;
-  }
-
-  void setDataList(List<dynamic> data) {
-    diaryList = data;
-  }
-
+  // void editDiaryEntry(BuildContext context, String index) {
+  //   Navigator.of(context).push(MaterialPageRoute(
+  //       builder: (context) => EditEntryDiary(editIndex: index)));
+  // }
 }

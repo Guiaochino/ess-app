@@ -319,6 +319,10 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
     );
   }
 
+  String generateUID() {
+    return UniqueKey().toString();
+  }
+
   //success dialog
   AwesomeDialog successDialog(BuildContext context) {
     return AwesomeDialog(
@@ -371,6 +375,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
 
     //add to diaryList
     DiaryModel diary_entry = new DiaryModel(
+      uid: generateUID(),
       diaryTitle: titleController.text, 
       diaryDateTime: _dateTime, 
       diaryDetails: paragraphController.text, 

@@ -7,7 +7,7 @@ import '../memory/memory_home_page.dart';
 class MemoryTabListView extends StatelessWidget {
   final int diaryIndex;
   final String diaryTitle;
-  final String diaryDateTime;
+  final DateTime diaryDateTime;
   final String diaryDetails;
   final int emoteRate;
   final Function(BuildContext)? deleteTapped;

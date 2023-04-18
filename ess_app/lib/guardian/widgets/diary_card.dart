@@ -7,7 +7,7 @@ class DiaryCard extends StatelessWidget {
   final String title;
   final int emoteRate;
   final String details;
-  final String dateTime;
+  final DateTime dateTime;
 
   const DiaryCard({
     Key? key,

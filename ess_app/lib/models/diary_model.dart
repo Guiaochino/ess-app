@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 class DiaryModel {
 
   // Model for diary. see diaries.dart for references
-  String uid = UniqueKey().toString();
+  String uid;
   String diaryTitle;
   DateTime diaryDateTime;
   String diaryDetails;
@@ -12,6 +12,7 @@ class DiaryModel {
   bool isDeleted = false;
 
   DiaryModel({
+    required this.uid,
     required this.diaryTitle,
     required this.diaryDateTime,
     required this.diaryDetails,
