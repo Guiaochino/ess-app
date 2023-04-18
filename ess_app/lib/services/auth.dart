@@ -37,7 +37,7 @@ class AuthServices {
 
       // create new document for user with uid
       await DatabaseService(uid: user!.uid).createUserData(new UserModel(uid: user.uid, email: user.email));
-      
+ 
       return _userFromFirebase(user);
 
     } catch (err) {
@@ -45,8 +45,6 @@ class AuthServices {
       return null;
     }   
   }
-
-  // verification
 
   // Signout
   Future SignOut() async {
