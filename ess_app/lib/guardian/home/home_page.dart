@@ -314,13 +314,13 @@ class _guardianHomePageState extends State<guardianHomePage> {
                         itemCount: 3,
                         itemBuilder: ((context, index) {
                           final diary = diaries[index];
-                          return DiaryCard(
-                            diaryId: diary.diaryID,
-                            title: diary.diaryTitle,
-                            details: diary.diaryDetails,
-                            dateTime: diary.diaryDateTime, 
-                            emoteRate: diary.emoteRate,
-                          );
+                          // return DiaryCard(
+                          //   diaryId: diary.diaryID,
+                          //   title: diary.diaryTitle,
+                          //   details: diary.diaryDetails,
+                          //   dateTime: diary.diaryDateTime, 
+                          //   emoteRate: diary.emoteRate,
+                          // );
                         }),
                       ),
                     ),

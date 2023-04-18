@@ -8,7 +8,7 @@ class ViewEntryDiary extends StatelessWidget {
   final int entryIndex;
   final int emoteRate;
   final String title;
-  final String dateTime;
+  final DateTime dateTime;
   final String details;
 
   const ViewEntryDiary({
@@ -136,7 +136,7 @@ class ViewEntryDiary extends StatelessWidget {
                                 SizedBox(width: 5.0),
                                 Container(
                                   child: Text(
-                                    extractDatefromDTString(dateTime),
+                                    dateTime.toString(),
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 15,
@@ -167,7 +167,7 @@ class ViewEntryDiary extends StatelessWidget {
                                 SizedBox(width: 5.0),
                                 Container(
                                   child: Text(
-                                    extractTimefromDTString(dateTime),
+                                    dateTime.toString(),
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 15,

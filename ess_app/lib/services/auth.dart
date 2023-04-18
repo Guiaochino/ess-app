@@ -1,3 +1,4 @@
+
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,8 +8,8 @@ class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Create user object for data to be passed in to models of user
-  UserModel? _userFromFirebase(User? user) {
-    return user != null ? UserModel(uid: user.uid, email: user.email) : null;
+  UserModel _userFromFirebase(User? user) {
+    return UserModel(uid: user!.uid, email: user.email);
   }
 
   // Auth change user stream
@@ -35,8 +36,10 @@ class AuthServices {
       User? user = result.user;
 
       // create new document for user with uid
-      await DatabaseService(uid: user!.uid).updateUserData("", "");
+      await DatabaseService(uid: user!.uid).createUserData(new UserModel(uid: user.uid, email: user.email));
+ 
       return _userFromFirebase(user);
+
     } catch (err) {
       print (err.toString());
       return null;
