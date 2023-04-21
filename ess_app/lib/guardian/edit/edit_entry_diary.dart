@@ -3,42 +3,43 @@
 */
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
-import 'package:ess_app/utils/dateTime_formatter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../models/diary_model.dart';
+
 class EditEntryDiary extends StatefulWidget {
-  final int editIndex;
+  final DiaryModel selectedDiary;
   
-  const EditEntryDiary({required this.editIndex});
+  const EditEntryDiary({required this.selectedDiary});
   
 
   @override
-  State<EditEntryDiary> createState() => _EditEntryDiaryState(diaryId: editIndex);
+  State<EditEntryDiary> createState() => _EditEntryDiaryState(diary: selectedDiary);
 }
 
 class _EditEntryDiaryState extends State<EditEntryDiary> {
-  int diaryId = 0 ;
-  _EditEntryDiaryState({required this.diaryId});
+  DiaryModel diary;
+  _EditEntryDiaryState({required this.diary});
 
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay.now();
   int selectedMood = 0; // selected mood index
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
-  late Diary diaryEntry;
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
+  late DiaryModel diaryEntry;
 
   //load diary data
   void initState(){
-    print(diaryId);
-    
-    diaryEntry = diaryList[diaryId];
+    diaryEntry = diary;
     titleController.text = diaryEntry.diaryTitle;
     paragraphController.text = diaryEntry.diaryDetails;
-    _dateTime = parseStringToDate(diaryEntry.diaryDateTime);
+    _dateTime = diaryEntry.diaryDateTime;
     selectedMood = diaryEntry.emoteRate;
     print(_dateTime);
   }
@@ -383,21 +384,15 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
       selectedMood = 4;
     }
 
-    print('id: ' + diaryId.toString());
-    print('title : ' + titleController.text);
-    print('emote rate: $selectedMood');
-    print('dateTime: '+ DateTime.now().toString());
-    print('details : ' + paragraphController.text);
-
     //save to diaryList
     setState(() {
-      diaryList[diaryId].diaryID = diaryId;
-      diaryList[diaryId].diaryTitle = titleController.text;
-      diaryList[diaryId].emoteRate = selectedMood;
-      diaryList[diaryId].diaryDateTime = _dateTime.toString();
-      diaryList[diaryId].diaryDetails = paragraphController.text;
+      diary.diaryTitle = titleController.text;
+      diary.emoteRate = selectedMood;
+      diary.diaryDateTime = _dateTime;
+      diary.diaryDetails = paragraphController.text;
     },);
-    
+
+    dbconn.updateDiaryByID(diary.uid, diary);
     print('Diary Entry Edited');
     successDialog(context).show();
   }

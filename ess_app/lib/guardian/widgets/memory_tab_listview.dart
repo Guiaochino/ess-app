@@ -1,24 +1,22 @@
 import 'package:ess_app/guardian/view/view_entry_diary.dart';
+import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
-  final int diaryIndex;
-  final String diaryTitle;
-  final DateTime diaryDateTime;
-  final String diaryDetails;
-  final int emoteRate;
+  // final int diaryIndex;
+  // final String diaryTitle;
+  // final DateTime diaryDateTime;
+  // final String diaryDetails;
+  // final int emoteRate;
+  final DiaryModel diary;
   final Function(BuildContext)? deleteTapped;
   final Function(BuildContext)? editTapped;
 
   MemoryTabListView({
-    required this.diaryIndex,
-    required this.diaryTitle,
-    required this.diaryDateTime,
-    required this.diaryDetails,
-    required this.emoteRate,
+    required this.diary,
     required this.deleteTapped, 
     required this.editTapped,
   });
@@ -79,9 +77,9 @@ class MemoryTabListView extends StatelessWidget {
                           SizedBox(width: 10),
                           Center(
                             child: Icon(
-                              icon(emoteRate),
+                              icon(diary.emoteRate),
                               size: 50,
-                              color: iconColor(emoteRate),
+                              color: iconColor(diary.emoteRate),
                             ),
                           ),
                           SizedBox(width: 20),
@@ -89,7 +87,7 @@ class MemoryTabListView extends StatelessWidget {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                diaryTitle,
+                                diary.diaryTitle,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 20, 
@@ -111,7 +109,7 @@ class MemoryTabListView extends StatelessWidget {
                         child: Container(
                           child: Container(
                             child: Text(
-                              diaryDetails,
+                              diary.diaryDetails,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.justify,
@@ -131,11 +129,7 @@ class MemoryTabListView extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => ViewEntryDiary(
-                              entryIndex: diaryIndex,
-                              title: diaryTitle,
-                              emoteRate: emoteRate,
-                              dateTime: diaryDateTime,
-                              details: diaryDetails,
+                              diary: diary,
                             ),
                           ));
                         },

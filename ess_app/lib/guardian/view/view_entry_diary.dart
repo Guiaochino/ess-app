@@ -1,22 +1,15 @@
 import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
+import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../memory/memory_home_page.dart';
 
 class ViewEntryDiary extends StatelessWidget {
-  final int entryIndex;
-  final int emoteRate;
-  final String title;
-  final DateTime dateTime;
-  final String details;
+  final DiaryModel diary;
 
   const ViewEntryDiary({
-    required this.entryIndex,
-    required this.title,     
-    required this.dateTime,
-    required this.details,
-    super.key, required this.emoteRate
+    required this.diary
   });
 
   @override
@@ -48,7 +41,7 @@ class ViewEntryDiary extends StatelessWidget {
               onPressed: () {
                 //edit
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EditEntryDiary(editIndex: entryIndex)));
+                  MaterialPageRoute(builder: (context) => EditEntryDiary(selectedDiary: diary)));
               },
               icon: Icon(
                 Icons.edit,
@@ -95,13 +88,13 @@ class ViewEntryDiary extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          icon(emoteRate),
+                          icon(this.diary.emoteRate),
                           size: 50,
-                          color: iconColor(emoteRate),
+                          color: iconColor(this.diary.emoteRate),
                           ),
                         SizedBox(width: 10),
                         Text(
-                          title,            
+                          this.diary.diaryTitle,            
                           style: TextStyle(
                             fontSize: 25,
                             color: Colors.black,
@@ -136,7 +129,7 @@ class ViewEntryDiary extends StatelessWidget {
                                 SizedBox(width: 5.0),
                                 Container(
                                   child: Text(
-                                    dateTime.toString(),
+                                    this.diary.diaryDateTime.toString(),
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 15,
@@ -167,7 +160,7 @@ class ViewEntryDiary extends StatelessWidget {
                                 SizedBox(width: 5.0),
                                 Container(
                                   child: Text(
-                                    dateTime.toString(),
+                                    this.diary.diaryDateTime.toString(),
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 15,
@@ -194,7 +187,7 @@ class ViewEntryDiary extends StatelessWidget {
                     child: Container(
                       color: Colors.white,
                       child: TextFormField(
-                        initialValue: details,
+                        initialValue: this.diary.diaryDetails,
                         textAlign: TextAlign.justify,
                         enabled: false,
                         maxLines: 40,
