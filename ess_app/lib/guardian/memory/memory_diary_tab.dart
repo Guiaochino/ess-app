@@ -7,6 +7,7 @@ import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/memory_tab_listview.dart';
 import 'package:ess_app/constants.dart';
@@ -31,37 +32,36 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
           //container for gridview
           Expanded(
             child: Container(
-              //builder of listview
-              child: FutureBuilder<List<DocumentSnapshot>>(
-                future: dbconn.getAllData(diaryCollection),
-                builder: ((BuildContext context, AsyncSnapshot<List> snapshot) {
-                  if (snapshot.hasData) {
-                    List<DocumentSnapshot> documents =
-                        snapshot.data! as List<DocumentSnapshot>;
-                    return ListView.builder(
-                        itemCount: documents.length,
-                        itemBuilder: (context, index) {
-                          documents.map((item) {
-                            return MemoryTabListView(
-                                diaryIndex: index,
-                                diaryTitle: item.get('diaryTitle'),
-                                diaryDateTime: item.get('diaryDateTime'),
-                                diaryDetails: item.get('diaryDetails'),
-                                emoteRate: item.get('emoteRate'),
-                                deleteTapped: (context) =>
-                                    print('Clicked Delete Button'),
-                                editTapped: (context) =>
-                                    print('Click Edit Button'));
-                          });
-                        });
-                  } else if (snapshot.hasError) {
-                    throw Exception('$snapshot.error');
+                //builder of listview
+                child: StreamBuilder<List<DiaryModel>>(
+              initialData: [],
+              stream: dbconn.diaryData,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<DiaryModel> data = snapshot.data!;
+                  if (data.isEmpty) {
+                    return Text('No Diary Available');
                   } else {
-                    return CircularProgressIndicator();
+                    return ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final docs = data[index];
+                          return MemoryTabListView(
+                              diary: docs,
+                              deleteTapped: (context) =>
+                                  deleteDiaryEntry(diaryCollection, docs.uid),
+                              editTapped: (context) =>
+                                  editDiaryEntry(context, docs));
+                        });
                   }
-                }),
-              ),
-            ),
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  return Text('Error: $snapshot.error');
+                }
+              },
+            )),
           ),
         ]),
       ),
@@ -138,13 +138,14 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
   }
 
   //deleting entry in list
-  // void deleteDiaryEntry(String index) {
-  //   print('Deleted diary at index ' + index.toString());
-  //   deleteSuccessDialog(context).show();
-  // }
+  void deleteDiaryEntry(String collectionCaller, String index) {
+    dbconn.deleteKeyFromCollectionByID(collectionCaller, index);
+    print('Deleted diary at index ' + index.toString());
+    deleteSuccessDialog(context).show();
+  }
 
-  // void editDiaryEntry(BuildContext context, String index) {
-  //   Navigator.of(context).push(MaterialPageRoute(
-  //       builder: (context) => EditEntryDiary(editIndex: index)));
-  // }
+  void editDiaryEntry(BuildContext context, DiaryModel diary) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EditEntryDiary(selectedDiary: diary)));
+  }
 }

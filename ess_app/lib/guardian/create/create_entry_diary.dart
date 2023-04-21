@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../memory/memory_home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ess_app/helpers.dart';
 
 class CreateEntryDiary extends StatefulWidget {
   const CreateEntryDiary({Key? key}) : super(key: key);
@@ -317,10 +318,6 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
         ),
       ),
     );
-  }
-
-  String generateUID() {
-    return UniqueKey().toString();
   }
 
   //success dialog

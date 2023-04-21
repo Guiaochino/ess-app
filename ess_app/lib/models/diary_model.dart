@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 
 class DiaryModel {
 
@@ -21,8 +20,8 @@ class DiaryModel {
 
   Map<String, dynamic> stringMapping() {
     return {
-      'diaryID': uid,
-      'dairyTitle': diaryTitle,
+      'uid': uid,
+      'diaryTitle': diaryTitle,
       'diaryDateTime': diaryDateTime,
       'diaryDetails': diaryDetails,
       'emoteRate': emoteRate,

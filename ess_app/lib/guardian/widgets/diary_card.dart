@@ -1,21 +1,19 @@
 import 'package:ess_app/guardian/view/view_entry_diary.dart';
 import 'package:ess_app/guardian/view/view_entry_image.dart';
+import 'package:ess_app/models/diary_model.dart';
 import 'package:flutter/material.dart';
 
 class DiaryCard extends StatelessWidget {
-  final int diaryId;
-  final String title;
-  final int emoteRate;
-  final String details;
-  final DateTime dateTime;
+  // final int diaryId;
+  // final String title;
+  // final int emoteRate;
+  // final String details;
+  // final DateTime dateTime;
+  final DiaryModel diary;
 
   const DiaryCard({
     Key? key,
-    required this.title,
-    required this.details,
-    required this.dateTime,
-    required this.diaryId, 
-    required this.emoteRate,
+    required this.diary
   }) : super(key: key);
 
   @override
@@ -25,17 +23,13 @@ class DiaryCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         decoration: BoxDecoration(
-            color: iconColor(emoteRate), borderRadius: BorderRadius.circular(15)),
+            color: iconColor(diary.emoteRate), borderRadius: BorderRadius.circular(15)),
         width: width,
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ViewEntryDiary(
-                entryIndex: diaryId,
-                emoteRate: emoteRate,
-                title: title,
-                dateTime:dateTime,
-                details:details,
+                diary: diary,
               )
             ));
           },
@@ -43,13 +37,13 @@ class DiaryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                icon(emoteRate),
+                icon(diary.emoteRate),
                 size: 60,
                 color: Colors.white,
               ),
               SizedBox(height: 10),
               Text(
-                  title,
+                  diary.diaryTitle,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 25,
