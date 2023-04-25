@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "816493398738",
+    "firebase_url": "https://ess-back-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "ess-back",
+    "storage_bucket": "ess-back.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816493398738:android:6d123b296be4d9cfbcfb0b",
+        "android_client_info": {
+          "package_name": "com.example.ess_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816493398738-gs55okp3bka3ctt5j38516vt0svvdvuf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBFsWVYyCUeuRs0VjgjFwG4vpwpvv4K2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816493398738-gs55okp3bka3ctt5j38516vt0svvdvuf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
