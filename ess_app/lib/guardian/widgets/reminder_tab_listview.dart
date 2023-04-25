@@ -1,28 +1,19 @@
 
 import 'package:ess_app/guardian/view/view_entry_reminder.dart';
+import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import '../reminder/reminder_home.dart';
-
 class ReminderTabListView extends StatelessWidget {
-  final int reminderIndex;
-  final String reminderTitle;
-  final String reminderDateTime;
-  final String reminderDetails;
-  final bool isDone;
+  final ReminderModel reminder;
   final Function(BuildContext)? deleteTapped;
   final Function(BuildContext)? editTapped;
 
   ReminderTabListView({
-    required this.reminderIndex,
-    required this.reminderTitle,
-    required this.reminderDateTime,
-    required this.reminderDetails,
+    required this.reminder,
     required this.deleteTapped,
-    required this.editTapped, required this.isDone,
-    
+    required this.editTapped, 
   });
 
   @override
@@ -66,10 +57,7 @@ class ReminderTabListView extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ViewReminder(
-                        entryIndex: reminderIndex,
-                        title: reminderTitle,
-                        dateTime: reminderDateTime,
-                        details: reminderDetails,
+                        reminder: reminder,
                       )));
             },
             child: Container(
@@ -81,29 +69,29 @@ class ReminderTabListView extends StatelessWidget {
               child: Center(
                 child: ListTile(
                    title: Text(
-                    reminderTitle,
+                    reminder.reminderTitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
-                      color: isDone? Colors.grey[800]:Colors.black,
+                      decoration: reminder.reminderIsDone ? TextDecoration.lineThrough: TextDecoration.none,
+                      color: reminder.reminderIsDone ? Colors.grey[800]:Colors.black,
                       fontWeight: FontWeight.w700,
                       fontSize: 20,
                       ),
                     ),
                   subtitle: Text(
-                    reminderDetails,
+                    reminder.reminderDetails,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
+                      decoration: reminder.reminderIsDone ? TextDecoration.lineThrough: TextDecoration.none,
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
                       fontSize:15,
                     ),
                   ),
                   trailing: Text(
-                    extractTimefromDTString(reminderDateTime),
+                    reminder.reminderDateTime.toString(),
                     maxLines: 1,
                     style: TextStyle(
                       color: Color(0xFFE86166),

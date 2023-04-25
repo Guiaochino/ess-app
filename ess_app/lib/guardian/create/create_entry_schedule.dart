@@ -1,9 +1,13 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/constants.dart';
+import 'package:ess_app/models/schedule_model.dart';
+import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../schedule/schedule_home.dart';
+import 'package:ess_app/helpers.dart';
 
 class CreateEntrySchedule extends StatefulWidget {
   @override
@@ -16,6 +20,7 @@ class _CreateEntryScheduleState extends State<CreateEntrySchedule> {
   TimeOfDay _timeOfDay = TimeOfDay.now();
   final titleController = TextEditingController();
   final paragraphController = TextEditingController();
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -366,22 +371,16 @@ class _CreateEntryScheduleState extends State<CreateEntrySchedule> {
 
     if(_dateTime.isAfter(DateTime.now())){
 
-      print('title : ' + titleController.text);
-      print('dateTime: '+ _dateTime.toString());
-      print('details : ' + paragraphController.text);
-
-      
-
       //add toscheduleList
-      scheduleList.add(
-        Schedule(
-          schedID: scheduleList.length + 1, // auto increment
-          schedTitle: titleController.text,
-          schedIsDone: false,
-          schedDateTime: _dateTime.toString(),
-          schedDetails: paragraphController.text,
-        )
-      );
+      final ScheduleModel scheduleEntry =  new ScheduleModel(
+        uid: generateUID(), 
+        schedTitle: titleController.text, 
+        schedDateTime: _dateTime, 
+        schedIsDone: false, 
+        schedDetails: paragraphController.text);
+      
+      dbconn.addData(scheduleCollection, scheduleEntry);
+      
       print('Schedule Entry Added');
       successDialog(context).show();
     }

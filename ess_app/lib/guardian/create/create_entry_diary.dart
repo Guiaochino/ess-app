@@ -1,13 +1,10 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/constants.dart';
-import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/models/diary_model.dart';
-import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import '../memory/memory_home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ess_app/helpers.dart';

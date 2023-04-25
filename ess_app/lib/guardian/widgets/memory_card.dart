@@ -1,19 +1,13 @@
 import 'package:ess_app/guardian/view/view_entry_image.dart';
+import 'package:ess_app/models/memory_model.dart';
 import 'package:flutter/material.dart';
 
 class MemoryCard extends StatelessWidget {
-  final int imageId;
-  final String title;
-  final String details;
-  final String dateTime;
-  final String imageDirectory;
+  final MemoryModel memory;
 
   const MemoryCard({
     Key? key,
-    required this.title,
-    required this.details,
-    required this.dateTime,
-    required this. imageDirectory, required this.imageId,
+    required this.memory
   }) : super(key: key);
 
   @override
@@ -29,11 +23,7 @@ class MemoryCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ViewEntryImage(
-                entryIndex: imageId,
-                title: title,
-                dateTime:dateTime,
-                imgPath: imageDirectory,
-                details:details,
+                memory: memory
               )
             ));
           },
@@ -50,7 +40,7 @@ class MemoryCard extends StatelessWidget {
                   child: Opacity(
                     opacity: 0.5,
                     child: Image.asset(
-                      imageDirectory,
+                      memory.memoryImg,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -58,7 +48,7 @@ class MemoryCard extends StatelessWidget {
               ),
               Center(
                 child: Text(
-                  title,
+                  memory.memoryTitle,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 20,

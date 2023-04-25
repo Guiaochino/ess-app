@@ -1,4 +1,5 @@
 import 'package:ess_app/guardian/view/view_entry_schedule.dart';
+import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -7,21 +8,13 @@ import 'package:timeline_tile/timeline_tile.dart';
 class ScheduleTabListView extends StatelessWidget {
   final int builderLength;
   final int tileIndex;
-  final int entryID;
-  final String title;
-  final String details;
-  final String dateTime;
-  final bool isDone;
+  final ScheduleModel schedule;
   final Function(BuildContext)? deleteTapped;
   final Function(BuildContext)? editTapped;
 
   ScheduleTabListView({
     super.key,
-    required this.entryID,
-    required this.title,
-    required this.details,
-    required this.dateTime,
-    required this.isDone,
+    required this.schedule,
     required this.deleteTapped,
     required this.editTapped, required this.builderLength, required this.tileIndex,
 
@@ -31,7 +24,7 @@ class ScheduleTabListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Slidable(
       // no edit button if sched is done
-       startActionPane: isDone == true ? null
+       startActionPane: schedule.schedIsDone == true ? null
        :ActionPane(
         motion: DrawerMotion(),
         children: [
@@ -79,11 +72,11 @@ class ScheduleTabListView extends StatelessWidget {
                   height: 30,
                   width: 30,
                   decoration: BoxDecoration(
-                    color: isDone? Colors.green: Colors.red,
+                    color: schedule.schedIsDone? Colors.green: Colors.red,
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   child: Icon(
-                    isDone? Icons.done : Icons.more_horiz,
+                    schedule.schedIsDone? Icons.done : Icons.more_horiz,
                     size: 20,
                     color: Colors.white
                   ),
@@ -95,7 +88,7 @@ class ScheduleTabListView extends StatelessWidget {
               padding: const EdgeInsets.only(right: 5.0),
               child: Container(
                 child: Text(
-                  extractTimefromDTString(dateTime),
+                  schedule.schedDateTime.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -120,12 +113,12 @@ class ScheduleTabListView extends StatelessWidget {
                             child: Align(
                               alignment: Alignment.bottomLeft,
                               child: Text(
-                                title,
+                                schedule.schedTitle,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
-                                  decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
-                                  color: isDone? Colors.grey[300]: Colors.white,
+                                  decoration: schedule.schedIsDone? TextDecoration.lineThrough: TextDecoration.none,
+                                  color: schedule.schedIsDone? Colors.grey[300]: Colors.white,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 18
                                 ),
@@ -134,12 +127,12 @@ class ScheduleTabListView extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              details,
+                              schedule.schedDetails,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: TextStyle(
-                                decoration: isDone? TextDecoration.lineThrough: TextDecoration.none,
-                                color: isDone? Colors.grey[300]: Colors.white,
+                                decoration: schedule.schedIsDone? TextDecoration.lineThrough: TextDecoration.none,
+                                color: schedule.schedIsDone? Colors.grey[300]: Colors.white,
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12
                               ),
@@ -153,12 +146,12 @@ class ScheduleTabListView extends StatelessWidget {
                       height: 30,
                       width: 70,
                       decoration: BoxDecoration(
-                        color: isDone? Colors.green: Colors.red,
+                        color: schedule.schedIsDone? Colors.green: Colors.red,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: Center(
                         child: Text(
-                          isDone? 'Completed': 'Upcoming',
+                          schedule.schedIsDone? 'Completed': 'Upcoming',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

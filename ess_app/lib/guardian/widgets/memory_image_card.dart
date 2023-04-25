@@ -1,23 +1,16 @@
 import 'package:ess_app/guardian/view/view_entry_image.dart';
+import 'package:ess_app/models/memory_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MemoryImageCard extends StatelessWidget {
-  final int memoryIndex;
-  final String title;
-  final String details;
-  final String dateTime;
-  final String imageDirectory;
+  final MemoryModel memory;
   final Function(BuildContext)? deleteTapped;
   final Function(BuildContext)? editTapped;
 
   const MemoryImageCard({
     super.key,
-    required this.memoryIndex,
-    required this.title,
-    required this.details,
-    required this.dateTime,
-    required this. imageDirectory,
+    required this.memory,
     required this.deleteTapped, 
     required this.editTapped,
     });
@@ -56,11 +49,7 @@ class MemoryImageCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ViewEntryImage(
-                entryIndex: memoryIndex,
-                title: title,
-                dateTime:dateTime,
-                imgPath: imageDirectory,
-                details:details,
+                memory: memory,
               )
             ));
           },
@@ -77,7 +66,7 @@ class MemoryImageCard extends StatelessWidget {
                 child: Opacity(
                   opacity: 0.5,
                   child: Image.asset(
-                    imageDirectory,
+                    memory.memoryImg,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -86,7 +75,7 @@ class MemoryImageCard extends StatelessWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(title,
+                child: Text(memory.memoryTitle,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 20,

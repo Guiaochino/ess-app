@@ -1,21 +1,14 @@
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
 import 'package:ess_app/utils/colors.dart';
-import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:ess_app/models/reminder_model.dart';
 
 class ViewReminder extends StatelessWidget {
-  final int entryIndex;
-  final String title;
-  final String dateTime;
-  final String details;
+  final ReminderModel reminder;
 
   const ViewReminder({
-    required this.entryIndex,
-    required this.title,     
-    required this.dateTime,
-    required this.details,
-    super.key
+    required this.reminder,
   });
 
   @override
@@ -43,7 +36,7 @@ class ViewReminder extends StatelessWidget {
               onPressed: () {
                 //edit
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EditEntryReminder(editIndex: entryIndex)));
+                  MaterialPageRoute(builder: (context) => EditEntryReminder(selectedReminder: reminder)));
               },
               icon: Icon(
                 Icons.edit,
@@ -89,7 +82,7 @@ class ViewReminder extends StatelessWidget {
                   child: Container(
                     width: 300,
                     child: Text(
-                      title,            
+                      reminder.reminderTitle,            
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 25,
@@ -120,7 +113,7 @@ class ViewReminder extends StatelessWidget {
                             SizedBox(width: 5.0),
                             Container(
                               child: Text(
-                                extractTimefromDTString(dateTime),
+                                reminder.reminderDateTime.toString(),
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 30,
@@ -144,7 +137,7 @@ class ViewReminder extends StatelessWidget {
                     child: Container(
                       color: Colors.white,
                       child: TextFormField(
-                        initialValue: details,
+                        initialValue: reminder.reminderDetails,
                         enabled: false,
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,

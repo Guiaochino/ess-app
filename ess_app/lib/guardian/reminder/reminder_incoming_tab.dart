@@ -1,8 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/dataList/reminders.dart';
+import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
+import 'package:ess_app/services/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/reminder_tab_listview.dart';
+import 'package:ess_app/models/reminder_model.dart';
 
 class ReminderIncomingTab extends StatefulWidget {
   const ReminderIncomingTab({super.key});
@@ -12,77 +15,80 @@ class ReminderIncomingTab extends StatefulWidget {
 }
 
 class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
-  
-  List<Reminder> reminders = reminderList.where((i) => i.reminderIsDone == false).toList();
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-        ),
-        child: Column(
-          children: [
-            SizedBox(height: 10.0),
-          //container for gridview
-            Expanded(
-              child: reminders.isEmpty?
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+    return StreamBuilder<List<ReminderModel>>(
+        stream: dbconn.getIncomingReminders,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<ReminderModel> incomingReminders = snapshot.data!;
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+              ),
+              child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.notifications_off,
-                          size: 200,
-                          color: Colors.black,
-                        ),
-                        Text(
-                          'No Reminders',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25),
-                        ),
-                      ],
-                    ),
+                  SizedBox(height: 10.0),
+                  //container for gridview
+                  Expanded(
+                    child: incomingReminders.isEmpty
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.notifications_off,
+                                      size: 200,
+                                      color: Colors.black,
+                                    ),
+                                    Text(
+                                      'No Reminders',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 25),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(
+                            child: ListView.builder(
+                              itemCount: incomingReminders.length,
+                              itemBuilder: ((context, index) {
+                                final reminder = incomingReminders[index];
+                                return ReminderTabListView(
+                                    reminder: reminder,
+                                    deleteTapped: (context) {
+                                      // deleteDialog(context, index).show();
+                                      deleteReminderEntry(reminder.uid);
+
+                                      print('tapped');
+                                    },
+                                    editTapped: (context) {
+                                      editReminderEntry(context, reminder);
+                                    });
+                              }),
+                            ),
+                          ),
                   ),
                 ],
-              )
-              :Container(
-                child: ListView.builder(
-                  itemCount: reminders.length,
-                  itemBuilder: ((context, index) {
-                    final reminder = reminders[index];
-                    return ReminderTabListView(
-                      reminderIndex: reminder.reminderID,
-                      reminderTitle: reminder.reminderTitle,
-                      reminderDateTime: reminder.reminderDateTime,
-                      reminderDetails: reminder.reminderDetails,
-                      isDone: reminder.reminderIsDone,
-                      deleteTapped: (context){
-                        // deleteDialog(context, index).show();
-                        deleteReminderEntry(index);
-                        
-                        print('tapped');
-                      },
-                      editTapped:(context){
-                        editReminderEntry(context, reminder.reminderID);
-                      }
-                    );
-                  }),
-                ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return Text('Error: $snapshot.error');
+          }
+        });
   }
 
   // delete? yes or no
@@ -145,9 +151,8 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
-      onDissmissCallback:(type) {
+      onDissmissCallback: (type) {
         // Navigator.of(context).pop();
-        
       },
       padding: EdgeInsets.all(15),
       showCloseIcon: false,
@@ -155,17 +160,14 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
     );
   }
 
-
-  void deleteReminderEntry(int index) {
-
-    print('Deleted diary at index ' + index.toString());
-    setState(() {
-      reminderList.removeAt(index);
-    });
+  void deleteReminderEntry(String index) {
+    print('Deleted diary at index ' + index);
+    dbconn.deleteKeyFromCollectionByID(reminderCollection, index);
     deleteSuccessDialog(context).show();
   }
-  void editReminderEntry(BuildContext context, int index) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => EditEntryReminder(editIndex: index)));
+
+  void editReminderEntry(BuildContext context, ReminderModel reminder) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EditEntryReminder(selectedReminder: reminder)));
   }
 }

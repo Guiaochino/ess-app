@@ -1,6 +1,9 @@
 import 'package:ess_app/guardian/home/home_page.dart';
+import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/patient/home/home_page.dart';
+import 'package:ess_app/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login_page.dart';
 
 class ChoicePage extends StatefulWidget {
@@ -90,7 +93,12 @@ class _ChoicePageState extends State<ChoicePage> {
                   child: MaterialButton(
                     onPressed: () {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => guardianHomePage()));
+                          MaterialPageRoute(builder: (context) => StreamProvider<UserModel?>.value(
+                            value: AuthServices().user,
+                            initialData: null,
+                            child: guardianHomePage(),
+                          ))
+                      );
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),

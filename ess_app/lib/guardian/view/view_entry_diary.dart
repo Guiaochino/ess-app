@@ -1,8 +1,6 @@
 import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
 import 'package:ess_app/models/diary_model.dart';
-import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../memory/memory_home_page.dart';
 
 class ViewEntryDiary extends StatelessWidget {

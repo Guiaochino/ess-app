@@ -1,7 +1,10 @@
 import 'package:ess_app/guardian/settings/change_password/email_verification.dart';
 import 'package:ess_app/login/login_page.dart';
+import 'package:ess_app/models/user_model.dart';
+import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../home/home_page.dart';
 
@@ -16,8 +19,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   late TextEditingController guardianController;
   late TextEditingController patientController;
 
-  String guardianName = 'sampleGuardianName';
-  String patientName = 'samplePatientName';
+  String guardianName = '';
+  String patientName = '';
+
+  late final dbconn;
 
   @override
   void initState(){
@@ -38,6 +43,9 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final user = Provider.of<UserModel?>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFE86166),
@@ -83,11 +91,17 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   GestureDetector(
                     onTap: () async{
                       final guardianName = await openGuardianDialog();
-                      if(guardianName == null || guardianName.isEmpty) return;
+                      if(guardianName == null || guardianName.isEmpty) {
+                        setState(() {
+                          this.guardianName = 'Set Guardian Name';
+                        });
+                      } else {
+                        setState(() {
+                          this.guardianName = user!.guardianName;
+                        });
+                      };
 
-                      setState(() {
-                        this.guardianName = guardianName;
-                      });
+                      
                     },
                     child: Row(
                       children: [
@@ -340,6 +354,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
 
   //submit names
   void submitGuardian(){
+    dbconn.updateGuardianName(guardianController.text);
     Navigator.of(context).pop(guardianController.text);
     guardianController.clear();
   }

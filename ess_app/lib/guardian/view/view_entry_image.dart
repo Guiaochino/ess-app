@@ -1,25 +1,16 @@
 import 'package:ess_app/guardian/edit/edit_entry_image.dart';
+import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import '../memory/memory_home_page.dart';
 
 class ViewEntryImage extends StatelessWidget {
-  final int entryIndex;
-  final String title;
-  final String dateTime;
-  final String imgPath;
-  final String details;
+  final MemoryModel memory;
   
   
   const ViewEntryImage({
-    super.key,
-    required this.entryIndex,
-    required this.title,    
-    required this.dateTime,
-    required this.imgPath,
-    required this.details, 
+    required this.memory
   });
-  
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +38,7 @@ class ViewEntryImage extends StatelessWidget {
               onPressed: () {
                 //edit
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EditEntryImage(editIndex: entryIndex)));
+                  MaterialPageRoute(builder: (context) => EditEntryImage(selectedMemory: memory)));
               },
               icon: Icon(
                 Icons.edit,
@@ -109,12 +100,12 @@ class ViewEntryImage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15),
                               child: GestureDetector(
                                 child: Image.asset(
-                                  imgPath,
+                                  memory.memoryImg,
                                   fit: BoxFit.cover,
                                 ),
                                 onTap: (){
                                   Navigator.push(context, MaterialPageRoute(builder: (_){
-                                    return ImageScreen(imgPath: imgPath);
+                                    return ImageScreen(imgPath: memory.memoryImg);
                                   }));
                                 },
                               ),
@@ -136,7 +127,7 @@ class ViewEntryImage extends StatelessWidget {
                   child: Container(
                     width: 250,
                     child: Text(
-                      title,            
+                      memory.memoryTitle,            
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 25,
@@ -156,7 +147,7 @@ class ViewEntryImage extends StatelessWidget {
                     child: Container(
                       color: Colors.white,
                       child: TextFormField(
-                        initialValue: details,
+                        initialValue: memory.memoryDetails,
                         enabled: false,
                         textAlign: TextAlign.justify,
                         maxLines: 40,

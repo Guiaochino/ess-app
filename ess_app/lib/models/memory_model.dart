@@ -21,7 +21,7 @@ class MemoryModel {
 
   Map<String, dynamic> stringMapping() {
     return {
-      'memoryID': uid,
+      'uid': uid,
       'memoryTitle': memoryTitle,
       'memoryDateTime': memoryDateTime,
       'memoryImg': memoryImg,

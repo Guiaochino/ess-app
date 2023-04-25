@@ -67,7 +67,11 @@ class MainPage extends StatelessWidget {
     if (user == null) {
       return LoginPage();
     } else {
-      return ChoicePage();
+      return StreamProvider<UserModel?>.value(
+        value: AuthServices().user, 
+        initialData: null,
+        child: ChoicePage(),
+        );
     }
     
   }

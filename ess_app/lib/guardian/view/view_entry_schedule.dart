@@ -1,23 +1,16 @@
 import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
 import 'package:ess_app/guardian/schedule/schedule_home.dart';
+import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ViewEntrySchedule extends StatelessWidget {
-  final int entryIndex;
-  final String title;
-  final String dateTime;
-  final bool isDone;
-  final String details;
+  final ScheduleModel schedule;
 
   const ViewEntrySchedule({
-    required this.entryIndex,
-    required this.title,     
-    required this.dateTime,
-    required this.isDone,
-    required this.details,
+    required this.schedule,
     super.key
   });
 
@@ -48,7 +41,7 @@ class ViewEntrySchedule extends StatelessWidget {
               child: IconButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EditEntrySchedule(editIndex: entryIndex)));
+                  MaterialPageRoute(builder: (context) => EditEntrySchedule(selectedSched: schedule)));
                 },
                 icon: Icon(
                   Icons.edit,
@@ -92,7 +85,7 @@ class ViewEntrySchedule extends StatelessWidget {
             Container(
               width: 300,
               child: Text(
-                title,            
+                schedule.schedTitle,            
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25,
@@ -124,7 +117,7 @@ class ViewEntrySchedule extends StatelessWidget {
                           SizedBox(width: 5.0),
                           Container(
                             child: Text(
-                              extractDatefromDTString(dateTime),
+                              schedule.schedDateTime.toString(),
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 15,
@@ -154,7 +147,7 @@ class ViewEntrySchedule extends StatelessWidget {
                             SizedBox(width: 5.0),
                             Container(
                               child: Text(
-                                extractTimefromDTString(dateTime),
+                                schedule.schedDateTime.toString(),
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 15,
@@ -180,7 +173,7 @@ class ViewEntrySchedule extends StatelessWidget {
                   color: Colors.white,
                   child: TextFormField(
                     enabled: false,
-                    initialValue: details,
+                    initialValue: schedule.schedDetails,
                     maxLines: 40,
                     keyboardType: TextInputType.multiline,
                     style: TextStyle(

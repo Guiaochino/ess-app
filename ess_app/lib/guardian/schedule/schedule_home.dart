@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/dataList/schedules.dart';
+import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
+import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:table_calendar/table_calendar.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/schedule_tab_listview.dart';
 import '../create/create_entry_schedule.dart';
+import 'package:ess_app/services/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ScheduleHomePage extends StatefulWidget {
   const ScheduleHomePage({super.key});
@@ -17,8 +20,9 @@ class ScheduleHomePage extends StatefulWidget {
 }
 
 class _ScheduleHomePageState extends State<ScheduleHomePage> {
-  //schedule from datalist
-  List<Schedule> schedules = scheduleList;
+
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
+  late List<ScheduleModel> schedules;
   DateTime dateClicked = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
@@ -27,16 +31,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
   @override
   //filter dates onload
   void initState() {
-    final filteredDates = scheduleList.where((schedule) {
-      final dateTime = extractDatefromDTString(schedule.schedDateTime);
-      final input = extractDatefromDTString(DateTime.now().toString());
-      return dateTime.contains(input); 
-
-    }).toList();
-    print(filteredDates);
-    setState(() {
-      schedules = filteredDates;
-    });
+    schedules = dbconn.scheduleOfSelectedDate(dateClicked).toList() as List<ScheduleModel>;
     super.initState();
   }
 
@@ -186,7 +181,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
                     });
-                    filterDate(selectedDay.toString());
+                    // filterDate(selectedDay.toString());
                   }),
                 ),
               ),
@@ -260,11 +255,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                           return ScheduleTabListView(
                             tileIndex: index,
                             builderLength: schedules.length,
-                            entryID: schedule.schedID,
-                            title: schedule.schedTitle,
-                            dateTime: schedule.schedDateTime,
-                            details: schedule.schedDetails,
-                            isDone: schedule.schedIsDone,
+                            schedule: schedule,
                             editTapped: (context){
                             },
                             deleteTapped: (context){
@@ -287,20 +278,21 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
   }
 
   //schedule getter on date click
-  void filterDate(String query){
-    final filteredDates = scheduleList.where((schedule) {
-      final dateTime = extractDatefromDTString(schedule.schedDateTime);
-      print('dateTime $dateTime');
-      final input = extractDatefromDTString(query);
-      print("Input $input");
-      return dateTime.contains(input); 
+  // void filterDate(String query){
+  //   final filteredDates = scheduleList.where((schedule) {
+  //     final dateTime = extractDatefromDTString(schedule.schedDateTime);
+  //     print('dateTime $dateTime');
+  //     final input = extractDatefromDTString(query);
+  //     print("Input $input");
+  //     return dateTime.contains(input); 
 
-    }).toList();
-    print(filteredDates);
-    setState(() {
-      schedules = filteredDates;
-    });
-  }
+  //   }).toList();
+  //   print(filteredDates);
+  //   setState(() {
+  //     schedules = filteredDates;
+  //   });
+  // }
+
   // delete? yes or no
   AwesomeDialog deleteDialog(BuildContext context, int index) {
     return AwesomeDialog(
@@ -370,16 +362,13 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
       autoHide: Duration(seconds: 3),
     );
   }
-  void deleteDiaryEntry(int index) {
-
+  void deleteDiaryEntry(String index) {
+      dbconn.deleteKeyFromCollectionByID(scheduleCollection, index);
       print('Deleted diary at index ' + index.toString());
-      setState(() {
-        scheduleList.removeAt(index);
-      });
       deleteSuccessDialog(context).show();
   }
-  void editDiaryEntry(BuildContext context, int index) {
+  void editDiaryEntry(BuildContext context, ScheduleModel schedule) {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => EditEntrySchedule(editIndex: index)));
+        MaterialPageRoute(builder: (context) => EditEntrySchedule(selectedSched: schedule)));
   }
 }

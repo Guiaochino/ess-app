@@ -1,7 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/dataList/memories.dart';
-import 'package:ess_app/dataList/reminders.dart';
+import 'package:ess_app/constants.dart';
+import 'package:ess_app/helpers.dart';
+import 'package:ess_app/models/reminder_model.dart';
+import 'package:ess_app/models/schedule_model.dart';
+import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +23,7 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
   TimeOfDay _timeOfDay = TimeOfDay.now();
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
   void dispose(){
     titleController.dispose();
@@ -299,15 +304,15 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
     print('details : ' + paragraphController.text);
 
     //add to reminderList
-    reminderList.add(
-      Reminder(
-        reminderID: reminderList.length + 1, // auto increment
-        reminderTitle: titleController.text,
-        reminderIsDone: isDone,
-        reminderDateTime: _dateTime.toString(),
-        reminderDetails: paragraphController.text,
-      )
-    );
+    ReminderModel scheduleEntry = new ReminderModel(
+      uid: generateUID(), 
+      reminderTitle: titleController.text, 
+      reminderDateTime: _dateTime, 
+      reminderIsDone: false, 
+      reminderDetails: paragraphController.text);
+
+    dbconn.addData(reminderCollection, scheduleEntry);
+
     print('reminder Entry Added');
     successDialog(context).show();
   }
