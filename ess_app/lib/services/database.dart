@@ -167,19 +167,19 @@ class DatabaseService {
   // Incoming Reminders Stream
   Stream<List<ReminderModel>> get getIncomingReminders => userCollection
       .doc(this.uid)
-      .collection(memoryCollection)
+      .collection(reminderCollection)
       .where('reminderIsDone', isEqualTo: false)
       .snapshots()
-      .map((element) => _dataListFromSnapshot(memoryCollection, element)
+      .map((element) => _dataListFromSnapshot(reminderCollection, element)
           as List<ReminderModel>);
 
   // Past Reminder Stream
   Stream<List<ReminderModel>> get getPastReminder => userCollection
       .doc(this.uid)
-      .collection(memoryCollection)
+      .collection(reminderCollection)
       .where('reminderIsDone', isEqualTo: true)
       .snapshots()
-      .map((element) => _dataListFromSnapshot(memoryCollection, element)
+      .map((element) => _dataListFromSnapshot(reminderCollection, element)
           as List<ReminderModel>);
 
   // Stream Schedules based on selected date

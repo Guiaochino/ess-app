@@ -1,12 +1,15 @@
+import 'package:ess_app/constants.dart';
+import 'package:ess_app/guardian/home/patient_home.dart';
 import 'package:ess_app/guardian/settings/change_password/email_verification.dart';
 import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/models/user_model.dart';
+import 'package:ess_app/services/auth.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../home/home_page.dart';
+import '../home/guardian_home.dart';
 
 class SettingsHomePage extends StatefulWidget {
   const SettingsHomePage({super.key});
@@ -52,8 +55,13 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
         elevation: 0,
         leading: (IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => guardianHomePage()));
+              if (userPreference == guardianPreference) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => guardianHomePage()));
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => patientHomePage()));
+              }
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -262,7 +270,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   //logout button
                   GestureDetector(
                     onTap: () async {
-                      await FirebaseAuth.instance.signOut();
+                      await AuthServices().SignOut();
                       openLogoutDialog();
                     },
                     child: Container(

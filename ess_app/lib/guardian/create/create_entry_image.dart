@@ -397,7 +397,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   //camera
   Future getCameraImage() async {
     //g
-    final image = await imagePicker.getImage(source: ImageSource.camera);
+    final image = await imagePicker.pickImage(source: ImageSource.camera);
     print(image);
     setState(() {
       _imageSelected = File(image!.path);
@@ -407,7 +407,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   // //image picker from files
   Future getImageFiles() async {
     //for pc
-    final image = await imagePicker.getImage(source: ImageSource.gallery);
+    final image = await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       _imageSelected = File(image!.path);
     });

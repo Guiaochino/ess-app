@@ -1,7 +1,9 @@
+import 'package:ess_app/constants.dart';
+import 'package:ess_app/guardian/home/patient_home.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import '../home/home_page.dart';
+import '../home/guardian_home.dart';
 import '../reminder/reminder_home.dart';
 import '../schedule/schedule_home.dart';
 import '../settings/settings_home.dart';
@@ -40,8 +42,13 @@ class MainDrawer extends StatelessWidget {
               icon: Icons.home, 
               title: 'Home', 
               navigation: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => guardianHomePage()));
+                if (userPreference == guardianPreference) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => guardianHomePage()));
+                } else {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => patientHomePage()));
+                }
               },
             ),
             SizedBox(height: 10),
