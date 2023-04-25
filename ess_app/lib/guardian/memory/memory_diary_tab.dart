@@ -1,13 +1,10 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ess_app/dataList/diaries.dart';
 import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../widgets/memory_tab_listview.dart';
 import 'package:ess_app/constants.dart';
@@ -20,7 +17,7 @@ class MemoryDiaryTab extends StatefulWidget {
 }
 
 class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
-  var dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {

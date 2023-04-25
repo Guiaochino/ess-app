@@ -21,7 +21,7 @@ class ReminderModel {
 
   Map<String, dynamic> stringMapping() {
     return {
-      'reminderID': uid,
+      'uid': uid,
       'reminderTitle': reminderTitle,
       'reminderDateTime': reminderDateTime,
       'reminderIsDone': reminderIsDone,

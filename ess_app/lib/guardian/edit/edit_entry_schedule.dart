@@ -1,35 +1,35 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/dataList/schedules.dart';
 import 'package:ess_app/guardian/schedule/schedule_home.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ess_app/models/schedule_model.dart';
+
 class EditEntrySchedule extends StatefulWidget {
-  final int editIndex;
-  const EditEntrySchedule({required this.editIndex});
+  final ScheduleModel selectedSched;
+  const EditEntrySchedule({required this.selectedSched});
 
   @override
-  State<EditEntrySchedule> createState() => _EditEntryScheduleState(scheduleId: editIndex);
+  State<EditEntrySchedule> createState() => _EditEntryScheduleState(schedule: selectedSched);
 }
 
 class _EditEntryScheduleState extends State<EditEntrySchedule> {
-  int scheduleId = 0;
-  _EditEntryScheduleState({required this.scheduleId});
+  ScheduleModel schedule;
+  _EditEntryScheduleState({required this.schedule});
 
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay.now();
   final titleController = TextEditingController();
   final paragraphController = TextEditingController();
-  late Schedule scheduleEntry;
+  late ScheduleModel scheduleEntry;
 
   void initState(){
-    print(scheduleId);
 
-    scheduleEntry = scheduleList[scheduleId];
+    scheduleEntry = schedule;
     titleController.text = scheduleEntry.schedTitle;
     paragraphController.text = scheduleEntry.schedDetails;
-    _dateTime = parseStringToDate(scheduleEntry.schedDateTime);
+    _dateTime = scheduleEntry.schedDateTime;
   }
   void dispose(){
     titleController.dispose();
@@ -386,14 +386,11 @@ class _EditEntryScheduleState extends State<EditEntrySchedule> {
       print('dateTime: '+ _dateTime.toString());
       print('details : ' + paragraphController.text);
 
-      
-
       //save to scheduleList
       setState(() {
-        scheduleList[scheduleId].schedID = scheduleId;
-        scheduleList[scheduleId].schedTitle = titleController.text;
-        scheduleList[scheduleId].schedDateTime = _dateTime.toString();
-        scheduleList[scheduleId].schedDetails = paragraphController.text;
+        schedule.schedTitle = titleController.text;
+        schedule.schedDateTime = _dateTime;
+        schedule.schedDetails = paragraphController.text;
       },);
       
       print('sched Entry Edited');

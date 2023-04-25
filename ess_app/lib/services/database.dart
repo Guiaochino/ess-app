@@ -113,7 +113,7 @@ class DatabaseService {
           as List<MemoryModel>);
 
   // Streams for data in the Reminder
-  Stream<List<ReminderModel>> get remidnerData => userCollection
+  Stream<List<ReminderModel>> get reminderData => userCollection
       .doc(this.uid)
       .collection(reminderCollection)
       .where('isDeleted', isEqualTo: false)
@@ -131,7 +131,8 @@ class DatabaseService {
           as List<ScheduleModel>);
 
   // Deleting a key in a collection
-  Future<void> deleteKeyFromCollectionByID(String collectionCaller, String key) async {
+  Future<void> deleteKeyFromCollectionByID(
+      String collectionCaller, String key) async {
     switch (collectionCaller) {
       case diaryCollection:
         await userCollection
@@ -161,6 +162,35 @@ class DatabaseService {
             .doc(key)
             .update({'isDeleted': true});
     }
+  }
+
+  // Incoming Reminders Stream
+  Stream<List<ReminderModel>> get getIncomingReminders => userCollection
+      .doc(this.uid)
+      .collection(reminderCollection)
+      .where('reminderIsDone', isEqualTo: false)
+      .snapshots()
+      .map((element) => _dataListFromSnapshot(reminderCollection, element)
+          as List<ReminderModel>);
+
+  // Past Reminder Stream
+  Stream<List<ReminderModel>> get getPastReminder => userCollection
+      .doc(this.uid)
+      .collection(reminderCollection)
+      .where('reminderIsDone', isEqualTo: true)
+      .snapshots()
+      .map((element) => _dataListFromSnapshot(reminderCollection, element)
+          as List<ReminderModel>);
+
+  // Stream Schedules based on selected date
+  Stream<List<ScheduleModel>> scheduleOfSelectedDate(DateTime selectedDate) {
+    return userCollection
+        .doc(this.uid)
+        .collection(scheduleCollection)
+        .where('schedDateTime', isEqualTo: selectedDate)
+        .snapshots()
+        .map((element) => _dataListFromSnapshot(scheduleCollection, element)
+            as List<ScheduleModel>);
   }
 
   // Updating Data by ID

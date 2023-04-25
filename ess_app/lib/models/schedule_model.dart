@@ -21,7 +21,7 @@ class ScheduleModel {
 
   Map<String, dynamic> stringMapping() {
     return {
-      'schedID': uid,
+      'uid': uid,
       'schedTitle': schedTitle,
       'schedDateTime': schedDateTime,
       'schedIsDone': schedIsDone,

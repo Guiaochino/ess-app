@@ -1,9 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_image.dart';
-import 'package:ess_app/guardian/view/view_entry_image.dart';
+import 'package:ess_app/models/memory_model.dart';
+import 'package:ess_app/services/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../../dataList/memories.dart';
 import '../widgets/memory_image_card.dart';
 
 class MemoryImageTab extends StatefulWidget {
@@ -15,7 +17,7 @@ class MemoryImageTab extends StatefulWidget {
 
 class _MemoryImageTabState extends State<MemoryImageTab> {
   //memories from datalist
-  final List<Memory> memories = memoryList;
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -32,60 +34,68 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Container(
-                  child: memories.isEmpty?
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.image_not_supported_outlined,
-                                size: 200,
-                                color: Colors.black,
-                              ),
-                              Text(
-                                'No Images Yet.',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 25),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                    //builder for gridview
-                    :StaggeredGridView.countBuilder(
-                    staggeredTileBuilder: (index) => index % 7 == 0
-                      ? StaggeredTile.count(2, 2)
-                      : StaggeredTile.count(1, 1),
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                    crossAxisCount: 3,
-                    itemCount: memories.length,
-                    itemBuilder: (context, index) {
-                      final memory = memories[index];
-                      return MemoryImageCard(
-                        memoryIndex: memory.memoryID,
-                        title: memory.memoryTitle,
-                        details: memory.memoryDetails,
-                        imageDirectory: memory.memoryImg,
-                        dateTime: memory.memoryDateTime,
-                        deleteTapped: (context){
-                          deleteMemoryEntry(index);
-                        },
-                        editTapped:(context){
-                          editMemoryEntry(context, memory.memoryID);
-                        }
-                      );
-                    }
-                  ),
-                ),
+                    child: StreamBuilder<List<MemoryModel>>(
+                        stream: dbconn.memoryData,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<MemoryModel> data = snapshot.data!;
+                            if (data.isEmpty) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Icon(
+                                          Icons.image_not_supported_outlined,
+                                          size: 200,
+                                          color: Colors.black,
+                                        ),
+                                        Text(
+                                          'No Images Yet.',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 25),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return StaggeredGridView.countBuilder(
+                                  staggeredTileBuilder: (index) =>
+                                      index % 7 == 0
+                                          ? StaggeredTile.count(2, 2)
+                                          : StaggeredTile.count(1, 1),
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 8,
+                                  crossAxisCount: 3,
+                                  itemCount: data.length,
+                                  itemBuilder: (context, index) {
+                                    final docs = data[index];
+                                    return MemoryImageCard(
+                                        memory: docs,
+                                        deleteTapped: (context) {
+                                          deleteMemoryEntry(
+                                              memoryCollection, docs.uid);
+                                        },
+                                        editTapped: (context) {
+                                          editMemoryEntry(context, docs);
+                                        });
+                                  });
+                            }
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else {
+                            return Text('$snapshot.error');
+                          }
+                        })),
               ),
             )
           ],
@@ -154,9 +164,8 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
-      onDissmissCallback:(type) {
+      onDissmissCallback: (type) {
         // Navigator.of(context).pop();
-        
       },
       padding: EdgeInsets.all(15),
       showCloseIcon: false,
@@ -165,17 +174,15 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
   }
 
   //deleting entry in list
-  void deleteMemoryEntry(int index) {
-
-    print('Deleted memory at index ' + index.toString());
-    setState(() {
-      memoryList.removeAt(index);
-    });
+  void deleteMemoryEntry(String collectionCaller, String index) {
+    dbconn.deleteKeyFromCollectionByID(collectionCaller, index);
+    print('Deleted memory at index ' + index);
     deleteSuccessDialog(context).show();
   }
-  //edit 
-  void editMemoryEntry(BuildContext context, int index) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => EditEntryImage(editIndex: index)));
+
+  //edit
+  void editMemoryEntry(BuildContext context, MemoryModel memory) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => EditEntryImage(selectedMemory: memory)));
   }
 }

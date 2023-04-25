@@ -1,9 +1,15 @@
+import 'package:ess_app/constants.dart';
+import 'package:ess_app/guardian/home/patient_home.dart';
 import 'package:ess_app/guardian/settings/change_password/email_verification.dart';
 import 'package:ess_app/login/login_page.dart';
+import 'package:ess_app/models/user_model.dart';
+import 'package:ess_app/services/auth.dart';
+import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../home/home_page.dart';
+import '../home/guardian_home.dart';
 
 class SettingsHomePage extends StatefulWidget {
   const SettingsHomePage({super.key});
@@ -16,8 +22,10 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   late TextEditingController guardianController;
   late TextEditingController patientController;
 
-  String guardianName = 'sampleGuardianName';
-  String patientName = 'samplePatientName';
+  String guardianName = '';
+  String patientName = '';
+
+  late final dbconn;
 
   @override
   void initState(){
@@ -38,14 +46,22 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final user = Provider.of<UserModel?>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFE86166),
         elevation: 0,
         leading: (IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => guardianHomePage()));
+              if (userPreference == guardianPreference) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => guardianHomePage()));
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => patientHomePage()));
+              }
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -83,11 +99,17 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   GestureDetector(
                     onTap: () async{
                       final guardianName = await openGuardianDialog();
-                      if(guardianName == null || guardianName.isEmpty) return;
+                      if(guardianName == null || guardianName.isEmpty) {
+                        setState(() {
+                          this.guardianName = 'Set Guardian Name';
+                        });
+                      } else {
+                        setState(() {
+                          this.guardianName = user!.guardianName;
+                        });
+                      };
 
-                      setState(() {
-                        this.guardianName = guardianName;
-                      });
+                      
                     },
                     child: Row(
                       children: [
@@ -248,7 +270,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   //logout button
                   GestureDetector(
                     onTap: () async {
-                      await FirebaseAuth.instance.signOut();
+                      await AuthServices().SignOut();
                       openLogoutDialog();
                     },
                     child: Container(
@@ -340,6 +362,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
 
   //submit names
   void submitGuardian(){
+    dbconn.updateGuardianName(guardianController.text);
     Navigator.of(context).pop(guardianController.text);
     guardianController.clear();
   }

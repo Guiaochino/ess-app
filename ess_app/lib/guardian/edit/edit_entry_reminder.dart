@@ -1,38 +1,36 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/dataList/reminders.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
+import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/utils/colors.dart';
-import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EditEntryReminder extends StatefulWidget {
-  final int editIndex;
+  final ReminderModel selectedReminder;
   
-  const EditEntryReminder({required this.editIndex});
+  const EditEntryReminder({required this.selectedReminder});
 
 
   @override
-  State<EditEntryReminder> createState() => _EditEntryReminderState(reminderId: editIndex);
+  State<EditEntryReminder> createState() => _EditEntryReminderState(reminder: selectedReminder);
 }
 
 class _EditEntryReminderState extends State<EditEntryReminder> {
-  int reminderId = 0 ;
-  _EditEntryReminderState({required this.reminderId});
+  ReminderModel reminder;
+  _EditEntryReminderState({required this.reminder});
 
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay.now();
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
-  late Reminder reminderEntry;
+  late ReminderModel reminderEntry;
 
   void initState(){
-    print(reminderId);
     
-    reminderEntry = reminderList[reminderId];
+    reminderEntry = reminder;
     titleController.text = reminderEntry.reminderTitle;
     paragraphController.text = reminderEntry.reminderDetails;
-    _dateTime = parseStringToDate(reminderEntry.reminderDateTime);
+    _dateTime = reminderEntry.reminderDateTime;
 
 
   }
@@ -316,11 +314,10 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
 
     //add to reminderList
     setState(() {
-      reminderList[reminderId].reminderID = reminderId;
-      reminderList[reminderId].reminderTitle = titleController.text;
-      reminderList[reminderId].reminderIsDone = isDone;
-      reminderList[reminderId].reminderDateTime = _dateTime.toString();
-      reminderList[reminderId].reminderDetails = paragraphController.text;
+      reminder.reminderTitle = titleController.text;
+      reminder.reminderIsDone = isDone;
+      reminder.reminderDateTime = _dateTime;
+      reminder.reminderDetails = paragraphController.text;
     },);
     
     print('reminder Entry Edited');

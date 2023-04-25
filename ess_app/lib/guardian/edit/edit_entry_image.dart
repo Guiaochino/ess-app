@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:ess_app/dataList/memories.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/utils/colors.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,29 +9,28 @@ import 'package:image_picker/image_picker.dart';
 // import 'package:image_picker_web/image_picker_web.dart';
 
 class EditEntryImage extends StatefulWidget {
-  final int editIndex;
+  final MemoryModel selectedMemory;
   
-  const EditEntryImage({required this.editIndex});
+  const EditEntryImage({required this.selectedMemory});
 
   @override
-  State<EditEntryImage> createState() => _EditEntryImageState(memoryId: editIndex);
+  State<EditEntryImage> createState() => _EditEntryImageState(memory: selectedMemory);
 }
 
 class _EditEntryImageState extends State<EditEntryImage> {
-  int memoryId = 0 ;
-  _EditEntryImageState({required this.memoryId});
+  MemoryModel memory;
+  _EditEntryImageState({required this.memory});
 
   File? _imageSelected;
   // Uint8List? _imageSelectedPC;
   final imagePicker = ImagePicker(); // imagepicker controller
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
-  late Memory memoryEntry;
+  late MemoryModel memoryEntry;
 
   //load memory data
   void initState(){
-    print(memoryId);
-    memoryEntry = memoryList[memoryId];
+    memoryEntry = memory;
     titleController.text = memoryEntry.memoryTitle;
     paragraphController.text = memoryEntry.memoryDetails;
   }
@@ -403,17 +402,12 @@ class _EditEntryImageState extends State<EditEntryImage> {
     }
     
     if(_imageSelected != '' && _imageSelected != null){
-      print('id: ' + memoryId.toString());
-      print('title : ' + titleController.text);
-      print('dateTime: '+ DateTime.now().toString());
-      print('details : ' + paragraphController.text);
 
       //save to memoryList
       setState(() {
-        memoryList[memoryId].memoryID = memoryId;
-        memoryList[memoryId].memoryTitle = titleController.text;
-        memoryList[memoryId].memoryDateTime = DateTime.now().toString();
-        memoryList[memoryId].memoryDetails = paragraphController.text;
+        memory.memoryTitle = titleController.text;
+        memory.memoryDateTime = DateTime.now();
+        memory.memoryDetails = paragraphController.text;
       },);
       
       print('Memory Entry Edited');

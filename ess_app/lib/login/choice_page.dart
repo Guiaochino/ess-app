@@ -1,7 +1,10 @@
-import 'package:ess_app/guardian/home/home_page.dart';
-import 'package:ess_app/patient/home/home_page.dart';
+import 'package:ess_app/constants.dart';
+import 'package:ess_app/guardian/home/guardian_home.dart';
+import 'package:ess_app/models/user_model.dart';
+import 'package:ess_app/guardian/home/patient_home.dart';
+import 'package:ess_app/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'package:provider/provider.dart';
 
 class ChoicePage extends StatefulWidget {
   const ChoicePage({Key? key}) : super(key: key);
@@ -53,8 +56,13 @@ class _ChoicePageState extends State<ChoicePage> {
                       borderRadius: BorderRadius.circular(20)),
                   child: MaterialButton(
                     onPressed: () {
+                      userPreference = patientPreference;
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => patientHomePage()));
+                          builder: (context) =>
+                              StreamProvider<UserModel?>.value(
+                                  value: AuthServices().user,
+                                  initialData: null,
+                                  child: patientHomePage())));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -89,8 +97,14 @@ class _ChoicePageState extends State<ChoicePage> {
                       borderRadius: BorderRadius.circular(20)),
                   child: MaterialButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => guardianHomePage()));
+                      userPreference = guardianPreference;
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              StreamProvider<UserModel?>.value(
+                                value: AuthServices().user,
+                                initialData: null,
+                                child: guardianHomePage(),
+                              )));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),

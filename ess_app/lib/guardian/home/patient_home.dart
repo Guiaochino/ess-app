@@ -1,15 +1,15 @@
-import 'package:ess_app/dataList/reminders.dart';
-import 'package:ess_app/dataList/schedules.dart';
-import 'package:ess_app/patient/memory/memory_home_page.dart';
-import 'package:ess_app/patient/reminder/reminder_home.dart';
-import 'package:ess_app/patient/schedule/schedule_home.dart';
-import 'package:ess_app/patient/widgets/main_drawer.dart';
-import 'package:ess_app/patient/widgets/reminder_tab_listview.dart';
-import 'package:ess_app/patient/widgets/schedule_tab_listview.dart';
+import 'package:ess_app/models/reminder_model.dart';
+import 'package:ess_app/models/schedule_model.dart';
+import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/guardian/reminder/reminder_home.dart';
+import 'package:ess_app/guardian/schedule/schedule_home.dart';
+import 'package:ess_app/guardian/widgets/main_drawer.dart';
+import 'package:ess_app/guardian/widgets/reminder_tab_listview.dart';
+import 'package:ess_app/guardian/widgets/schedule_tab_listview.dart';
+import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
-import 'package:ess_app/utils/dateTime_formatter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
 
 class patientHomePage extends StatefulWidget {
@@ -20,28 +20,29 @@ class patientHomePage extends StatefulWidget {
 }
 
 class _patientHomePageState extends State<patientHomePage> {
-  List<Reminder> reminders = reminderList.where((i) => i.reminderIsDone == false).toList();
-  List<Schedule> schedules = scheduleList;
-  @override
-  //filter dates onload
-  void initState() {
-    final filteredDates = scheduleList.where((schedule) {
-      final dateTime = extractDatefromDTString(schedule.schedDateTime);
-      final input = extractDatefromDTString(DateTime.now().toString());
-      return dateTime.contains(input); 
 
-    }).toList();
-    print(filteredDates);
-    setState(() {
-      schedules = filteredDates;
-    });
-    super.initState();
-  }
+  List<ScheduleModel> schedules = [];
+  List<ReminderModel> reminders = [];
+  
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
  
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+
+    dbconn.scheduleOfSelectedDate(DateTime.now()).listen((data) {
+      setState(() {
+        schedules = data;
+      });
+    });
+
+    dbconn.getIncomingReminders.listen((data) {
+      setState(() {
+        reminders = data;
+      });
+    });
+
     return Scaffold(
       backgroundColor: AppColors.backColor,
       appBar: AppBar(
@@ -198,11 +199,7 @@ class _patientHomePageState extends State<patientHomePage> {
                           return ScheduleTabListView(
                             tileIndex: index,
                             builderLength: schedules.length,
-                            entryID: schedule.schedID,
-                            title: schedule.schedTitle,
-                            dateTime: schedule.schedDateTime,
-                            details: schedule.schedDetails,
-                            isDone: schedule.schedIsDone,
+                            schedule: schedule,
                             editTapped: (context){
                             },
                             deleteTapped: (context){
@@ -267,11 +264,7 @@ class _patientHomePageState extends State<patientHomePage> {
                           itemBuilder: ((context, index) {
                             final reminder = reminders[index];
                             return ReminderTabListView(
-                              reminderIndex: reminder.reminderID,
-                              reminderTitle: reminder.reminderTitle,
-                              reminderDateTime: reminder.reminderDateTime,
-                              reminderDetails: reminder.reminderDetails,
-                              isDone: reminder.reminderIsDone,
+                              reminder: reminder,
                               deleteTapped: (context){
                                 // deleteDialog(context, index).show();
                                 

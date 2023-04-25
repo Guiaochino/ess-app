@@ -1,7 +1,10 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
+import 'package:ess_app/models/reminder_model.dart';
+import 'package:ess_app/services/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../dataList/reminders.dart';
 import '../widgets/reminder_tab_listview.dart';
 
 class ReminderPastTab extends StatefulWidget {
@@ -12,75 +15,81 @@ class ReminderPastTab extends StatefulWidget {
 }
 
 class _ReminderPastTabState extends State<ReminderPastTab> {
-  List<Reminder> reminders = reminderList.where((i) => i.reminderIsDone).toList();
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-        ),
-        child: Column(
-          children: [
-            SizedBox(height: 10.0),
-          //container for gridview
-            Expanded(
-              child: reminders.isEmpty?
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.notifications_off,
-                          size: 200,
-                          color: Colors.black,
+    return StreamBuilder<List<ReminderModel>>(
+      stream: dbconn.getPastReminder,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<ReminderModel> pastReminders = snapshot.data!;
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: 10.0),
+              //container for gridview
+                Expanded(
+                  child: pastReminders.isEmpty?
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
                         ),
-                        Text(
-                          'No Reminders',
-                          style: TextStyle(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.notifications_off,
+                              size: 200,
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25),
+                            ),
+                            Text(
+                              'No Reminders',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                    ],
+                  )
+                  :Container(
+                    child: ListView.builder(
+                      itemCount: pastReminders.length,
+                      itemBuilder: ((context, index) {
+                        final reminder = pastReminders[index];
+                        return ReminderTabListView(
+                          reminder: reminder,
+                          deleteTapped: (context){
+                            // deleteDialog(context, index).show();
+                            deleteReminderEntry(reminder.uid);
+                            
+                            print('tapped');
+                          },
+                          editTapped:(context){
+                            editReminderEntry(context, reminder);
+                          }
+                        );
+                      }),
                     ),
                   ),
-                ],
-              )
-              :Container(
-                child: ListView.builder(
-                  itemCount: reminders.length,
-                  itemBuilder: ((context, index) {
-                    final reminder = reminders[index];
-                    return ReminderTabListView(
-                      reminderIndex: reminder.reminderID,
-                      reminderTitle: reminder.reminderTitle,
-                      reminderDateTime: reminder.reminderDateTime,
-                      reminderDetails: reminder.reminderDetails,
-                      isDone: reminder.reminderIsDone,
-                      deleteTapped: (context){
-                        // deleteDialog(context, index).show();
-                        deleteReminderEntry(index);
-                        
-                        print('tapped');
-                      },
-                      editTapped:(context){
-                        editReminderEntry(context, reminder.reminderID);
-                      }
-                    );
-                  }),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          );
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return Text('Error: $snapshot.error');
+        }
+      },
     );
   }
 
@@ -153,16 +162,13 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
     );
   }
 
-  void deleteReminderEntry(int index) {
-
-    print('Deleted diary at index ' + index.toString());
-    setState(() {
-      reminderList.removeAt(index);
-    });
+  void deleteReminderEntry(String index) {
+    dbconn.deleteKeyFromCollectionByID(reminderCollection, index);
+    print('Deleted diary at index ' + index);
     deleteSuccessDialog(context).show();
   }
-  void editReminderEntry(BuildContext context, int index) {
+  void editReminderEntry(BuildContext context, ReminderModel reminder) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => EditEntryReminder(editIndex: index)));
+      MaterialPageRoute(builder: (context) => EditEntryReminder(selectedReminder: reminder)));
   }
 }
