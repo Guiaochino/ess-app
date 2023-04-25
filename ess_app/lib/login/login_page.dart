@@ -126,31 +126,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 40),
 
-              //signin button
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: MaterialButton(
-                  onPressed: signin,
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.firstColor,
-                      borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Log In',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
                 //signin button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -211,17 +186,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  Future signin() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(), 
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
   }
 
   //login failed dialog
