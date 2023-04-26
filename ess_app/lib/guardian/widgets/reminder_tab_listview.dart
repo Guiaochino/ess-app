@@ -87,11 +87,11 @@ class ReminderTabListView extends StatelessWidget {
                       decoration: reminder.reminderIsDone ? TextDecoration.lineThrough: TextDecoration.none,
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
-                      fontSize:15,
+                      fontSize:12,
                     ),
                   ),
                   trailing: Text(
-                    reminder.reminderDateTime.toString(),
+                    extractTimefromDTString(reminder.reminderDateTime.toString()),
                     maxLines: 1,
                     style: TextStyle(
                       color: Color(0xFFE86166),
@@ -101,102 +101,6 @@ class ReminderTabListView extends StatelessWidget {
                   ),
                 ),
               ),
-              
-              // child: Center(
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(10.0),
-              //     child: Column(
-              //       children: [
-              //         //1st column - icon and title
-              //         Container(
-              //           height: 50,
-              //           child: Row(
-              //             children: [
-              //               Icon(
-              //                 Icons.drive_file_rename_outline,
-              //                 size: 50,
-              //               ),
-              //               Padding(
-              //                 padding: const EdgeInsets.symmetric(
-              //                   horizontal: 20.0, 
-              //                   vertical: 5.0,
-              //                 ),
-              //                 child: Container(
-              //                   width: 5,
-              //                   height: 50,
-              //                   color: Colors.black,
-              //                 ),
-              //               ),
-              //               Expanded(
-              //                 child: Align(
-              //                   alignment: Alignment.centerLeft,
-              //                   child: Text(
-              //                     reminderTitle,
-              //                     overflow: TextOverflow.ellipsis,
-              //                     style: TextStyle(
-              //                       fontSize: 25, 
-              //                       fontWeight: FontWeight.w600,
-              //                     ),
-              //                   ),
-              //                 ),
-              //               )
-              //             ],
-              //           ),
-              //         ),
-              //         //2nd Column -  diary details
-              //         Expanded(
-              //           child: Padding(
-              //             padding: const EdgeInsets.symmetric(
-              //               vertical: 10.0, 
-              //               horizontal: 10.0
-              //             ),
-              //             child: Container(
-              //               child: Container(
-              //                 child: Text(
-              //                   reminderDetails,
-              //                   maxLines: 4,
-              //                   overflow: TextOverflow.ellipsis,
-              //                   textAlign: TextAlign.justify,
-              //                   style: TextStyle(
-              //                     fontSize: 15, 
-              //                     color: Colors.grey
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //         //3rd Column - time
-              //         Align(
-              //           alignment: Alignment.centerRight,
-              //           child: Container(
-              //             height: 50,
-              //             width: 120,
-              //             child: Center(
-              //               child: Row(
-              //                 children: [
-              //                   Icon(
-              //                     Icons.watch_later,
-              //                     color: Color(0xFFE86166),
-              //                   ),
-              //                   SizedBox(width: 10),
-              //                   Text(
-              //                     extractTimefromDTString(reminderDateTime),
-              //                     style: TextStyle(
-              //                       color: Color(0xFFE86166),
-              //                       fontWeight: FontWeight.w600,
-              //                       fontSize: 15,
-              //                     ),
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ),
           ),
         ),

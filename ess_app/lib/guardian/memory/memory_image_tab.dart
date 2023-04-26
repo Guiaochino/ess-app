@@ -6,6 +6,7 @@ import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:page_transition/page_transition.dart';
 import '../widgets/memory_image_card.dart';
 
 class MemoryImageTab extends StatefulWidget {
@@ -182,7 +183,11 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
 
   //edit
   void editMemoryEntry(BuildContext context, MemoryModel memory) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => EditEntryImage(selectedMemory: memory)));
+    Navigator.of(context).push(
+      PageTransition(
+        child: EditEntryImage(selectedMemory: memory,),
+        type: PageTransitionType.rightToLeft,
+      ),
+    );
   }
 }

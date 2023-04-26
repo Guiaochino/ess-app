@@ -169,6 +169,7 @@ class DatabaseService {
       .doc(this.uid)
       .collection(reminderCollection)
       .where('reminderIsDone', isEqualTo: false)
+      .where('isDeleted', isEqualTo: false)
       .snapshots()
       .map((element) => _dataListFromSnapshot(reminderCollection, element)
           as List<ReminderModel>);
@@ -178,6 +179,7 @@ class DatabaseService {
       .doc(this.uid)
       .collection(reminderCollection)
       .where('reminderIsDone', isEqualTo: true)
+      .where('isDeleted', isEqualTo: false)
       .snapshots()
       .map((element) => _dataListFromSnapshot(reminderCollection, element)
           as List<ReminderModel>);
