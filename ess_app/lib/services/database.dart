@@ -5,6 +5,7 @@ import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/constants.dart';
+import 'package:flutter/material.dart';
 
 class DatabaseService {
   final String uid;
@@ -168,7 +169,6 @@ class DatabaseService {
   Stream<List<ReminderModel>> get getIncomingReminders => userCollection
       .doc(this.uid)
       .collection(reminderCollection)
-      .where('reminderIsDone', isEqualTo: false)
       .where('isDeleted', isEqualTo: false)
       .snapshots()
       .map((element) => _dataListFromSnapshot(reminderCollection, element)
@@ -178,11 +178,11 @@ class DatabaseService {
   Stream<List<ReminderModel>> get getPastReminder => userCollection
       .doc(this.uid)
       .collection(reminderCollection)
-      .where('reminderIsDone', isEqualTo: true)
       .where('isDeleted', isEqualTo: false)
       .snapshots()
       .map((element) => _dataListFromSnapshot(reminderCollection, element)
           as List<ReminderModel>);
+  
 
   // Stream Schedules based on selected date
   Stream<List<ScheduleModel>> scheduleOfSelectedDate(DateTime selectedDate) {

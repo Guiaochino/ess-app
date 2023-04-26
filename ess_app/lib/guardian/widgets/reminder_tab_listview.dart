@@ -9,12 +9,19 @@ class ReminderTabListView extends StatelessWidget {
   final ReminderModel reminder;
   final Function(BuildContext)? deleteTapped;
   final Function(BuildContext)? editTapped;
+  bool _isDone = false;
 
   ReminderTabListView({
     required this.reminder,
     required this.deleteTapped,
     required this.editTapped, 
-  });
+  }){
+    final now = TimeOfDay.now();
+    if (reminder.reminderDateTime.hour < now.hour ||
+        (reminder.reminderDateTime.hour == now.hour && reminder.reminderDateTime.minute <= now.minute)) {
+      _isDone = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +80,8 @@ class ReminderTabListView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      decoration: reminder.reminderIsDone ? TextDecoration.lineThrough: TextDecoration.none,
-                      color: reminder.reminderIsDone ? Colors.grey[800]:Colors.black,
+                      decoration: _isDone ? TextDecoration.lineThrough: TextDecoration.none,
+                      color: _isDone ? Colors.grey[800]:Colors.black,
                       fontWeight: FontWeight.w700,
                       fontSize: 20,
                       ),
@@ -84,7 +91,7 @@ class ReminderTabListView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      decoration: reminder.reminderIsDone ? TextDecoration.lineThrough: TextDecoration.none,
+                      decoration: _isDone ? TextDecoration.lineThrough: TextDecoration.none,
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
                       fontSize:12,

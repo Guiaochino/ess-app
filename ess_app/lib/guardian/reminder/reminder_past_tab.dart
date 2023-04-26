@@ -25,7 +25,14 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
       stream: dbconn.getPastReminder,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<ReminderModel> pastReminders = snapshot.data!;
+        //sorting function for incoming
+          List<ReminderModel> pastReminders = snapshot.data!.where((document) {
+            DateTime dateTime = document.reminderDateTime;
+            TimeOfDay now = TimeOfDay.now();
+            TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
+            return (time.hour < now.hour)||((time.hour == now.hour && time.minute <= now.minute));
+          }).toList();
+          
           return Container(
             decoration: BoxDecoration(
               color: Colors.grey[300],

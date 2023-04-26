@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
@@ -25,7 +26,13 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
         stream: dbconn.getIncomingReminders,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<ReminderModel> incomingReminders = snapshot.data!;
+            //sorting function for incoming
+            List<ReminderModel> incomingReminders = snapshot.data!.where((document) {
+              DateTime dateTime = document.reminderDateTime;
+              TimeOfDay now = TimeOfDay.now();
+              TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
+              return (time.hour > now.hour)||((time.hour == now.hour && time.minute > now.minute));
+            }).toList();
             return Container(
               decoration: BoxDecoration(
                 color: Colors.grey[300],
