@@ -1,11 +1,16 @@
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/memory_model.dart';
+import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/storage.dart';
 import 'package:ess_app/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:page_transition/page_transition.dart';
 // import 'package:image_picker_web/image_picker_web.dart';
 
 class EditEntryImage extends StatefulWidget {
@@ -26,18 +31,23 @@ class _EditEntryImageState extends State<EditEntryImage> {
   final imagePicker = ImagePicker(); // imagepicker controller
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
-  late MemoryModel memoryEntry;
+  final storage = StorageServices(uid: FirebaseAuth.instance.currentUser!.uid);
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
+  String _imageUrl = '';
+  bool _noImgFromDevice = true;
 
   //load memory data
   void initState(){
-    memoryEntry = memory;
-    titleController.text = memoryEntry.memoryTitle;
-    paragraphController.text = memoryEntry.memoryDetails;
+    titleController.text = memory.memoryTitle;
+    paragraphController.text = memory.memoryDetails;
+    _imageUrl = memory.memoryImg;
+    super.initState();
   }
 
   void dispose(){
     titleController.dispose();
     paragraphController.dispose();
+    super.dispose();
   }
   
   @override
@@ -49,90 +59,121 @@ class _EditEntryImageState extends State<EditEntryImage> {
       appBar: AppBar(
         backgroundColor: AppColors.backColor,
         elevation: 0,
-        leading: (IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 30,
-            ))),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              PageTransition(
+                child: MemoryHomePage(activePage: 0),
+                type: PageTransitionType.leftToRight,
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+        ),
       ),
       body: SafeArea(
         child: Container(
           color: AppColors.backColor,
           child: Center(
-            child: Column(
-              children: [
-                SizedBox(height: 10.0),
-                //how is your day
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: (
-                      Text(
-                        'Edit memory',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 30,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 5.0,
-                              color: Colors.grey,
-                              offset: Offset(5.0, 5.0),
-                            ),
-                          ],
-                        ),
-                      )
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  SizedBox(height: 10.0),
+                  //how is your day
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: (
+                        Text(
+                          'Edit memory',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 25,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 5.0,
+                                color: Colors.grey,
+                                offset: Offset(5.0, 5.0),
+                              ),
+                            ],
+                          ),
+                        )
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20.0),
-                //image container
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  SizedBox(height: 20.0),
+                  //image container
+                  Expanded(
                     child: 
                       _imageSelected == null ?
                       Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Color(0xFFF2BA05),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: MaterialButton(
-                          
-                          onPressed:() {
-                            _asyncSimpleDialog(context);
-                          },
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_photo_alternate,
-                                  color: Colors.black,
-                                  size: height > 645? 100: 40,
-                                ),
-                                height > 670 && width > 280 ?
-                                Text(
-                                  'ADD IMAGE',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 25, 
-                                    fontWeight: FontWeight.w600,
+                        child: 
+                        _noImgFromDevice == false ?
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Color(0xFFF2BA05),
+                            ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: MaterialButton(
+                            
+                            onPressed:() {
+                              _asyncSimpleDialog(context);
+                            },
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_photo_alternate,
+                                    color: Colors.black,
+                                    size: height > 645? 100: 40,
                                   ),
-                                ): Container()
-                              ],
+                                  height > 670 && width > 280 ?
+                                  Text(
+                                    'ADD IMAGE',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 25, 
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ): Container()
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),            
+                        )
+                        :Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Color(0xFFF2BA05),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: GestureDetector(
+                              child: Image.network(
+                                memory.memoryImg,
+                                fit: BoxFit.cover,
+                              ),
+                              onLongPress: (){
+                                _asyncSimpleDialog(context);
+                              },
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (_){
+                                  return ImageScreen(imgPath: memory.memoryImg);
+                                }));
+                              },
                             ),
                           ),
                         ),
-                      ),
-                    )
+                      )
                     :Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
@@ -155,43 +196,41 @@ class _EditEntryImageState extends State<EditEntryImage> {
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20.0),
-                //memory title
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 50,
+                  SizedBox(height: 20.0),
+                  //memory title
+                  Align(
+                    alignment: Alignment.center,
                     child: Container(
-                      width: width - 60,
-                      child: TextField(
-                        controller: titleController,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.black,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        decoration: InputDecoration(
-                          iconColor: Colors.black,
-                          prefixIcon: Icon(Icons.auto_stories, size: 30),
-                          border: UnderlineInputBorder(),
-                          hintText: 'Enter Memory Title',
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
+                      height: 50,
+                      child: Container(
+                        width: width - 40,
+                        child: TextField(
+                          textAlignVertical: TextAlignVertical.bottom,
+                          controller: titleController,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          decoration: InputDecoration(
+                            iconColor: Colors.black,
+                            prefixIcon: Icon(Icons.auto_stories, size: 30),
+                            border: UnderlineInputBorder(),
+                            hintText: 'Enter Memory Title',
+                            hintStyle: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20.0),
-                //paragraph
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  SizedBox(height: 20.0),
+                  //paragraph
+                  Expanded(
                     child: Container(
                       color: Colors.white,
                       child: TextFormField(
@@ -199,28 +238,29 @@ class _EditEntryImageState extends State<EditEntryImage> {
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 15,
                           height: 2,
                           color: Colors.black,
                         ),
                         decoration: InputDecoration(
-                          hintText: 'What happened today?',
+                          hintText: "What's this image about?",
                           hintStyle: TextStyle(
                             color: Colors.grey[600],
                           ),
                           border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 5.0,
+                            ),
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20),
-                //save button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: ElevatedButton(
+                  SizedBox(height: 20),
+                  //save button
+                  ElevatedButton(
                     onPressed: (){
                       saveMemoryEntry();
                     },
@@ -229,27 +269,27 @@ class _EditEntryImageState extends State<EditEntryImage> {
                       overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(8),
                         )
                       )
                     ),
                     child: Container(
-                      height: 80,
+                      height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.save_alt,
-                            size: 35,
+                            size: 25,
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
                           width > 280?
                           Text(
-                            'Save',
+                            'Save Memory',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 25,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ): Container()
@@ -257,9 +297,9 @@ class _EditEntryImageState extends State<EditEntryImage> {
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20),
-              ]
+                  SizedBox(height: 20),
+                ]
+              ),
             )
           )
         )
@@ -268,38 +308,6 @@ class _EditEntryImageState extends State<EditEntryImage> {
   }
 
   
-  //
-  AwesomeDialog errorDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.ERROR,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'No Image!',
-      desc: 'Attach an image and try again.',
-      titleTextStyle: TextStyle(
-        color: Colors.red,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      descTextStyle: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
-
   //dialog options
   Future _asyncSimpleDialog(BuildContext context) async {
     return await showDialog(
@@ -311,15 +319,14 @@ class _EditEntryImageState extends State<EditEntryImage> {
           children: [
             SimpleDialogOption(
               onPressed: () {
-                print('camera');
-                  Navigator.of(context).pop();
+                getCameraImage();
+                Navigator.of(context).pop();
               },
               child: Text('Use Camera'),
             ),
             SimpleDialogOption(
               onPressed: () {
-                print('files');
-                // getImageFiles();
+                getImageFiles();
                 Navigator.of(context).pop();
               },
               child: Text('Select from files'),
@@ -327,9 +334,9 @@ class _EditEntryImageState extends State<EditEntryImage> {
             if(_imageSelected != null)
             SimpleDialogOption(
               onPressed: () {
-                print('remove');
                 setState(() {
                   _imageSelected = null;
+                  _noImgFromDevice = true;
                   Navigator.of(context).pop();
                 });
               },
@@ -342,56 +349,38 @@ class _EditEntryImageState extends State<EditEntryImage> {
   }
   
   //camera
-  // Future getCameraImage() async{
-  //   //g
-  //   final image = await imagePicker.getImage(source: ImageSource.camera);
-  //   setState(() {
-  //     _imageSelected = File(image!.path);
-  //   });
+  Future getCameraImage() async{
+    //g
+    final image = await imagePicker.pickImage(source: ImageSource.camera);
+    if (image == null) {
+      // User canceled image selection
+      return;
+    }
+    setState(() {
+      _imageSelected = File(image.path);
+      print(_imageSelected);
+      _noImgFromDevice = false;
+    });
     
-  // }
-  // //image picker from files
-  // Future getImageFiles() async{
-  //   //for pc
-  //   final image = await ImagePickerWeb.getImageAsBytes();
-  //   setState(() {
-  //     _imageSelectedPC = image;
-  //   });
-  // }
-
-  //success dialog
-  AwesomeDialog successDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Edited Successfully!',
-      titleTextStyle: TextStyle(
-        color: Colors.green,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      onDissmissCallback:(type) {
-        Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
+  }
+  //image picker from files
+  Future getImageFiles() async{
+    //for pc
+    final image = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (image == null) {
+      // User canceled image selection
+      return;
+    }
+    setState(() {
+      _imageSelected = File(image.path);
+      print(_imageSelected);
+      _noImgFromDevice = false;
+    });
   }
 
+
   //saving memory
-  void saveMemoryEntry() {
+  Future<void> saveMemoryEntry() async {
 
     //null or empty entries
     if(titleController.text == null || titleController.text == ''){
@@ -401,22 +390,64 @@ class _EditEntryImageState extends State<EditEntryImage> {
       paragraphController.text = 'No Details';
     }
     
-    if(_imageSelected != '' && _imageSelected != null){
-
-      //save to memoryList
+    if(_imageSelected != '' && _imageSelected != null || _imageUrl != ''){
       setState(() {
         memory.memoryTitle = titleController.text;
         memory.memoryDateTime = DateTime.now();
         memory.memoryDetails = paragraphController.text;
-      },);
-      
-      print('Memory Entry Edited');
-      successDialog(context).show();
+      },
+      );
+      print(_noImgFromDevice);
+      try{
+        if(_noImgFromDevice){
+          dbconn.updateMemoryByID(memory.uid, memory);
+          showSuccessDialog(context, 'Your memory entry has been saved.', MemoryHomePage(activePage: 0));
+        }
+        else{
+          var upload = await storage.uploadImage(memory.uid, _imageSelected!);
+
+          setState(() {
+            memory.memoryImg = upload;
+          },
+          );
+          dbconn.updateMemoryByID(memory.uid, memory);
+          print(memory);
+          showSuccessDialog(context, 'Your memory entry has been saved.', MemoryHomePage(activePage: 0));
+          print('success');
+        }
+      }catch(e){
+        print(e);
+      }
     }
     else{
-      errorDialog(context).show();
+      showErrorDialog(context, 'Attach an image and try again.');
     }
     
+  }
+}
+
+class ImageScreen extends StatelessWidget {
+  final String imgPath;
+  const ImageScreen({super.key, required this.imgPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        child: Center(
+          child: Hero(
+            tag: 'imageHero',
+            child: Image.network(
+              imgPath,
+              fit: BoxFit.cover,
+            )
+          ),
+        ),
+        onTap: (){
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 }
 

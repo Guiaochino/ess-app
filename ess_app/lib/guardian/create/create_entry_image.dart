@@ -161,6 +161,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                   child: Container(
                     width: width - 40,
                     child: TextField(
+                      controller: titleController,
                       textAlignVertical: TextAlignVertical.bottom,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -191,6 +192,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
                   child: Container(
                     color: Colors.white,
                     child: TextFormField(
+                      controller: paragraphController,
                       maxLines: 40,
                       keyboardType: TextInputType.multiline,
                       style: TextStyle(
@@ -267,7 +269,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
     );
   }
 
-  void saveMemoryEntry() async {
+  Future <void> saveMemoryEntry() async {
     //null or empty entries
     if (titleController.text == null || titleController.text == '') {
       titleController.text = 'No Title';
@@ -284,18 +286,22 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
     //Upload image to Storage
     // Add to Database
     if (_imageSelected != '' && _imageSelected != null) {
-      var upload = await storage.uploadFile(_imageSelected!);
+      try{
+        var upload = await storage.uploadImage( generateUID(), _imageSelected!);
 
-      MemoryModel memoryEntry = new MemoryModel(
-        uid: generateUID(), 
-        memoryTitle: titleController.text, 
-        memoryDateTime: _datetime,
-        memoryImg: upload,
-        memoryDetails: paragraphController.text);
+        MemoryModel memoryEntry = new MemoryModel(
+          uid: generateUID(), 
+          memoryTitle: titleController.text, 
+          memoryDateTime: _datetime,
+          memoryImg: upload,
+          memoryDetails: paragraphController.text);
 
-      dbconn.addData(memoryCollection, memoryEntry);
-      print('Memory Entry Added');
-      showSuccessDialog(context, 'Your memory entry has been saved.', MemoryHomePage(activePage: 0));
+        dbconn.addData(memoryCollection, memoryEntry);
+        print('Memory Entry Added');
+        showSuccessDialog(context, 'Your memory entry has been saved.', MemoryHomePage(activePage: 0));
+      }catch(e){
+        print(e);
+      }
     } else {
       showErrorDialog(context, 'Attach an image and try again.');
     }
@@ -345,9 +351,14 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   Future getCameraImage() async {
     //g
     final image = await imagePicker.pickImage(source: ImageSource.camera);
-    print(image);
+    if (image == null) {
+      // User canceled image selection
+      return;
+    }
     setState(() {
-      _imageSelected = File(image!.path);
+      _imageSelected = File(image.path);
+      print(_imageSelected);
+      print('ewe');
     });
   }
 
@@ -355,8 +366,14 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   Future getImageFiles() async {
     //for pc
     final image = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (image == null) {
+      // User canceled image selection
+      return;
+    }
     setState(() {
-      _imageSelected = File(image!.path);
+      _imageSelected = File(image.path);
+      print(_imageSelected);
+      print('ewe');
     });
   }
 }

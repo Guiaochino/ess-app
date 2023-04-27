@@ -4,6 +4,7 @@
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
+import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,16 +33,16 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
-  late DiaryModel diaryEntry;
+  
 
   //load diary data
   void initState(){
-    diaryEntry = diary;
-    titleController.text = diaryEntry.diaryTitle;
-    paragraphController.text = diaryEntry.diaryDetails;
-    _dateTime = diaryEntry.diaryDateTime;
-    selectedMood = diaryEntry.emoteRate;
+    titleController.text = diary.diaryTitle;
+    paragraphController.text = diary.diaryDetails;
+    _dateTime = diary.diaryDateTime;
+    selectedMood = diary.emoteRate;
     print(_dateTime);
+    super.initState();
   }
 
   void dispose(){
@@ -394,7 +395,8 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
 
     dbconn.updateDiaryByID(diary.uid, diary);
     print('Diary Entry Edited');
-    successDialog(context).show();
+    showSuccessDialog(context, 'Your reminder has been edited.', MemoryHomePage(activePage: 1));
+
   }
   
   //radio button
