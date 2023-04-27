@@ -32,6 +32,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
   List<MemoryModel> memories = [];
   List<ReminderModel> reminders = [];
   List<ScheduleModel> schedules = [];
+  
 
   final _imagePageController = PageController();
   final _diaryPageController = PageController();
@@ -41,7 +42,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserModel?>(context);
-    var name = user!.guardianName;
+    
 
     dbconn.diaryData.listen((data) {
       setState(() {
@@ -61,11 +62,12 @@ class _guardianHomePageState extends State<guardianHomePage> {
       });
     });
 
-    // dbconn.scheduleData.listen((data) {
-    //   setState(() {
-    //     schedules = data;
-    //   });
-    // });
+    dbconn.scheduleData.listen((data) {
+      setState(() {
+        schedules = data;
+        print(schedules);
+      });
+    });
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(238, 238, 238, 1),
@@ -128,7 +130,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                                       Text(
                                         DateFormat.yMMMEd().format(DateTime.now()).toString(),
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w600,
                                           fontFamily: 'Montserrat',
                                           color: Colors.grey[800],
@@ -136,9 +138,9 @@ class _guardianHomePageState extends State<guardianHomePage> {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        'Hi $name!',
+                                        'Hi test',
                                         style: TextStyle(
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w700,
                                           fontSize: 25,
                                           fontFamily: 'Montserrat',
                                           color: Colors.black
@@ -150,13 +152,13 @@ class _guardianHomePageState extends State<guardianHomePage> {
                                     height: 60,
                                     width: 60,
                                     decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 47, 92, 150).withOpacity(0.1),
+                                      color: Color.fromARGB(255, 241, 222, 160).withOpacity(0.5),
                                       borderRadius: BorderRadius.all(Radius.circular(12)),
                                     ),
                                     child: Icon(
                                       Icons.person,
                                       size: 40,
-                                      color: Colors.grey[800], 
+                                      color: Colors.grey[900], 
                                     ),
                                   ),
                                 ],
@@ -313,7 +315,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       ? Column(
                           children: [
                             Container(
-                              height: 220,
+                              height: 200,
                               child: PageView.builder(
                                 controller: _imagePageController,
                                 itemCount: 3,
@@ -327,7 +329,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                             SizedBox(height: 10.0),
                             SmoothPageIndicator(
                               controller: _imagePageController,
-                              count: diaries.length,
+                              count: 3,
                               effect: ExpandingDotsEffect(
                                 activeDotColor:Color.fromARGB(255, 228, 175, 0),
                               ),
@@ -368,7 +370,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     ? Column(
                       children: [
                         Container(
-                          height: 220,
+                          height: 200,
                           child: PageView.builder(
                             controller: _diaryPageController,
                             itemCount: 3,
@@ -382,7 +384,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                         SizedBox(height: diaries.isEmpty ? 0 : 10.0),
                         SmoothPageIndicator(
                           controller: _diaryPageController,
-                          count: diaries.length,
+                          count: 3,
                           effect: ExpandingDotsEffect(
                               activeDotColor: Color.fromARGB(255, 228, 175, 0)),
                         )
@@ -399,7 +401,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
           // //UPCOMING SCHEDULE
           SliverToBoxAdapter(
             child: Container(
-              height: schedules.isNotEmpty ? 320 : 150,
+              height: schedules.isNotEmpty ? 350 : 150,
               child: Column(
                 children: [
                   SizedBox(height: 20.0),
@@ -418,33 +420,32 @@ class _guardianHomePageState extends State<guardianHomePage> {
                   SizedBox(height: 20.0),
                   //schedule cards
                   Expanded(
-                      child: 
-                      Column(
-                    children: schedules.isNotEmpty ? [
-                      //schedule cards, change function values to change inputs
-                      UpSchedCard(
-                        scheduleDate: "$schedules[0].schedDateTime.month $schedules[0].schedDateTime.day $schedules[0].schedDateTime.year",
-                        scheduleDetails: schedules[0].schedDetails,
-                        scheduleTime: "$schedules[0].schedDateTime.hour $schedules[0].schedDateTime.minute",
-                      ),
-                      SizedBox(height: 10.0),
-                      UpSchedCard(
-                        scheduleDate: "Dec 08 - Tuesday",
-                        scheduleDetails: "Lunch with you hehe",
-                        scheduleTime: "12:00 PM",
-                      ),
-                      SizedBox(height: 10.0),
-                      UpSchedCard(
-                        scheduleDate: "Dec 12 - Saturday",
-                        scheduleDetails: "Dinner with you hehe",
-                        scheduleTime: "08:00 PM",
-                      ),
-                    ] : [
-                      emptyCategory(
-                          icon: Icons.event_busy,
-                          detail: 'No Recent Schedules',
-                        ),],
-                  ),
+                    child:Column(
+                      children: schedules.isNotEmpty ? [
+                        //schedule cards, change function values to change inputs
+                        UpSchedCard(
+                          scheduleDate: "${schedules[0].schedDateTime.month} ${schedules[0].schedDateTime.day} ${schedules[0].schedDateTime.year}",
+                          scheduleDetails: schedules[0].schedDetails,
+                          scheduleTime: "${schedules[0].schedDateTime.hour} ${schedules[0].schedDateTime.minute}",
+                        ),
+                        SizedBox(height: 5.0),
+                        UpSchedCard(
+                          scheduleDate: "${schedules[1].schedDateTime.month} ${schedules[1].schedDateTime.day} ${schedules[1].schedDateTime.year}",
+                          scheduleDetails: schedules[1].schedDetails,
+                          scheduleTime: "${schedules[1].schedDateTime.hour} ${schedules[1].schedDateTime.minute}",
+                        ),
+                        SizedBox(height: 5.0),
+                        UpSchedCard(
+                          scheduleDate: "${schedules[2].schedDateTime.month} ${schedules[2].schedDateTime.day} ${schedules[2].schedDateTime.year}",
+                          scheduleDetails: schedules[2].schedDetails,
+                          scheduleTime: "${schedules[2].schedDateTime.hour} ${schedules[2].schedDateTime.minute}",
+                        ),
+                      ] : [
+                        emptyCategory(
+                            icon: Icons.event_busy,
+                            detail: 'No Recent Schedules',
+                          ),],
+                    ),
                   )
                 ],
               ),
@@ -520,7 +521,7 @@ class emptyCategory extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 50,
+            size: 40,
             color: Colors.black,
           ),
           Text(

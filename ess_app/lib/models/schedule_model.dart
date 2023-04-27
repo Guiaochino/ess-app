@@ -7,7 +7,6 @@ class ScheduleModel {
   String uid;
   String schedTitle;
   DateTime schedDateTime;
-  bool schedIsDone;
   String schedDetails;
   bool isDeleted = false;
 
@@ -15,7 +14,6 @@ class ScheduleModel {
     required this.uid,
     required this.schedTitle,
     required this.schedDateTime,
-    required this.schedIsDone,
     required this.schedDetails,
   });
 
@@ -24,7 +22,6 @@ class ScheduleModel {
       'uid': uid,
       'schedTitle': schedTitle,
       'schedDateTime': schedDateTime,
-      'schedIsDone': schedIsDone,
       'schedDetails': schedDetails,
       'isDeleted': isDeleted,
     };

@@ -39,7 +39,7 @@ class MemoryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(19),
                   child: Opacity(
                     opacity: 0.5,
-                    child: Image.asset(
+                    child: Image.network(
                       memory.memoryImg,
                       fit: BoxFit.cover,
                     ),

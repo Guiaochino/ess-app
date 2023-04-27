@@ -267,7 +267,6 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
 
   //saving reminder
   void saveReminderEntry() {
-    bool isDone =  false;
     //null or empty entries
     if(titleController.text == null || titleController.text == ''){
       titleController.text = 'No Title';
@@ -275,13 +274,9 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
     if(paragraphController.text == null || paragraphController.text == ''){
       paragraphController.text = 'No Details';
     }
-    if(_dateTime.isBefore(DateTime.now())){
-      isDone = true;
-    }
 
     print('title : ' + titleController.text);
     print('dateTime: '+ _dateTime.toString());
-    print('done :' + isDone.toString());
     print('details : ' + paragraphController.text);
 
     //add to reminderList
@@ -289,7 +284,6 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
       uid: generateUID(), 
       reminderTitle: titleController.text, 
       reminderDateTime: _dateTime, 
-      reminderIsDone: false, 
       reminderDetails: paragraphController.text);
 
     dbconn.addData(reminderCollection, scheduleEntry);

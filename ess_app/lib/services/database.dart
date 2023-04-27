@@ -78,7 +78,6 @@ class DatabaseService {
               uid: doc.get('uid'),
               reminderTitle: doc.get('reminderTitle'),
               reminderDateTime: doc.get('reminderDateTime').toDate(),
-              reminderIsDone: doc.get('reminderIsDone'),
               reminderDetails: doc.get('reminderDetails'));
         }).toList();
       case scheduleCollection:
@@ -87,7 +86,6 @@ class DatabaseService {
               uid: doc.get('uid'),
               schedTitle: doc.get('schedTitle'),
               schedDateTime: doc.get('schedDateTime').toDate(),
-              schedIsDone: doc.get('schedIsDone'),
               schedDetails: doc.get('schedDetails'));
         }).toList();
       default:
@@ -100,15 +98,18 @@ class DatabaseService {
       .doc(this.uid)
       .collection(diaryCollection)
       .where('isDeleted', isEqualTo: false)
+      .orderBy('diaryDateTime', descending: true)
       .snapshots()
       .map((element) =>
           _dataListFromSnapshot(diaryCollection, element) as List<DiaryModel>);
+
 
   // Streams for data in the memory
   Stream<List<MemoryModel>> get memoryData => userCollection
       .doc(this.uid)
       .collection(memoryCollection)
       .where('isDeleted', isEqualTo: false)
+      .orderBy('memoryDateTime', descending: true)
       .snapshots()
       .map((element) => _dataListFromSnapshot(memoryCollection, element)
           as List<MemoryModel>);
@@ -186,10 +187,19 @@ class DatabaseService {
 
   // Stream Schedules based on selected date
   Stream<List<ScheduleModel>> scheduleOfSelectedDate(DateTime selectedDate) {
+    // Set the start of the selected date
+    DateTime startOfSelectedDate =
+      DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+
+  // Set the end of the selected date
+    DateTime endOfSelectedDate = startOfSelectedDate.add(Duration(days: 1));
     return userCollection
         .doc(this.uid)
         .collection(scheduleCollection)
-        .where('schedDateTime', isEqualTo: selectedDate)
+        .where('isDeleted', isEqualTo: false)
+        .where('schedDateTime', isGreaterThanOrEqualTo: startOfSelectedDate)
+        .where('schedDateTime', isLessThan: endOfSelectedDate)
+        .orderBy('schedDateTime', descending: false)
         .snapshots()
         .map((element) => _dataListFromSnapshot(scheduleCollection, element)
             as List<ScheduleModel>);

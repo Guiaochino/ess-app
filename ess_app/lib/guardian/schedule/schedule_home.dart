@@ -5,6 +5,7 @@ import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../widgets/main_drawer.dart';
@@ -30,6 +31,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return StreamBuilder<List<ScheduleModel>>(
       stream: dbconn.scheduleOfSelectedDate(_selectedDay),
       builder: (context, snapshot) {
@@ -67,13 +69,12 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Container(
                       //table calendar
                       child: TableCalendar(
-                        
                         locale: 'en_US',
                         rowHeight: 50,
                         daysOfWeekHeight: 25,
@@ -144,7 +145,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                             fontSize: 15,
                           ),
                           selectedDecoration: BoxDecoration(
-                            color: Color.fromARGB(255, 245, 188, 3),
+                            color: AppColors.firstColor.withOpacity(0.6),
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -179,37 +180,52 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                             _selectedDay = selectedDay;
                             _focusedDay = focusedDay;
                           });
-                          // filterDate(selectedDay.toString());
+                          dbconn.scheduleOfSelectedDate(_selectedDay);
                         }),
                       ),
                     ),
                   ),
                   //schedule tab
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 10.0),
                   Expanded(
                     child: Container(
+                      width: width ,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE86166),
+                        color: AppColors.secondColor,
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.0),
-                          topRight: Radius.circular(30.0),
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0),
                         ),
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Schedule',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 25),
-                              ),
+                          SizedBox(height: 15),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Incoming Events',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 25,
+                                      ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  DateFormat(' dd MMM yyyy').format(_selectedDay).toString(),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                    ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -229,7 +245,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                                       children: [
                                         Icon(
                                           Icons.event_busy_rounded,
-                                          size: 150,
+                                          size: 100,
                                           color: Colors.white,
                                         ),
                                         Text(
@@ -237,7 +253,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 25),
+                                              fontSize: 20),
                                         ),
                                       ],
                                     ),

@@ -8,10 +8,17 @@ import 'package:page_transition/page_transition.dart';
 
 class ViewReminder extends StatelessWidget {
   final ReminderModel reminder;
+  bool _isDone = false;
 
-  const ViewReminder({
+   ViewReminder({
     required this.reminder,
-  });
+  }){
+    final now = TimeOfDay.now();
+    if (reminder.reminderDateTime.hour < now.hour ||
+        (reminder.reminderDateTime.hour == now.hour && reminder.reminderDateTime.minute <= now.minute)) {
+      _isDone = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class ViewReminder extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(
               PageTransition(
-                child: ReminderHomePage(activePage: 0),
+                child: ReminderHomePage(activePage: !_isDone? 0 : 1),
                 type: PageTransitionType.leftToRight,
               ),
             );
@@ -71,19 +78,30 @@ class ViewReminder extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 20.0),
-                //add daily reminder
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    reminder.reminderTitle, 
-                    overflow: TextOverflow.visible,  
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.black,
-                      overflow: TextOverflow.ellipsis,
-                      fontWeight: FontWeight.w700
+                Row(
+                  children: [
+                    Container(
+                      width: 5,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: _isDone? Colors.green: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                  ),
+                    SizedBox(width: 5),
+                    Expanded(
+                      child: Text(
+                        reminder.reminderTitle, 
+                        overflow: TextOverflow.visible,  
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.black,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20.0),
                 //time

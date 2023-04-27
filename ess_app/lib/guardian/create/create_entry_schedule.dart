@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/constants.dart';
+import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
@@ -314,68 +315,6 @@ class _CreateEntryScheduleState extends State<CreateEntrySchedule> {
       ),
     );
   }
-  //success dialog
-  AwesomeDialog successDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Schedule Added!',
-      titleTextStyle: TextStyle(
-        color: Colors.green,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      onDissmissCallback:(type) {
-        Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ScheduleHomePage()));
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
-
-  //error
-  AwesomeDialog errorDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.ERROR,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Invalid Date',
-      desc: 'Date and Time must be in future.',
-      titleTextStyle: TextStyle(
-        color: Colors.red,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      descTextStyle: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
 
   //saving diary
   void saveSchedule() {
@@ -390,22 +329,20 @@ class _CreateEntryScheduleState extends State<CreateEntrySchedule> {
     
 
     if(_dateTime.isAfter(DateTime.now())){
-
       //add toscheduleList
       final ScheduleModel scheduleEntry =  new ScheduleModel(
         uid: generateUID(), 
         schedTitle: titleController.text, 
         schedDateTime: _dateTime, 
-        schedIsDone: false, 
         schedDetails: paragraphController.text);
       
       dbconn.addData(scheduleCollection, scheduleEntry);
       
       print('Schedule Entry Added');
-      successDialog(context).show();
+      showSuccessDialog(context, 'Your schedule entry has been added.', ScheduleHomePage());
     }
     else{
-      errorDialog(context).show();
+      showErrorDialog(context, 'Date and Time must be in future.');
     }
   }
 }
