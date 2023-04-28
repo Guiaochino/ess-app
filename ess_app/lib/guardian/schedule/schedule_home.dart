@@ -1,9 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
+import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/schedule_tab_listview.dart';
@@ -28,6 +31,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return StreamBuilder<List<ScheduleModel>>(
       stream: dbconn.scheduleOfSelectedDate(_selectedDay),
       builder: (context, snapshot) {
@@ -65,13 +69,12 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Container(
                       //table calendar
                       child: TableCalendar(
-                        
                         locale: 'en_US',
                         rowHeight: 50,
                         daysOfWeekHeight: 25,
@@ -142,7 +145,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                             fontSize: 15,
                           ),
                           selectedDecoration: BoxDecoration(
-                            color: Color.fromARGB(255, 245, 188, 3),
+                            color: AppColors.firstColor.withOpacity(0.6),
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -177,37 +180,52 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                             _selectedDay = selectedDay;
                             _focusedDay = focusedDay;
                           });
-                          // filterDate(selectedDay.toString());
+                          dbconn.scheduleOfSelectedDate(_selectedDay);
                         }),
                       ),
                     ),
                   ),
                   //schedule tab
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 10.0),
                   Expanded(
                     child: Container(
+                      width: width ,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE86166),
+                        color: AppColors.secondColor,
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.0),
-                          topRight: Radius.circular(30.0),
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0),
                         ),
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Schedule',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 25),
-                              ),
+                          SizedBox(height: 15),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Incoming Events',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 25,
+                                      ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  DateFormat(' dd MMM yyyy').format(_selectedDay).toString(),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                    ),
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -227,7 +245,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                                       children: [
                                         Icon(
                                           Icons.event_busy_rounded,
-                                          size: 150,
+                                          size: 100,
                                           color: Colors.white,
                                         ),
                                         Text(
@@ -235,7 +253,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 25),
+                                              fontSize: 20),
                                         ),
                                       ],
                                     ),
@@ -253,9 +271,22 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                                   builderLength: schedules.length,
                                   schedule: schedule,
                                   editTapped: (context){
+                                    editScheduleEntry(context, schedule);
                                   },
-                                  deleteTapped: (context){
-                                    
+                                  deleteTapped: (context) async {
+                                    try {
+                                      bool? deleteConfirmed = await showConfirmationDialog(context, 'Are you sure you want to delete?');
+                                      if (deleteConfirmed == true) {
+                                        // perform deletion
+                                        await deleteScheduleEntry(scheduleCollection, schedule.uid);
+                                      } else {
+                                        // user canceled deletion
+                                      }
+                                    } catch (e) {
+                                      // handle any errors that might occur here
+                                      print(e);
+                                    }
+                                  
                                   }, 
 
                                 );
@@ -279,6 +310,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
       },
     );
   }
+
   //schedule getter on date click
   // void filterDate(String query){
   //   final filteredDates = scheduleList.where((schedule) {
@@ -295,82 +327,19 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
   //   });
   // }
 
-  // delete? yes or no
-  AwesomeDialog deleteDialog(BuildContext context, int index) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.QUESTION,
-      borderSide: BorderSide(
-        color: AppColors.secondColor,
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Delete Entry?',
-      titleTextStyle: TextStyle(
-        overflow: TextOverflow.ellipsis,
-        color: Colors.green,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-      desc: 'Are you sure you want to delete this diary entry?',
-      btnOkText: 'Yes',
-      btnOkColor: Color(0xFFE86166),
-      btnCancelColor: Colors.blue,
-      btnCancelText: 'No',
-      btnOkOnPress: () {
-        print('yes');
-      },
-      btnCancelOnPress: () {
-        print('no');
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-    );
-  }
+  
+  Future <void> deleteScheduleEntry(String collectionCaller, String index) async{
+    print('Deleted schedule at index ' + index.toString());
+    dbconn.deleteKeyFromCollectionByID(collectionCaller, index);
+    showDeletionSuccessDialog(context, 'Schedule deleted successfully!');
 
-  //delete successfully
-  AwesomeDialog deleteSuccessDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(
-        color: AppColors.secondColor,
-        width: 2,
+  }
+  void editScheduleEntry(BuildContext context, ScheduleModel schedule) {
+    Navigator.of(context).push(
+      PageTransition(
+        child: EditEntrySchedule(selectedSched: schedule),
+        type: PageTransitionType.rightToLeft,
       ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Deleted Successfully',
-      titleTextStyle: TextStyle(
-        overflow: TextOverflow.ellipsis,
-        color: Colors.green,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-      onDissmissCallback:(type) {
-        // Navigator.of(context).pop();
-        
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
     );
-  }
-  void deleteDiaryEntry(String index) {
-      dbconn.deleteKeyFromCollectionByID(scheduleCollection, index);
-      print('Deleted diary at index ' + index.toString());
-      deleteSuccessDialog(context).show();
-  }
-  void editDiaryEntry(BuildContext context, ScheduleModel schedule) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => EditEntrySchedule(selectedSched: schedule)));
   }
 }

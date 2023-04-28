@@ -6,6 +6,7 @@ import 'package:ess_app/services/auth.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'choice_page.dart';
 
@@ -21,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final _auth = AuthServices();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _errorLogin = false;
 
   @override
   void dispose() {
@@ -35,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.backColor,
       body: SafeArea(
         child: Container(
@@ -51,7 +54,29 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 20),
+              _errorLogin ? 
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.secondColor,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Invalid Credentials.',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                      ),
+                    ),
+                  )
+                ),
+              )
+              :Container(),
+              SizedBox(height: 20),
               //emailfield
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -59,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextField(
+                      textAlignVertical: TextAlignVertical.bottom,
                       controller: emailController, // Email Controller for inputs
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
@@ -85,9 +111,10 @@ class _LoginPageState extends State<LoginPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextField(
+                      textAlignVertical: TextAlignVertical.bottom,
                       obscureText: true,
                       controller: passwordController, // Password Controller for inputs
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
@@ -112,8 +139,12 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => EmailVerification()));
+                      Navigator.of(context).push(
+                        PageTransition(
+                          child: EmailVerification(),
+                          type: PageTransitionType.rightToLeft,
+                        ),
+                      );
                     },
                     child: Text(
                       'Forgot Password?',
@@ -127,33 +158,46 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 40),
 
                 //signin button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      dynamic result = await _auth.SignInEmailPassword(emailController.text.trim(), passwordController.text.trim());
-                      if (result == null) {
-                        print("Error in Signin");
-                      } else {
-                        print("Login Successfully!");
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ChoicePage()));
-                      }
-                    },
-                    child: Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            color: Color(0xFFF2BA05),
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Center(
-                            child: Text('Log In',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                )))),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: MaterialButton(
+                  onPressed: () async {
+                    dynamic result = await _auth.SignInEmailPassword(emailController.text.trim(), passwordController.text.trim());
+                    if (result == null) {
+                     setState(() {
+                        _errorLogin = true;
+                        emailController.clear();
+                        passwordController.clear();
+                     });
+                    } else {
+                      print("Login Successfully!");
+                      Navigator.of(context).push(
+                        PageTransition(
+                          child: ChoicePage(),
+                          type: PageTransitionType.rightToLeft,
+                        ),
+                      );
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFF2BA05),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Log In',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
+              ),
               SizedBox(height: 40),
 
               Row(
@@ -167,8 +211,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CreateAccount()));
+                      Navigator.of(context).push(
+                        PageTransition(
+                          child: CreateAccount(),
+                          type: PageTransitionType.rightToLeft,
+                        ),
+                      );
                     },
                     child: Text(
                       ' Sign up now!',

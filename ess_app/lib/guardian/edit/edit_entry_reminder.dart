@@ -1,9 +1,13 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
+import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/reminder_model.dart';
+import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
 class EditEntryReminder extends StatefulWidget {
   final ReminderModel selectedReminder;
@@ -23,20 +27,20 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
   TimeOfDay _timeOfDay = TimeOfDay.now();
   final titleController = TextEditingController(); //title textfield controller
   final paragraphController = TextEditingController(); //paragraph textfield controller
-  late ReminderModel reminderEntry;
+  final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
+  
 
   void initState(){
-    
-    reminderEntry = reminder;
-    titleController.text = reminderEntry.reminderTitle;
-    paragraphController.text = reminderEntry.reminderDetails;
-    _dateTime = reminderEntry.reminderDateTime;
-
-
+    titleController.text = reminder.reminderTitle;
+    paragraphController.text = reminder.reminderDetails;
+    _dateTime = reminder.reminderDateTime;
+    super.initState();
   }
+  
   void dispose(){
     titleController.dispose();
     paragraphController.dispose();
+    super.dispose();
   }
 
 
@@ -51,13 +55,16 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
         elevation: 0,
         leading: (IconButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ReminderHomePage(activePage: 0,)));
+              Navigator.of(context).push(
+                PageTransition(
+                  child: ReminderHomePage(activePage: 0),
+                  type: PageTransitionType.leftToRight,
+                ),
+              );
             },
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.black,
-              size: 30,
             ))),
       ),
       body: SafeArea(
@@ -76,10 +83,10 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 30,
+                        fontSize: 25,
                         shadows: [
                           Shadow(
-                            blurRadius: 10.0,
+                            blurRadius: 5.0,
                             color: Colors.grey,
                             offset: Offset(5.0, 5.0),
                           ),
@@ -95,14 +102,15 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                   child: Container(
                     height: 50,
                     child: Container(
-                      width: width - 60,
+                      width: width - 40,
                       child: TextField(
-                        controller: titleController,
+                        textAlignVertical: TextAlignVertical.bottom,
                         textAlign: TextAlign.center,
+                        controller: titleController,
                         style: TextStyle(
-                          fontSize: 25,
+                          fontSize: 18,
                           color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           overflow: TextOverflow.ellipsis,
                         ),
                         decoration: InputDecoration(
@@ -111,9 +119,9 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                           border: UnderlineInputBorder(),
                           hintText: 'Enter Reminder Title',
                           hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           )
                         ),
                       ),
@@ -124,56 +132,53 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                 //time
                 Container(
                   height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Expanded(
-                      flex: 5,
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Spacer(),
-                            Icon(
-                              Icons.watch_later,
-                              color: Color(0xFFE86166),
-                              size: 55,
-                            ),
-                            SizedBox(width: 5.0),
-                            Expanded(
-                              flex: 4,
-                              child: MaterialButton(
-                                onPressed: () async {
-                              TimeOfDay? newTime = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.fromDateTime(_dateTime),
-                              );
-                              if (newTime == null) return;
-                              final newDateTime = DateTime(
-                                _dateTime.year,
-                                _dateTime.month,
-                                _dateTime.day,
-                                newTime.hour,
-                                newTime.minute,
-                              );
-                              setState(() {
-                                _dateTime = newDateTime;
-                                print(_dateTime);
-                              });
-                            },
-                                child: Text(
-                                  DateFormat.jm().format(_dateTime),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xFFE86166),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Spacer()
-                          ],
-                        )
+                  width: width - 40,
+                  child: TextField(
+                    readOnly: true,
+                    textAlignVertical: TextAlignVertical.bottom,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.watch_later),
+                        onPressed: () async {
+                          TimeOfDay? newTime = await showTimePicker(
+                            context: context,
+                            initialTime: _timeOfDay,
+                          );
+                          if (newTime == null) return;
+                          final newDateTime = DateTime(
+                            _dateTime.year,
+                            _dateTime.month,
+                            _dateTime.day,
+                            newTime.hour,
+                            newTime.minute,
+                          );
+                          setState(() {
+                            _dateTime = newDateTime;
+                            print(_dateTime);
+                          });
+                        },
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 5.0,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      hintText: DateFormat.jm().format(_dateTime),
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -183,26 +188,32 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                 Expanded(
                   flex: 2,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Container(
-                      color: Colors.white,
                       child: TextFormField(
                         controller: paragraphController,
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 15,
                           height: 2,
                           color: Colors.black,
                         ),
                         decoration: InputDecoration(
-                            hintText: 'Enter details here...',
-                            hintStyle: TextStyle(
-                              color: Colors.grey[600],
+                          hintText: 'Enter details here...',
+                          hintStyle: TextStyle(
+                            color: Colors.grey[600],
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 5.0,
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            )),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -214,37 +225,37 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                 SizedBox(height: 20),
                 //save button
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ElevatedButton(
                     onPressed: (){
                       saveReminderEntry();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFFF2BA05)),
+                      backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
                       overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(8),
                         )
                       )
                     ),
                     child: Container(
-                      height: 80,
+                      height: 50,
                       
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.save_alt,
+                            Icons.save,
                             size: 35,
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
                           width > 280 ?
                           Text(
-                            'Save',
+                            'Save Reminder',
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -262,40 +273,8 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
       ),
     );
   }
-  //success dialog
-  AwesomeDialog successDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Edited Successfully!',
-      titleTextStyle: TextStyle(
-        color: Colors.green,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      onDissmissCallback:(type) {
-        Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ReminderHomePage(activePage: 0,)));
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
-
   //saving reminder
   void saveReminderEntry() {
-    bool isDone =  false;
     //null or empty entries
     if(titleController.text == null || titleController.text == ''){
       titleController.text = 'No Title';
@@ -303,25 +282,22 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
     if(paragraphController.text == null || paragraphController.text == ''){
       paragraphController.text = 'No Details';
     }
-    if(_dateTime.isBefore(DateTime.now())){
-      isDone = true;
-    }
 
     print('title : ' + titleController.text);
     print('dateTime: '+ _dateTime.toString());
-    print('done :' + isDone.toString());
     print('details : ' + paragraphController.text);
 
     //add to reminderList
     setState(() {
       reminder.reminderTitle = titleController.text;
-      reminder.reminderIsDone = isDone;
       reminder.reminderDateTime = _dateTime;
       reminder.reminderDetails = paragraphController.text;
     },);
+
+    dbconn.updateRemidnerByID(reminder.uid, reminder);
     
-    print('reminder Entry Edited');
-    successDialog(context).show();
+    print('Reminder Entry Edited');
+    showSuccessDialog(context, 'Your reminder has been edited.', ReminderHomePage(activePage: 0));
   }
 
 }

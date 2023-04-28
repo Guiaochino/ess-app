@@ -14,7 +14,7 @@ class UpSchedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
         tileColor: Colors.white,

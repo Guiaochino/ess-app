@@ -1,9 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
+import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import '../widgets/reminder_tab_listview.dart';
 import 'package:ess_app/models/reminder_model.dart';
 
@@ -23,7 +26,13 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
         stream: dbconn.getIncomingReminders,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<ReminderModel> incomingReminders = snapshot.data!;
+            //sorting function for incoming
+            List<ReminderModel> incomingReminders = snapshot.data!.where((document) {
+              DateTime dateTime = document.reminderDateTime;
+              TimeOfDay now = TimeOfDay.now();
+              TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
+              return (time.hour > now.hour)||((time.hour == now.hour && time.minute > now.minute));
+            }).toList();
             return Container(
               decoration: BoxDecoration(
                 color: Colors.grey[300],
@@ -67,11 +76,19 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
                                 final reminder = incomingReminders[index];
                                 return ReminderTabListView(
                                     reminder: reminder,
-                                    deleteTapped: (context) {
-                                      // deleteDialog(context, index).show();
-                                      deleteReminderEntry(reminder.uid);
-
-                                      print('tapped');
+                                    deleteTapped: (context) async {
+                                      try {
+                                        bool? deleteConfirmed = await showConfirmationDialog(context, 'Are you sure you want to delete?');
+                                        if (deleteConfirmed == true) {
+                                          // perform deletion
+                                          await deleteReminderEntry(reminderCollection, reminder.uid);
+                                        } else {
+                                          // user canceled deletion
+                                        }
+                                      } catch (e) {
+                                        // handle any errors that might occur here
+                                        print(e);
+                                      }
                                     },
                                     editTapped: (context) {
                                       editReminderEntry(context, reminder);
@@ -91,83 +108,20 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
         });
   }
 
-  // delete? yes or no
-  AwesomeDialog deleteDialog(BuildContext context, int index) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.QUESTION,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Delete Entry?',
-      titleTextStyle: TextStyle(
-        overflow: TextOverflow.ellipsis,
-        color: Colors.green,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-      desc: 'Are you sure you want to delete this diary entry?',
-      btnOkText: 'Yes',
-      btnOkColor: Color(0xFFE86166),
-      btnCancelColor: Colors.blue,
-      btnCancelText: 'No',
-      btnOkOnPress: () {
-        print('yes');
-      },
-      btnCancelOnPress: () {
-        print('no');
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-    );
-  }
+  
 
-  //delete successfully
-  AwesomeDialog deleteSuccessDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Deleted Successfully',
-      titleTextStyle: TextStyle(
-        overflow: TextOverflow.ellipsis,
-        color: Colors.green,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-      ),
-      onDissmissCallback: (type) {
-        // Navigator.of(context).pop();
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
-
-  void deleteReminderEntry(String index) {
-    print('Deleted diary at index ' + index);
-    dbconn.deleteKeyFromCollectionByID(reminderCollection, index);
-    deleteSuccessDialog(context).show();
+  Future <void> deleteReminderEntry(String collectionCaller, String index) async {
+    print('Deleted schedule at index ' + index);
+    dbconn.deleteKeyFromCollectionByID(collectionCaller, index);
+    showDeletionSuccessDialog(context, 'Reminder deleted successfully!');
   }
 
   void editReminderEntry(BuildContext context, ReminderModel reminder) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => EditEntryReminder(selectedReminder: reminder)));
+    Navigator.of(context).push(
+      PageTransition(
+        child: EditEntryReminder(selectedReminder: reminder),
+        type: PageTransitionType.rightToLeft,
+      ),
+    );
   }
 }
