@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/models/memory_model.dart';
@@ -32,6 +33,11 @@ class _guardianHomePageState extends State<guardianHomePage> {
   List<MemoryModel> memories = [];
   List<ReminderModel> reminders = [];
   List<ScheduleModel> schedules = [];
+
+  int _memoryCount = 0;
+  int _diaryCount = 0;
+  int _reminderCount = 0;
+  int _scheduleCount = 0;
   
 
   final _imagePageController = PageController();
@@ -39,36 +45,84 @@ class _guardianHomePageState extends State<guardianHomePage> {
 
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
-  @override
-  Widget build(BuildContext context) {
-    final user = Provider.of<UserModel?>(context);
-    
+  late StreamSubscription<List<DiaryModel>> _diaryDataHomeSubscription;
+  late StreamSubscription<List<MemoryModel>> _memoryDataHomeSubscription;
+  late StreamSubscription<List<ReminderModel>> _reminderDataHomeSubscription;
+  late StreamSubscription<List<ScheduleModel>> _scheduleDataHomeSubscription;
 
-    dbconn.diaryData.listen((data) {
+  @override
+  void initState() {
+    super.initState();
+    _subscribeToStreams();
+  }
+
+  void _subscribeToStreams() {
+    // dbconn.getMemoryCount().then((count) {
+    //   setState(() {
+    //     _memoryCount = count;
+    //   });
+    // });
+
+    // dbconn.getDiaryCount().then((count) {
+    //   setState(() {
+    //     _diaryCount = count;
+    //   });
+    // });
+
+    // dbconn.getReminderCount().then((count) {
+    //   setState(() {
+    //     _reminderCount = count;
+    //   });
+    // });
+
+    // dbconn.getScheduleCount().then((count) {
+    //   setState(() {
+    //     _scheduleCount = count;
+    //   });
+    // });
+
+    _diaryDataHomeSubscription = dbconn.diaryDataHome.listen((data) {
       setState(() {
         diaries = data;
       });
     });
 
-    dbconn.memoryData.listen((data) {
+    _memoryDataHomeSubscription = dbconn.memoryDataHome.listen((data) {
       setState(() {
         memories = data;
       });
     });
 
-    dbconn.reminderData.listen((data) {
+    _reminderDataHomeSubscription = dbconn.reminderDataHome.listen((data) {
       setState(() {
         reminders = data;
       });
     });
 
-    dbconn.scheduleData.listen((data) {
+    _scheduleDataHomeSubscription = dbconn.scheduleDataHome().listen((data) {
       setState(() {
         schedules = data;
-        print(schedules);
       });
     });
+  }
 
+  @override
+  void dispose() {
+    _cancelSubscriptions();
+    super.dispose();
+  }
+
+  void _cancelSubscriptions() {
+    _diaryDataHomeSubscription.cancel();
+    _memoryDataHomeSubscription.cancel();
+    _reminderDataHomeSubscription.cancel();
+    _scheduleDataHomeSubscription.cancel();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<UserModel?>(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(238, 238, 238, 1),
       body: CustomScrollView(
@@ -185,6 +239,11 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       //memories button
                       mainButtons(
                         pageRedirect: () {
+                          for (final reminder in reminders) {
+                            print('Date: ${reminder.uid}');
+                            print('Title: ${reminder.reminderTitle}');
+                            print('Date: ${reminder.reminderDateTime}');
+                          }
                           Navigator.of(context).push(
                             PageTransition(
                               child: MemoryHomePage(activePage: 0),
@@ -256,14 +315,14 @@ class _guardianHomePageState extends State<guardianHomePage> {
                           title: 'Images',
                           icon: Icons.photo,
                           iconColor: Color.fromARGB(255, 223, 171, 1),
-                          statNum: memories.length,
+                          statNum: _memoryCount,
                         ),
                         SizedBox(width: 10.0),
                         statCard(
                           title: 'Diaries',
                           icon: Icons.book_sharp,
                           iconColor: AppColors.secondColor,
-                          statNum: diaries.length,
+                          statNum: _diaryCount,
                         ),
                       ],
                     ),
@@ -274,14 +333,14 @@ class _guardianHomePageState extends State<guardianHomePage> {
                           title: 'Schedules',
                           icon: Icons.calendar_month_outlined,
                           iconColor: Color.fromARGB(255, 47, 92, 150),
-                          statNum: schedules.length,
+                          statNum: _scheduleCount,
                         ),
                         SizedBox(width: 10.0),
                         statCard(
                           title: 'Reminders',
                           icon: Icons.notifications_active,
                           iconColor: Color.fromARGB(255, 145, 20, 167),
-                          statNum: reminders.length,
+                          statNum: _reminderCount,
                         ),
                       ],
                     ),
@@ -401,7 +460,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
           // //UPCOMING SCHEDULE
           SliverToBoxAdapter(
             child: Container(
-              height: schedules.isNotEmpty ? 350 : 150,
+              height: 340,
               child: Column(
                 children: [
                   SizedBox(height: 20.0),
@@ -420,85 +479,116 @@ class _guardianHomePageState extends State<guardianHomePage> {
                   SizedBox(height: 20.0),
                   //schedule cards
                   Expanded(
-                    child:Column(
-                      children: schedules.isNotEmpty ? [
-                        //schedule cards, change function values to change inputs
-                        UpSchedCard(
-                          scheduleDate: "${schedules[0].schedDateTime.month} ${schedules[0].schedDateTime.day} ${schedules[0].schedDateTime.year}",
-                          scheduleDetails: schedules[0].schedDetails,
-                          scheduleTime: "${schedules[0].schedDateTime.hour} ${schedules[0].schedDateTime.minute}",
-                        ),
-                        SizedBox(height: 5.0),
-                        UpSchedCard(
-                          scheduleDate: "${schedules[1].schedDateTime.month} ${schedules[1].schedDateTime.day} ${schedules[1].schedDateTime.year}",
-                          scheduleDetails: schedules[1].schedDetails,
-                          scheduleTime: "${schedules[1].schedDateTime.hour} ${schedules[1].schedDateTime.minute}",
-                        ),
-                        SizedBox(height: 5.0),
-                        UpSchedCard(
-                          scheduleDate: "${schedules[2].schedDateTime.month} ${schedules[2].schedDateTime.day} ${schedules[2].schedDateTime.year}",
-                          scheduleDetails: schedules[2].schedDetails,
-                          scheduleTime: "${schedules[2].schedDateTime.hour} ${schedules[2].schedDateTime.minute}",
-                        ),
-                      ] : [
-                        emptyCategory(
-                            icon: Icons.event_busy,
-                            detail: 'No Recent Schedules',
-                          ),],
+                    child: schedules.isNotEmpty? 
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemCount:schedules.length,
+                      itemBuilder:((context, index) {
+                        return UpSchedCard(
+                          schedule: schedules[index],
+                        );
+                      })
+                    )
+                    :emptyCategory(
+                      icon: Icons.event_busy,
+                      detail: 'No Recent Schedules',
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
           ),
           
           //YOURREMINDERS
+          // SliverToBoxAdapter(
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(10),
+          //     ),
+          //     child: Column(
+          //       children: [
+          //         SizedBox(height: 20),
+          //         categoryHeading(
+          //           title: 'Daily Reminders',
+          //           pageRedirect: () {
+          //             Navigator.of(context).push(
+          //               PageTransition(
+          //                 child: ReminderHomePage(activePage: 0),
+          //                 type: PageTransitionType.rightToLeft,
+          //               ),
+          //             );
+          //           },
+          //         ),
+          //         SizedBox(height: 20.0),
+          //         Padding(
+          //           padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          //           child: Column(
+          //             children: [
+          //               //upcoming tile
+          //               reminderTile(
+          //                 title: 'Upcoming',
+          //                 badge: reminders.length,
+          //                 icon: Icons.event_note,
+          //               ),
+          //               SizedBox(height: 10),
+          //               //completed tile
+          //               reminderTile(
+          //                 title: 'Completed',
+          //                 badge: reminders.length,
+          //                 icon: Icons.event_available,
+          //               ),
+          //             ],
+          //           )
+          //         ),
+          //         SizedBox(height: 40),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+        
           SliverToBoxAdapter(
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
+              height: 300,
               child: Column(
                 children: [
                   SizedBox(height: 20),
                   categoryHeading(
-                    title: 'Daily Reminders',
+                    title: 'Upcoming Reminders',
                     pageRedirect: () {
-                      Navigator.of(context).push(
-                        PageTransition(
-                          child: ReminderHomePage(activePage: 0),
-                          type: PageTransitionType.rightToLeft,
-                        ),
-                      );
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ReminderHomePage(activePage: 0,)));
                     },
                   ),
                   SizedBox(height: 20.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      children: [
-                        //upcoming tile
-                        reminderTile(
-                          title: 'Upcoming',
-                          badge: reminders.length,
-                          icon: Icons.event_note,
-                        ),
-                        SizedBox(height: 10),
-                        //completed tile
-                        reminderTile(
-                          title: 'Completed',
-                          badge: reminders.length,
-                          icon: Icons.event_available,
-                        ),
-                      ],
-                    )
-                  ),
-                  SizedBox(height: 40),
-                ],
-              ),
-            ),
-          ),
-        
+                  // Container(
+                  //   child:Expanded(
+                  //         child: Container(
+                  //           // builder of listview
+                  //           child: ListView.builder(
+                  //             itemCount: 3,
+                  //             itemBuilder: ((context, index) {
+                  //               return Padding(
+                  //                 padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  //                 child: UpReminderCard(
+                  //                   reminderTitle: reminderEntry.reminderTitle,
+                  //                   reminderDetails: reminderEntry.reminderDetails,
+                  //                   reminderTime: extractTimefromDTString(reminderEntry.reminderDateTime.toString()),
+                  //                 ),
+                  //               );
+                  //             }),
+                  //           ),
+                  //         )
+                  //   )
+                  // )
+                ]
+              )
+            )
+          )
+
         ],
       ),
       //drawer

@@ -1,15 +1,11 @@
+import 'package:ess_app/models/schedule_model.dart';
 import 'package:flutter/material.dart';
 
 class UpSchedCard extends StatelessWidget {
-  final String scheduleDate;
-  final String scheduleDetails;
-  final String scheduleTime;
+  final ScheduleModel schedule;
 
   UpSchedCard({
-    required this.scheduleDate,
-    required this.scheduleDetails,
-    required this.scheduleTime,
-  });
+   required this.schedule});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +32,7 @@ class UpSchedCard extends StatelessWidget {
           ),
         //schedule date
         title: Text(
-          scheduleDate,
+          schedule.schedTitle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
@@ -49,7 +45,7 @@ class UpSchedCard extends StatelessWidget {
         ),
         //schedule details
         subtitle: Text(
-          scheduleDetails,
+          schedule.schedDetails,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
@@ -69,7 +65,7 @@ class UpSchedCard extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             //schedule time
             child: Text(
-              scheduleTime,
+              schedule.schedDateTime.toString(),
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(

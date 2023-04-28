@@ -168,29 +168,81 @@ class DatabaseService {
 
   // Incoming Reminders Stream
   Stream<List<ReminderModel>> get getIncomingReminders => userCollection
-      .doc(this.uid)
-      .collection(reminderCollection)
-      .where('isDeleted', isEqualTo: false)
-      .snapshots()
-      .map((element) => _dataListFromSnapshot(reminderCollection, element)
-          as List<ReminderModel>);
+    .doc(this.uid)
+    .collection(reminderCollection)
+    .where('isDeleted', isEqualTo: false)
+    .snapshots()
+    .map((querySnapshot) {
+      List<ReminderModel> reminders = [];
+      TimeOfDay now = TimeOfDay.now();
+      for (final documentSnapshot in querySnapshot.docs) {
+        DateTime dateTime = documentSnapshot['reminderDateTime'].toDate();
+        TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
+        if ((time.hour > now.hour) || 
+            ((time.hour == now.hour) && (time.minute > now.minute))) {
+             ReminderModel reminderModel = ReminderModel(
+              uid: documentSnapshot.get('uid'),
+              reminderTitle: documentSnapshot.get('reminderTitle'),
+              reminderDateTime: documentSnapshot.get('reminderDateTime').toDate(),
+              reminderDetails: documentSnapshot.get('reminderDetails'));
+          reminders.add(reminderModel);
+        }
+      }
+      reminders.sort((a, b) {
+        Timestamp timestampA = Timestamp.fromDate(a.reminderDateTime);
+        DateTime dateTimeA = timestampA.toDate();
+        Timestamp timestampB = Timestamp.fromDate(b.reminderDateTime);
+        DateTime dateTimeB = timestampB.toDate();
+        return dateTimeA.compareTo(dateTimeB);
+      });
+      return reminders;
+  });
 
   // Past Reminder Stream
-  Stream<List<ReminderModel>> get getPastReminder => userCollection
-      .doc(this.uid)
-      .collection(reminderCollection)
-      .where('isDeleted', isEqualTo: false)
-      .snapshots()
-      .map((element) => _dataListFromSnapshot(reminderCollection, element)
-          as List<ReminderModel>);
+  // Stream<List<ReminderModel>> get getPastReminder => userCollection
+  //     .doc(this.uid)
+  //     .collection(reminderCollection)
+  //     .where('isDeleted', isEqualTo: false)
+  //     .snapshots()
+  //     .map((element) => _dataListFromSnapshot(reminderCollection, element)
+  //         as List<ReminderModel>);
   
+  Stream<List<ReminderModel>> get getPastReminders => userCollection
+    .doc(this.uid)
+    .collection(reminderCollection)
+    .where('isDeleted', isEqualTo: false)
+    .snapshots()
+    .map((querySnapshot) {
+      List<ReminderModel> reminders = [];
+      TimeOfDay now = TimeOfDay.now();
+      for (final documentSnapshot in querySnapshot.docs) {
+        DateTime dateTime = documentSnapshot['reminderDateTime'].toDate();
+        TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
+        if ((time.hour < now.hour) || 
+            ((time.hour == now.hour) && (time.minute <= now.minute))) {
+             ReminderModel reminderModel = ReminderModel(
+              uid: documentSnapshot.get('uid'),
+              reminderTitle: documentSnapshot.get('reminderTitle'),
+              reminderDateTime: documentSnapshot.get('reminderDateTime').toDate(),
+              reminderDetails: documentSnapshot.get('reminderDetails'));
+          reminders.add(reminderModel);
+        }
+      }
+      reminders.sort((a, b) {
+        Timestamp timestampA = Timestamp.fromDate(a.reminderDateTime);
+        DateTime dateTimeA = timestampA.toDate();
+        Timestamp timestampB = Timestamp.fromDate(b.reminderDateTime);
+        DateTime dateTimeB = timestampB.toDate();
+        return dateTimeA.compareTo(dateTimeB);
+      });
+      return reminders;
+  });
 
   // Stream Schedules based on selected date
   Stream<List<ScheduleModel>> scheduleOfSelectedDate(DateTime selectedDate) {
     // Set the start of the selected date
     DateTime startOfSelectedDate =
       DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
-
   // Set the end of the selected date
     DateTime endOfSelectedDate = startOfSelectedDate.add(Duration(days: 1));
     return userCollection
@@ -259,5 +311,112 @@ class DatabaseService {
         .doc(this.uid)
         .update({'patientName': patient_name}).then(
             (value) => print("Updated Successfully"));
+  }
+
+  //getting the count
+  Future<int> getMemoryCount() async {
+    final snapshot = await userCollection
+        .doc(this.uid)
+        .collection(memoryCollection)
+        .where('isDeleted', isEqualTo: false)
+        .get();
+    return snapshot.size;
+  }
+
+  Future<int> getDiaryCount() async {
+    final snapshot = await userCollection
+        .doc(this.uid)
+        .collection(diaryCollection)
+        .where('isDeleted', isEqualTo: false)
+        .get();
+    return snapshot.size;
+  }
+
+  Future<int> getReminderCount() async {
+    final snapshot = await userCollection
+        .doc(this.uid)
+        .collection(reminderCollection)
+        .where('isDeleted', isEqualTo: false)
+        .get();
+    return snapshot.size;
+  }
+
+  Future<int> getScheduleCount() async {
+    final snapshot = await userCollection
+        .doc(this.uid)
+        .collection(scheduleCollection)
+        .where('isDeleted', isEqualTo: false)
+        .get();
+    return snapshot.size;
+  }
+  Stream<List<MemoryModel>> get memoryDataHome => userCollection
+      .doc(this.uid)
+      .collection(memoryCollection)
+      .limit(3)
+      .where('isDeleted', isEqualTo: false)
+      .orderBy('memoryDateTime', descending: true)
+      .snapshots()
+      .map((element) => _dataListFromSnapshot(memoryCollection, element)
+          as List<MemoryModel>);
+
+  Stream<List<DiaryModel>> get diaryDataHome => userCollection
+    .doc(this.uid)
+    .collection(diaryCollection)
+    .limit(3)
+    .where('isDeleted', isEqualTo: false)
+    .orderBy('diaryDateTime', descending: true)
+    .snapshots()
+    .map((element) =>
+        _dataListFromSnapshot(diaryCollection, element) as List<DiaryModel>);
+
+  // Streams for data in the Reminder
+  Stream<List<ReminderModel>> get reminderDataHome => userCollection
+    .doc(this.uid)
+    .collection(reminderCollection)
+    .limit(3)
+    .where('isDeleted', isEqualTo: false)
+    .snapshots()
+    .map((querySnapshot) {
+      List<ReminderModel> reminders = [];
+      TimeOfDay now = TimeOfDay.now();
+      for (final documentSnapshot in querySnapshot.docs) {
+        DateTime dateTime = documentSnapshot['reminderDateTime'].toDate();
+        TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
+        if ((time.hour > now.hour) || 
+            ((time.hour == now.hour) && (time.minute > now.minute))) {
+             ReminderModel reminderModel = ReminderModel(
+              uid: documentSnapshot.get('uid'),
+              reminderTitle: documentSnapshot.get('reminderTitle'),
+              reminderDateTime: documentSnapshot.get('reminderDateTime').toDate(),
+              reminderDetails: documentSnapshot.get('reminderDetails'));
+          reminders.add(reminderModel);
+        }
+      }
+      reminders.sort((a, b) {
+        Timestamp timestampA = Timestamp.fromDate(a.reminderDateTime);
+        DateTime dateTimeA = timestampA.toDate();
+        Timestamp timestampB = Timestamp.fromDate(b.reminderDateTime);
+        DateTime dateTimeB = timestampB.toDate();
+        return dateTimeA.compareTo(dateTimeB);
+      });
+      return reminders;
+  });
+  // Streams for data in the Schedule
+  Stream<List<ScheduleModel>> scheduleDataHome() {
+    // Set the start of the selected date
+    DateTime startOfSelectedDate =DateTime.now();
+  // Set the end of the selected date
+    DateTime endOfSelectedDate = startOfSelectedDate.add(Duration(days: 1));
+    return userCollection
+        .doc(this.uid)
+        .collection(scheduleCollection)
+        .limit(3)
+        .where('isDeleted', isEqualTo: false)
+        .where('schedDateTime', isGreaterThanOrEqualTo: startOfSelectedDate)
+        .where('schedDateTime', isLessThan: endOfSelectedDate)
+        .orderBy('schedDateTime', descending: false)
+        .snapshots()
+        .map((element) => _dataListFromSnapshot(scheduleCollection, element)
+            as List<ScheduleModel>);
   }
 }
