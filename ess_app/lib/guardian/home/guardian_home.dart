@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:ess_app/guardian/widgets/upcoming_reminder.dart';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/models/reminder_model.dart';
@@ -57,29 +58,29 @@ class _guardianHomePageState extends State<guardianHomePage> {
   }
 
   void _subscribeToStreams() {
-    // dbconn.getMemoryCount().then((count) {
-    //   setState(() {
-    //     _memoryCount = count;
-    //   });
-    // });
+    dbconn.getMemoryCount().then((count) {
+      setState(() {
+        _memoryCount = count;
+      });
+    });
 
-    // dbconn.getDiaryCount().then((count) {
-    //   setState(() {
-    //     _diaryCount = count;
-    //   });
-    // });
+    dbconn.getDiaryCount().then((count) {
+      setState(() {
+        _diaryCount = count;
+      });
+    });
 
-    // dbconn.getReminderCount().then((count) {
-    //   setState(() {
-    //     _reminderCount = count;
-    //   });
-    // });
+    dbconn.getReminderCount().then((count) {
+      setState(() {
+        _reminderCount = count;
+      });
+    });
 
-    // dbconn.getScheduleCount().then((count) {
-    //   setState(() {
-    //     _scheduleCount = count;
-    //   });
-    // });
+    dbconn.getScheduleCount().then((count) {
+      setState(() {
+        _scheduleCount = count;
+      });
+    });
 
     _diaryDataHomeSubscription = dbconn.diaryDataHome.listen((data) {
       setState(() {
@@ -238,12 +239,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     children: [
                       //memories button
                       mainButtons(
-                        pageRedirect: () {
-                          for (final reminder in reminders) {
-                            print('Date: ${reminder.uid}');
-                            print('Title: ${reminder.reminderTitle}');
-                            print('Date: ${reminder.reminderDateTime}');
-                          }
+                        pageRedirect: () {                      
                           Navigator.of(context).push(
                             PageTransition(
                               child: MemoryHomePage(activePage: 0),
@@ -377,7 +373,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                               height: 200,
                               child: PageView.builder(
                                 controller: _imagePageController,
-                                itemCount: 3,
+                                itemCount: memories.length,
                                 itemBuilder: ((context, index) {
                                   return MemoryCard(
                                     memory: memories[index],
@@ -388,7 +384,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                             SizedBox(height: 10.0),
                             SmoothPageIndicator(
                               controller: _imagePageController,
-                              count: 3,
+                              count: memories.length,
                               effect: ExpandingDotsEffect(
                                 activeDotColor:Color.fromARGB(255, 228, 175, 0),
                               ),
@@ -432,7 +428,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                           height: 200,
                           child: PageView.builder(
                             controller: _diaryPageController,
-                            itemCount: 3,
+                            itemCount: diaries.length,
                             itemBuilder: ((context, index) {
                               return DiaryCard(
                                 diary: diaries[index],
@@ -443,7 +439,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                         SizedBox(height: diaries.isEmpty ? 0 : 10.0),
                         SmoothPageIndicator(
                           controller: _diaryPageController,
-                          count: 3,
+                          count: diaries.length,
                           effect: ExpandingDotsEffect(
                               activeDotColor: Color.fromARGB(255, 228, 175, 0)),
                         )
@@ -460,7 +456,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
           // //UPCOMING SCHEDULE
           SliverToBoxAdapter(
             child: Container(
-              height: 340,
+              height: schedules.isNotEmpty ? 340 : 150,
               child: Column(
                 children: [
                   SizedBox(height: 20.0),
@@ -492,7 +488,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     )
                     :emptyCategory(
                       icon: Icons.event_busy,
-                      detail: 'No Recent Schedules',
+                      detail: 'No Schedules Today',
                     ),
                   ),
                 ],
@@ -552,43 +548,46 @@ class _guardianHomePageState extends State<guardianHomePage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              height: 300,
+              height: reminders.isNotEmpty ? 340 : 150,
               child: Column(
                 children: [
                   SizedBox(height: 20),
                   categoryHeading(
                     title: 'Upcoming Reminders',
                     pageRedirect: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ReminderHomePage(activePage: 0,)));
+                      Navigator.of(context).push(
+                        PageTransition(
+                          child: ReminderHomePage(activePage: 0),
+                          type: PageTransitionType.rightToLeft,
+                        ),
+                      );
                     },
                   ),
                   SizedBox(height: 20.0),
-                  // Container(
-                  //   child:Expanded(
-                  //         child: Container(
-                  //           // builder of listview
-                  //           child: ListView.builder(
-                  //             itemCount: 3,
-                  //             itemBuilder: ((context, index) {
-                  //               return Padding(
-                  //                 padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  //                 child: UpReminderCard(
-                  //                   reminderTitle: reminderEntry.reminderTitle,
-                  //                   reminderDetails: reminderEntry.reminderDetails,
-                  //                   reminderTime: extractTimefromDTString(reminderEntry.reminderDateTime.toString()),
-                  //                 ),
-                  //               );
-                  //             }),
-                  //           ),
-                  //         )
-                  //   )
-                  // )
+                  Expanded(
+                    child: reminders.isNotEmpty?
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemCount: reminders.length,
+                      itemBuilder: ((context, index) {
+                        return UpReminderCard(
+                          reminder:reminders[index]
+                        );
+                      }),
+                    )
+                    :emptyCategory(
+                      icon: Icons.event_busy,
+                      detail: 'No Reminders Today',
+                    ),
+                  ),
                 ]
-              )
-            )
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(height: 40),
           )
-
         ],
       ),
       //drawer

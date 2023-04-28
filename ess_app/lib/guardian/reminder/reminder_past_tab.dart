@@ -1,8 +1,9 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'dart:async';
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/reminder_model.dart';
+import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

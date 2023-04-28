@@ -349,6 +349,8 @@ class DatabaseService {
         .get();
     return snapshot.size;
   }
+
+  //streams for the homepage
   Stream<List<MemoryModel>> get memoryDataHome => userCollection
       .doc(this.uid)
       .collection(memoryCollection)
@@ -373,7 +375,6 @@ class DatabaseService {
   Stream<List<ReminderModel>> get reminderDataHome => userCollection
     .doc(this.uid)
     .collection(reminderCollection)
-    .limit(3)
     .where('isDeleted', isEqualTo: false)
     .snapshots()
     .map((querySnapshot) {
@@ -399,7 +400,13 @@ class DatabaseService {
         DateTime dateTimeB = timestampB.toDate();
         return dateTimeA.compareTo(dateTimeB);
       });
-      return reminders;
+      if(reminders.length > 3){
+        List<ReminderModel> threeReminders = reminders.sublist(0, 3);
+        return threeReminders;
+      }
+      else{
+        return reminders;
+      }
   });
   // Streams for data in the Schedule
   Stream<List<ScheduleModel>> scheduleDataHome() {

@@ -27,12 +27,7 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             //sorting function for incoming
-            List<ReminderModel> incomingReminders = snapshot.data!.where((document) {
-              DateTime dateTime = document.reminderDateTime;
-              TimeOfDay now = TimeOfDay.now();
-              TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
-              return (time.hour > now.hour)||((time.hour == now.hour && time.minute > now.minute));
-            }).toList();
+            List<ReminderModel> incomingReminders = snapshot.data!;
             return Container(
               decoration: BoxDecoration(
                 color: Colors.grey[300],
