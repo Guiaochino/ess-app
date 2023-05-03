@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:ess_app/guardian/widgets/patient_upcoming_reminder.dart';
+import 'package:ess_app/guardian/widgets/patient_upcoming_schedule.dart';
+import 'package:ess_app/guardian/widgets/upcoming_reminder.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
@@ -25,23 +30,45 @@ class _patientHomePageState extends State<patientHomePage> {
   List<ReminderModel> reminders = [];
   
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
+  late StreamSubscription<List<ReminderModel>> _reminderDataHomeSubscription;
+  late StreamSubscription<List<ScheduleModel>> _scheduleDataHomeSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscribeToStreams();
+  }
+
+  void _subscribeToStreams(){
+    _reminderDataHomeSubscription = dbconn.reminderDataHome.listen((data) {
+      setState(() {
+        reminders = data;
+      });
+    });
+
+    _scheduleDataHomeSubscription = dbconn.scheduleDataHome().listen((data) {
+      setState(() {
+        schedules = data;
+      });
+    });
+  }
+  @override
+  void dispose() {
+    _cancelSubscriptions();
+    super.dispose();
+  }
+
+  void _cancelSubscriptions() {
+    _reminderDataHomeSubscription.cancel();
+    _scheduleDataHomeSubscription.cancel();
+  }
  
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    dbconn.scheduleOfSelectedDate(DateTime.now()).listen((data) {
-      setState(() {
-        schedules = data;
-      });
-    });
-
-    dbconn.getIncomingReminders.listen((data) {
-      setState(() {
-        reminders = data;
-      });
-    });
+    
 
     return Scaffold(
       backgroundColor: AppColors.backColor,
@@ -155,58 +182,34 @@ class _patientHomePageState extends State<patientHomePage> {
                         ),
                       ),
                       SizedBox(height: 10),     
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.secondColor,
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                      schedules.isEmpty? 
+                      Center(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            emptyCategory(
+                              icon: Icons.event_busy,
+                              detail: 'No Schedules Today',
+                            ),
+                            SizedBox(height: 20),
+                          ],
                         ),
-                        child: schedules.isEmpty? 
-                        Center(
-                          child: Column(
-                            children: [
-                              SizedBox(height: 20),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.event_busy_rounded,
-                                      size: 70,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      'No Schedule.',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                            ],
-                          ),
-                        )
-                        //listview builder of onclick date events
-                        :ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: schedules.length,
-                        itemBuilder: (context, index) {
-                          final schedule = schedules[index];
-                          return ScheduleTabListView(
-                            tileIndex: index,
-                            builderLength: schedules.length,
-                            schedule: schedule,
-                            editTapped: (context){
-                            },
-                            deleteTapped: (context){
-                            }, 
-                          );
-                        },
-                      ))               
+                      )
+                      //listview builder of onclick date events
+                      :ListView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: schedules.length,
+                      itemBuilder: (context, index) {
+                        final schedule = schedules[index];
+                        return UpcomingScheduleListView(
+                          tileIndex: index,
+                          builderLength: schedules.length,
+                          schedule: schedule,
+                        );
+                      },
+                      )               
                     ],
                   ),
                 ),
@@ -232,52 +235,29 @@ class _patientHomePageState extends State<patientHomePage> {
                     SizedBox(height: 10),
                     Expanded(
                       child: reminders.isEmpty?
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
+                      Center(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            emptyCategory(
+                              icon: Icons.event_busy,
+                              detail: 'No Reminders Today',
                             ),
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.notifications_off,
-                                  size: 200,
-                                  color: Colors.black,
-                                ),
-                                Text(
-                                  'No Reminders',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 25),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                            SizedBox(height: 20),
+                          ],
+                        ),
                       )
                       :Container(
                         child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: reminders.length,
                           itemBuilder: ((context, index) {
                             final reminder = reminders[index];
-                            return ReminderTabListView(
-                              reminder: reminder,
-                              deleteTapped: (context){
-                                // deleteDialog(context, index).show();
-                                
-                                print('tapped');
-                              },
-                              editTapped:(context){
-                              }
-                            );
+                            return UpcomingReminderListView(reminder: reminder);
                           }),
                         ),
                       ),
                     ),
-        
                   ],
                 ),
               )
@@ -291,6 +271,39 @@ class _patientHomePageState extends State<patientHomePage> {
         ),
       ),
     );
+  }
+}
+
+class emptyCategory extends StatelessWidget {
+  final IconData icon;
+  final String detail;
+  const emptyCategory({
+    Key? key, required this.icon, required this.detail,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 40,
+            color: Colors.black,
+          ),
+          Text(
+            detail,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[800],
+              fontFamily: 'Montserrat',
+            ),
+          ),
+        ],
+      );
   }
 }
 

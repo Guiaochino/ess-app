@@ -1,12 +1,12 @@
-import 'package:ess_app/models/schedule_model.dart';
+import 'package:ess_app/models/reminder_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class UpSchedCard extends StatelessWidget {
-  final ScheduleModel schedule;
+class UpReminderCard extends StatelessWidget {
+  final ReminderModel reminder;
 
-  UpSchedCard({
-   required this.schedule});
+  UpReminderCard({
+   required this.reminder});
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +22,18 @@ class UpSchedCard extends StatelessWidget {
             height: 50,
             width: 50,
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 141, 47, 150).withOpacity(0.1),
+              color: Color.fromARGB(255, 47, 92, 150).withOpacity(0.1),
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             child: Icon(
-              Icons.event,
+              Icons.notifications_active,
               size: 30,
-              color: Color.fromARGB(255, 141, 47, 150), 
+              color: Color.fromARGB(255, 47, 92, 150), 
             ),
           ),
         //schedule date
         title: Text(
-          schedule.schedTitle,
+          reminder.reminderTitle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
@@ -46,7 +46,7 @@ class UpSchedCard extends StatelessWidget {
         ),
         //schedule details
         subtitle: Text(
-          schedule.schedDetails,
+          reminder.reminderDetails,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,
@@ -66,7 +66,7 @@ class UpSchedCard extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             //schedule time
             child: Text(
-              DateFormat('h:mm a').format(schedule.schedDateTime),
+              DateFormat('h:mm a').format(reminder.reminderDateTime),
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(

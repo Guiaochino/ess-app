@@ -1,8 +1,9 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'dart:async';
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/reminder_model.dart';
+import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,17 +23,11 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ReminderModel>>(
-      stream: dbconn.getPastReminder,
+      stream: dbconn.getPastReminders,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
         //sorting function for incoming
-          List<ReminderModel> pastReminders = snapshot.data!.where((document) {
-            DateTime dateTime = document.reminderDateTime;
-            TimeOfDay now = TimeOfDay.now();
-            TimeOfDay time = TimeOfDay.fromDateTime(dateTime);
-            return (time.hour < now.hour)||((time.hour == now.hour && time.minute <= now.minute));
-          }).toList();
-          
+          List<ReminderModel> pastReminders = snapshot.data!;
           return Container(
             decoration: BoxDecoration(
               color: Colors.grey[300],
