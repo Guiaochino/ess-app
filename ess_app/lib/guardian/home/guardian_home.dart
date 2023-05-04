@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:ess_app/guardian/widgets/upcoming_reminder.dart';
+import 'package:ess_app/helpers.dart';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notification_api.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/guardian/widgets/diary_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -54,6 +57,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
   @override
   void initState() {
     super.initState();
+    
     _subscribeToStreams();
   }
 
@@ -239,13 +243,15 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     children: [
                       //memories button
                       mainButtons(
-                        pageRedirect: () {                      
-                          Navigator.of(context).push(
-                            PageTransition(
-                              child: MemoryHomePage(activePage: 0),
-                              type: PageTransitionType.rightToLeft,
-                            ),
-                          );
+                        pageRedirect: () {  
+                          print(generateUID());
+                          // NotificationApi.printAllScheduledNotifications();  
+                          // Navigator.of(context).push(
+                          //   PageTransition(
+                          //     child: MemoryHomePage(activePage: 0),
+                          //     type: PageTransitionType.rightToLeft,
+                          //   ),
+                          // );
                         },
                         imgAsset: 'assets/images/memory.jpg',
                         title: 'Memories',
@@ -254,12 +260,19 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       //schedules button
                       mainButtons(
                         pageRedirect: () {
+                          NotificationApi.scheduleNotification(
+                            id: 103,
+                            title: 'Schedule',
+                            body: 'Reminder now',
+                            payload: 'sample.payload',
+                            scheduledDate: DateTime(2023, 5, 4, 13, 53),
+                          );
                           Navigator.of(context).push(
                             PageTransition(
                               child: ScheduleHomePage(),
                               type: PageTransitionType.rightToLeft,
                             ),
-                          );
+                          );  
                         },
                         imgAsset: 'assets/images/schedule.jpg',
                         title: 'Schedules',
@@ -268,6 +281,13 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       //reminders button
                       mainButtons(
                         pageRedirect: () {
+                          NotificationApi.reminderNotification(
+                            id: 101,
+                            title: 'Schedule',
+                            body: 'Reminder now',
+                            payload: 'sample.payload',
+                            scheduledDate: DateTime(2023, 5, 4, 13, 35),
+                          );
                           Navigator.of(context).push(
                             PageTransition(
                               child: ReminderHomePage(activePage: 0),
