@@ -3,6 +3,7 @@ import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notifications.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -337,6 +338,12 @@ class _CreateEntryScheduleState extends State<CreateEntrySchedule> {
         schedDetails: paragraphController.text);
       
       dbconn.addData(scheduleCollection, scheduleEntry);
+      NotificationService.scheduleNotification(
+        id: int.parse(scheduleEntry.uid),
+        title: 'Event approaching!',
+        body: '${scheduleEntry.schedTitle} \n${scheduleEntry.schedDetails}',
+        scheduledDate: _dateTime,
+      );
       
       print('Schedule Entry Added');
       showSuccessDialog(context, 'Your schedule entry has been added.', ScheduleHomePage());

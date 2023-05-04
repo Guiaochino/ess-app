@@ -5,6 +5,7 @@ import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -107,7 +108,8 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
 
 
   Future <void> deleteReminderEntry(String collectionCaller, String index) async {
-    print('Deleted diary at index ' + index);
+    print('Deleted reminder at index ' + index);
+    NotificationService.removeNotificationWithId(int.parse(index));
     dbconn.deleteKeyFromCollectionByID(collectionCaller, index);
     showDeletionSuccessDialog(context, 'Reminder deleted successfully!');
   }

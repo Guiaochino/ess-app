@@ -5,6 +5,7 @@ import 'package:ess_app/helpers.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notifications.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -280,13 +281,21 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
     print('details : ' + paragraphController.text);
 
     //add to reminderList
-    ReminderModel scheduleEntry = new ReminderModel(
+    ReminderModel reminderEntry = new ReminderModel(
       uid: generateUID(), 
       reminderTitle: titleController.text, 
       reminderDateTime: _dateTime, 
       reminderDetails: paragraphController.text);
-
-    dbconn.addData(reminderCollection, scheduleEntry);
+    
+    //save to database
+    dbconn.addData(reminderCollection, reminderEntry);
+    //add notification
+    NotificationService.reminderNotification(
+      id: int.parse(reminderEntry.uid),
+      title: "Here's a reminder!",
+      body: '${reminderEntry.reminderTitle} \n${reminderEntry.reminderDetails}',
+      scheduledDate: _dateTime,
+    );
 
     print('reminder Entry Added');
     showSuccessDialog(context, 'Your reminder has been saved.', ReminderHomePage(activePage: 0));

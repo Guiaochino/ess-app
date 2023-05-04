@@ -59,6 +59,7 @@ dependencies:
   cloud_firestore: ^4.5.0
   page_transition: ^2.0.9
   flutter_native_splash: ^2.2.4
+  flutter_local_notifications: ^14.0.0+1
 
 flutter_native_splash:
   android: true

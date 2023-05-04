@@ -2,19 +2,26 @@ import 'package:ess_app/login/choice_page.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'login/login_page.dart';
-
+import 'package:timezone/data/latest.dart' as tz;
 // Firebase Plugins
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 
 Future main() async {
+  //local notif init
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher'); // <- default icon name is @mipmap/ic_launcher
+    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, );
 
   WidgetsFlutterBinding.ensureInitialized();
+  flutterLocalNotificationsPlugin.initialize(initializationSettings,);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  tz.initializeTimeZones(); //timezone init
 
   runApp(const MyApp());
 }
