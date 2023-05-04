@@ -242,12 +242,12 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       mainButtons(
                         pageRedirect: () {
                           NotificationService.printAllScheduledNotifications();                   
-                          // Navigator.of(context).push(
-                          //   PageTransition(
-                          //     child: MemoryHomePage(activePage: 0),
-                          //     type: PageTransitionType.rightToLeft,
-                          //   ),
-                          // );
+                          Navigator.of(context).push(
+                            PageTransition(
+                              child: MemoryHomePage(activePage: 0),
+                              type: PageTransitionType.rightToLeft,
+                            ),
+                          );
                         },
                         imgAsset: 'assets/images/memory.jpg',
                         title: 'Memories',
