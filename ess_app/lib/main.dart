@@ -13,10 +13,13 @@ import 'package:provider/provider.dart';
 Future main() async {
   //local notif init
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  
     var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher'); // <- default icon name is @mipmap/ic_launcher
     var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, );
 
   WidgetsFlutterBinding.ensureInitialized();
+  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+    AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
   flutterLocalNotificationsPlugin.initialize(initializationSettings,);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

@@ -338,12 +338,12 @@ class _CreateEntryScheduleState extends State<CreateEntrySchedule> {
         schedDetails: paragraphController.text);
       
       dbconn.addData(scheduleCollection, scheduleEntry);
-      // NotificationService.scheduleNotification(
-      //   id: int.parse(scheduleEntry.uid),
-      //   title: 'Event approaching!',
-      //   body: '${scheduleEntry.schedTitle} \n${scheduleEntry.schedDetails}',
-      //   scheduledDate: _dateTime,
-      // );
+      NotificationService.scheduleNotification(
+        id: int.parse(scheduleEntry.uid),
+        title: 'Event approaching!',
+        body: '${scheduleEntry.schedTitle} \n${scheduleEntry.schedDetails}',
+        scheduledDate: _dateTime,
+      );
       
       print('Schedule Entry Added');
       showSuccessDialog(context, 'Your schedule entry has been added.', ScheduleHomePage());

@@ -14,6 +14,9 @@ class NotificationService {
         'channel id',
         'channel name',
         importance: Importance.max,
+        enableLights: true,
+        enableVibration: true,
+        playSound: true
       ),
     );
   }
