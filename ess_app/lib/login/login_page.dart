@@ -18,7 +18,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final _auth = AuthServices();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -45,37 +44,33 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Expanded(
                 child: Container(
-                  color: AppColors.firstColor,
-                  child: Center(
-                    child: Image.asset(
-                  'assets/images/geriAssisTransparent.png',
-                  fit: BoxFit.cover,
-                )
-                  )
-                ),
+                    color: AppColors.firstColor,
+                    child: Center(
+                        child: Image.asset(
+                      'assets/images/geriAssisTransparent.png',
+                      fit: BoxFit.cover,
+                    ))),
               ),
               SizedBox(height: 20),
-              _errorLogin ? 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.secondColor,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Invalid Credentials.',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white
-                      ),
-                    ),
-                  )
-                ),
-              )
-              :Container(),
+              _errorLogin
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: AppColors.secondColor,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Invalid Credentials.',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white),
+                            ),
+                          )),
+                    )
+                  : Container(),
               SizedBox(height: 20),
               //emailfield
               Padding(
@@ -85,7 +80,8 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextField(
                       textAlignVertical: TextAlignVertical.bottom,
-                      controller: emailController, // Email Controller for inputs
+                      controller:
+                          emailController, // Email Controller for inputs
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         filled: true,
@@ -113,7 +109,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       textAlignVertical: TextAlignVertical.bottom,
                       obscureText: true,
-                      controller: passwordController, // Password Controller for inputs
+                      controller:
+                          passwordController, // Password Controller for inputs
                       keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         filled: true,
@@ -141,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Navigator.of(context).push(
                         PageTransition(
-                          child: EmailVerification(),
+                          child: ForgotPassword(),
                           type: PageTransitionType.rightToLeft,
                         ),
                       );
@@ -157,18 +154,21 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 40),
 
-                //signin button
+              //signin button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: MaterialButton(
                   onPressed: () async {
-                    dynamic result = await _auth.SignInEmailPassword(emailController.text.trim(), passwordController.text.trim());
+                    dynamic result = await _auth.SignInEmailPassword(
+                        emailController.text.trim(),
+                        passwordController.text.trim());
+                    print(result);
                     if (result == null) {
-                     setState(() {
+                      setState(() {
                         _errorLogin = true;
                         emailController.clear();
                         passwordController.clear();
-                     });
+                      });
                     } else {
                       print("Login Successfully!");
                       Navigator.of(context).push(
@@ -200,34 +200,31 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 40),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center, 
-                children: [
-                  Text(
-                    'No Account Yet?',
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(
+                  'No Account Yet?',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: CreateAccount(),
+                        type: PageTransitionType.rightToLeft,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    ' Sign up now!',
                     style: TextStyle(
+                      color: Color.fromARGB(255, 241, 83, 72),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        PageTransition(
-                          child: CreateAccount(),
-                          type: PageTransitionType.rightToLeft,
-                        ),
-                      );
-                    },
-                    child: Text(
-                      ' Sign up now!',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 241, 83, 72),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ]
-              ),
+                ),
+              ]),
               SizedBox(height: 20),
             ],
           ),
@@ -268,4 +265,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
