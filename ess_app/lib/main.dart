@@ -1,4 +1,7 @@
+import 'package:ess_app/guardian/settings/change_password/change_password.dart';
+import 'package:ess_app/guardian/settings/settings_home.dart';
 import 'package:ess_app/login/choice_page.dart';
+import 'package:ess_app/login/email_verification_sent.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -56,8 +59,9 @@ class MainPage extends StatelessWidget {
       return StreamProvider<UserModel?>.value(
         value: AuthServices().user,
         initialData: null,
-        child: ChoicePage(),
-      );
+        child: ChoicePage()
+        );
+
     }
   }
 }
