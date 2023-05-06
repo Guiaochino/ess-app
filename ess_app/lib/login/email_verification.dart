@@ -3,6 +3,7 @@ import 'package:ess_app/login/email_verification_sent.dart';
 import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class EmailVerification extends StatefulWidget {
   const EmailVerification({Key? key}) : super(key: key);
@@ -44,15 +45,8 @@ class _EmailVerificationState extends State<EmailVerification> {
                   child: Text(
                     'Email Verification',
                     style: TextStyle(
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                       fontSize: 25,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.grey,
-                          offset: Offset(5.0, 5.0),
-                        ),
-                      ],
                     ),
                   ),
                 ),
@@ -89,8 +83,8 @@ class _EmailVerificationState extends State<EmailVerification> {
                         Padding(
                           padding: const EdgeInsets.only(
                             top: 10,
-                            left: 30,
-                            right: 30,
+                            left: 20,
+                            right: 20,
                           ),
                           child: Container(
                             child: Padding(
@@ -130,30 +124,41 @@ class _EmailVerificationState extends State<EmailVerification> {
                           child: Container(
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10.0),
-                              child: MaterialButton(
+                              child: ElevatedButton(
                                 onPressed: () {
-                                  
-                                  // TODO: sent verification to email provided
-                  
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          EmailVerificationSent()));
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF333333),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Send Email',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
+                                  //TODO: add a send email implementation
+
+                                  Navigator.of(context).push(
+                                    PageTransition(
+                                      child: EmailVerificationSent(),
+                                      type: PageTransitionType.rightToLeft,
                                     ),
+                                  );
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(Colors.grey[900]),
+                                    overlayColor:
+                                        MaterialStateProperty.all(Colors.black),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ))),
+                                child: Container(
+                                  height: 60,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Send Email',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
