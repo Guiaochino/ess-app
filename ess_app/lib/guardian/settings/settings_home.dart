@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/home/patient_home.dart';
-import 'package:ess_app/guardian/settings/change_password/email_verification.dart';
+import 'package:ess_app/guardian/settings/change_password/email_verification_sent.dart';
 import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/auth.dart';
@@ -250,7 +250,11 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                 GestureDetector(
                   onTap:(){
                     Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => EmailVerificationChangePass()));
+                      PageTransition(
+                        child: EmailVerificationSentChangePass(),
+                        type: PageTransitionType.leftToRight,
+                      ),
+                    );
                   },
                   child: Row(
                     children: [
