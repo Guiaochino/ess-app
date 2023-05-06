@@ -4,6 +4,7 @@ import 'package:ess_app/login/forgot_password.dart';
 import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class EmailVerificationSent extends StatefulWidget {
   const EmailVerificationSent({Key? key}) : super(key: key);
@@ -45,7 +46,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                   child: Text(
                     'Email Verification',
                     style: TextStyle(
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                       fontSize: 25,
                       
                     ),
@@ -84,7 +85,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                         SizedBox(height: 20.0),
                         //text
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 45.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: Container(
                             alignment: Alignment.bottomCenter,
                             child: Column(
@@ -116,26 +117,41 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: Container(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: MaterialButton(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0),
+                              child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => LoginPage()));
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF333333),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Center(
-                                    child: Text('Done',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
+
+                                  Navigator.of(context).push(
+                                    PageTransition(
+                                      child: ForgotPassword(),
+                                      type: PageTransitionType.rightToLeft,
                                     ),
+                                  );
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(Colors.grey[900]),
+                                    overlayColor:
+                                        MaterialStateProperty.all(Colors.black),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ))),
+                                child: Container(
+                                  height: 60,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Done',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

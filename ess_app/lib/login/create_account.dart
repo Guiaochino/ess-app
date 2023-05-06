@@ -24,6 +24,7 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: AppColors.backColor,
           elevation: 0,

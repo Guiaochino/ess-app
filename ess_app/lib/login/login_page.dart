@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.backColor,
       body: SafeArea(
         child: Container(
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
-                          )),
+                          ),),
                     )
                   : Container(),
               SizedBox(height: 20),
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextField(
-                      textAlignVertical: TextAlignVertical.bottom,
+                      textAlignVertical: TextAlignVertical.center,
                       controller:
                           emailController, // Email Controller for inputs
                       keyboardType: TextInputType.emailAddress,
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextField(
-                      textAlignVertical: TextAlignVertical.bottom,
+                      textAlignVertical: TextAlignVertical.center,
                       obscureText: true,
                       controller:
                           passwordController, // Password Controller for inputs
@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Navigator.of(context).push(
                         PageTransition(
-                          child: ForgotPassword(),
+                          child: EmailVerification(),
                           type: PageTransitionType.rightToLeft,
                         ),
                       );
