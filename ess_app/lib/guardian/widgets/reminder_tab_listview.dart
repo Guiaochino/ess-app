@@ -1,4 +1,3 @@
-
 import 'package:ess_app/guardian/view/view_entry_reminder.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
@@ -15,11 +14,12 @@ class ReminderTabListView extends StatelessWidget {
   ReminderTabListView({
     required this.reminder,
     required this.deleteTapped,
-    required this.editTapped, 
-  }){
+    required this.editTapped,
+  }) {
     final now = TimeOfDay.now();
     if (reminder.reminderDateTime.hour < now.hour ||
-        (reminder.reminderDateTime.hour == now.hour && reminder.reminderDateTime.minute <= now.minute)) {
+        (reminder.reminderDateTime.hour == now.hour &&
+            reminder.reminderDateTime.minute <= now.minute)) {
       _isDone = true;
     }
   }
@@ -61,14 +61,11 @@ class ReminderTabListView extends StatelessWidget {
         ),
         child: MaterialButton(
           onPressed: () {
-            Navigator.of(context).push(
-              PageTransition(
+            Navigator.of(context).push(PageTransition(
                 child: ViewReminder(
                   reminder: reminder,
                 ),
-                type: PageTransitionType.bottomToTop
-              )
-            );
+                type: PageTransitionType.bottomToTop));
           },
           child: Container(
             height: 80,
@@ -78,26 +75,30 @@ class ReminderTabListView extends StatelessWidget {
             ),
             child: Center(
               child: ListTile(
-                 title: Text(
+                title: Text(
                   reminder.reminderTitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    decoration: _isDone ? TextDecoration.lineThrough: TextDecoration.none,
-                    color: _isDone ? Colors.grey[800]:Colors.black,
+                    decoration: _isDone
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                    color: _isDone ? Colors.grey[800] : Colors.black,
                     fontWeight: FontWeight.w700,
                     fontSize: 20,
-                    ),
                   ),
+                ),
                 subtitle: Text(
                   reminder.reminderDetails,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    decoration: _isDone ? TextDecoration.lineThrough: TextDecoration.none,
+                    decoration: _isDone
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
                     color: Colors.grey[600],
                     fontWeight: FontWeight.w500,
-                    fontSize:12,
+                    fontSize: 12,
                   ),
                 ),
                 trailing: Text(

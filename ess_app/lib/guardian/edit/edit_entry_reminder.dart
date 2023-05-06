@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
+import 'package:ess_app/helpers.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
@@ -9,14 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../Services/notif_service.dart';
+
 class EditEntryReminder extends StatefulWidget {
   final ReminderModel selectedReminder;
-  
+
   const EditEntryReminder({required this.selectedReminder});
 
-
   @override
-  State<EditEntryReminder> createState() => _EditEntryReminderState(reminder: selectedReminder);
+  State<EditEntryReminder> createState() =>
+      _EditEntryReminderState(reminder: selectedReminder);
 }
 
 class _EditEntryReminderState extends State<EditEntryReminder> {
@@ -26,23 +29,22 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay.now();
   final titleController = TextEditingController(); //title textfield controller
-  final paragraphController = TextEditingController(); //paragraph textfield controller
+  final paragraphController =
+      TextEditingController(); //paragraph textfield controller
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
-  
 
-  void initState(){
+  void initState() {
     titleController.text = reminder.reminderTitle;
     paragraphController.text = reminder.reminderDetails;
     _dateTime = reminder.reminderDateTime;
     super.initState();
   }
-  
-  void dispose(){
+
+  void dispose() {
     titleController.dispose();
     paragraphController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +71,7 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
       ),
       body: SafeArea(
         child: Container(
-          color:AppColors.backColor,
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -114,16 +116,15 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         decoration: InputDecoration(
-                          iconColor: Colors.black,
-                          prefixIcon: Icon(Icons.notifications, size: 30),
-                          border: UnderlineInputBorder(),
-                          hintText: 'Enter Reminder Title',
-                          hintStyle: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          )
-                        ),
+                            iconColor: Colors.black,
+                            prefixIcon: Icon(Icons.notifications, size: 30),
+                            border: UnderlineInputBorder(),
+                            hintText: 'Enter Reminder Title',
+                            hintStyle: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            )),
                       ),
                     ),
                   ),
@@ -218,30 +219,31 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                     ),
                   ),
                 ),
-                height > 670?
-                Spacer(
-                  flex: 1,
-                ): Container(),
+                height > 670
+                    ? Spacer(
+                        flex: 1,
+                      )
+                    : Container(),
                 SizedBox(height: 20),
                 //save button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       saveReminderEntry();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
-                      overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
+                        backgroundColor:
+                            MaterialStateProperty.all(AppColors.firstColor),
+                        overlayColor: MaterialStateProperty.all(
+                            Color.fromARGB(255, 230, 177, 5)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                        )
-                      )
-                    ),
+                        ))),
                     child: Container(
                       height: 50,
-                      
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -251,15 +253,16 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
-                          width > 280 ?
-                          Text(
-                            'Save Reminder',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ): Container(),
+                          width > 280
+                              ? Text(
+                                  'Save Reminder',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),
@@ -273,31 +276,40 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
       ),
     );
   }
+
   //saving reminder
   void saveReminderEntry() {
+    NotificationService().scheduleNotification(
+        id: int.parse(reminder.uid),
+        title: titleController.text,
+        body: paragraphController.text,
+        scheduledNotificationDateTime: _dateTime);
+
     //null or empty entries
-    if(titleController.text == null || titleController.text == ''){
+    if (titleController.text == null || titleController.text == '') {
       titleController.text = 'No Title';
     }
-    if(paragraphController.text == null || paragraphController.text == ''){
+    if (paragraphController.text == null || paragraphController.text == '') {
       paragraphController.text = 'No Details';
     }
 
     print('title : ' + titleController.text);
-    print('dateTime: '+ _dateTime.toString());
+    print('dateTime: ' + _dateTime.toString());
     print('details : ' + paragraphController.text);
 
     //add to reminderList
-    setState(() {
-      reminder.reminderTitle = titleController.text;
-      reminder.reminderDateTime = _dateTime;
-      reminder.reminderDetails = paragraphController.text;
-    },);
+    setState(
+      () {
+        reminder.reminderTitle = titleController.text;
+        reminder.reminderDateTime = _dateTime;
+        reminder.reminderDetails = paragraphController.text;
+      },
+    );
 
     dbconn.updateRemidnerByID(reminder.uid, reminder);
-    
-    print('Reminder Entry Edited');
-    showSuccessDialog(context, 'Your reminder has been edited.', ReminderHomePage(activePage: 0));
-  }
 
+    print('Reminder Entry Edited');
+    showSuccessDialog(context, 'Your reminder has been edited.',
+        ReminderHomePage(activePage: 0));
+  }
 }

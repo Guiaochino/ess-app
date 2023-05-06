@@ -4,6 +4,7 @@ import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notif_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -69,14 +70,24 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
                               itemCount: incomingReminders.length,
                               itemBuilder: ((context, index) {
                                 final reminder = incomingReminders[index];
+                                NotificationService().scheduleNotification(
+                                    id: int.parse(reminder.uid),
+                                    body: reminder.reminderDetails,
+                                    title: reminder.reminderTitle,
+                                    scheduledNotificationDateTime:
+                                        reminder.reminderDateTime);
                                 return ReminderTabListView(
                                     reminder: reminder,
                                     deleteTapped: (context) async {
                                       try {
-                                        bool? deleteConfirmed = await showConfirmationDialog(context, 'Are you sure you want to delete?');
+                                        bool? deleteConfirmed =
+                                            await showConfirmationDialog(
+                                                context,
+                                                'Are you sure you want to delete?');
                                         if (deleteConfirmed == true) {
                                           // perform deletion
-                                          await deleteReminderEntry(reminderCollection, reminder.uid);
+                                          await deleteReminderEntry(
+                                              reminderCollection, reminder.uid);
                                         } else {
                                           // user canceled deletion
                                         }
@@ -103,9 +114,8 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
         });
   }
 
-  
-
-  Future <void> deleteReminderEntry(String collectionCaller, String index) async {
+  Future<void> deleteReminderEntry(
+      String collectionCaller, String index) async {
     print('Deleted schedule at index ' + index);
     dbconn.deleteKeyFromCollectionByID(collectionCaller, index);
     showDeletionSuccessDialog(context, 'Reminder deleted successfully!');

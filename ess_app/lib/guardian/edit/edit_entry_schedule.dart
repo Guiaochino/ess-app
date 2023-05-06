@@ -10,12 +10,15 @@ import 'package:intl/intl.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../Services/notif_service.dart';
+
 class EditEntrySchedule extends StatefulWidget {
   final ScheduleModel selectedSched;
   const EditEntrySchedule({required this.selectedSched});
 
   @override
-  State<EditEntrySchedule> createState() => _EditEntryScheduleState(schedule: selectedSched);
+  State<EditEntrySchedule> createState() =>
+      _EditEntryScheduleState(schedule: selectedSched);
 }
 
 class _EditEntryScheduleState extends State<EditEntrySchedule> {
@@ -28,15 +31,14 @@ class _EditEntryScheduleState extends State<EditEntrySchedule> {
   final paragraphController = TextEditingController();
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
-  
-
-  void initState(){
+  void initState() {
     titleController.text = schedule.schedTitle;
     paragraphController.text = schedule.schedDetails;
     _dateTime = schedule.schedDateTime;
     super.initState();
   }
-  void dispose(){
+
+  void dispose() {
     titleController.dispose();
     paragraphController.dispose();
     super.dispose();
@@ -52,19 +54,18 @@ class _EditEntryScheduleState extends State<EditEntrySchedule> {
         backgroundColor: AppColors.backColor,
         elevation: 0,
         leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              PageTransition(
-                child: ScheduleHomePage(),
-                type: PageTransitionType.leftToRight,
-              ),
-            );
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          )
-        ),
+            onPressed: () {
+              Navigator.of(context).push(
+                PageTransition(
+                  child: ScheduleHomePage(),
+                  type: PageTransitionType.leftToRight,
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
       ),
       body: SafeArea(
         child: Container(
@@ -112,16 +113,15 @@ class _EditEntryScheduleState extends State<EditEntrySchedule> {
                           fontWeight: FontWeight.w600,
                         ),
                         decoration: InputDecoration(
-                          iconColor: Colors.black,
-                          prefixIcon: Icon(Icons.event, size: 30),
-                          border: UnderlineInputBorder(),
-                          hintText: 'Enter Schedule Title',
-                          hintStyle: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          )
-                        ),
+                            iconColor: Colors.black,
+                            prefixIcon: Icon(Icons.event, size: 30),
+                            border: UnderlineInputBorder(),
+                            hintText: 'Enter Schedule Title',
+                            hintStyle: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            )),
                       ),
                     ),
                   ),
@@ -271,30 +271,31 @@ class _EditEntryScheduleState extends State<EditEntrySchedule> {
                     ),
                   ),
                 ),
-                height > 670?
-                Spacer(
-                  flex: 1,
-                ): Container(),
+                height > 670
+                    ? Spacer(
+                        flex: 1,
+                      )
+                    : Container(),
                 SizedBox(height: 20),
                 //save button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       saveSchedule();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
-                      overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
+                        backgroundColor:
+                            MaterialStateProperty.all(AppColors.firstColor),
+                        overlayColor: MaterialStateProperty.all(
+                            Color.fromARGB(255, 230, 177, 5)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                        )
-                      )
-                    ),
+                        ))),
                     child: Container(
                       height: 50,
-                      
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -304,15 +305,16 @@ class _EditEntryScheduleState extends State<EditEntrySchedule> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
-                          width > 280 ?
-                          Text(
-                            'Save Schedule',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ): Container(),
+                          width > 280
+                              ? Text(
+                                  'Save Schedule',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),
@@ -326,40 +328,47 @@ class _EditEntryScheduleState extends State<EditEntrySchedule> {
       ),
     );
   }
+
   //saving sched
   void saveSchedule() {
+    if (_dateTime.isAfter(DateTime.now())) {
+      //add toscheduleList
+      debugPrint('YOUR SCHEDULED DATE IS $_dateTime');
+      NotificationService().scheduleNotification(
+          id: int.parse(schedule.uid),
+          title: titleController.text,
+          body: paragraphController.text,
+          payLoad: 'payLoad',
+          scheduledNotificationDateTime: _dateTime);
+      //null or empty entries
+      if (titleController.text == null || titleController.text == '') {
+        titleController.text = 'No Title';
+      }
+      if (paragraphController.text == null || paragraphController.text == '') {
+        paragraphController.text = 'No Details';
+      }
 
-    //null or empty entries
-    if(titleController.text == null || titleController.text == ''){
-      titleController.text = 'No Title';
+      if (_dateTime.isAfter(DateTime.now())) {
+        print('title : ' + titleController.text);
+        print('dateTime: ' + _dateTime.toString());
+        print('details : ' + paragraphController.text);
+
+        //save to scheduleList
+        setState(
+          () {
+            schedule.schedTitle = titleController.text;
+            schedule.schedDateTime = _dateTime;
+            schedule.schedDetails = paragraphController.text;
+          },
+        );
+
+        dbconn.updateScheduleByID(schedule.uid, schedule);
+        print('sched Entry Edited');
+        showSuccessDialog(
+            context, 'Your schedule has been edited.', ScheduleHomePage());
+      } else {
+        showErrorDialog(context, 'Date and Time must be in future.');
+      }
     }
-    if(paragraphController.text == null || paragraphController.text == ''){
-      paragraphController.text = 'No Details';
-    }
-    
-
-    if(_dateTime.isAfter(DateTime.now())){
-
-      print('title : ' + titleController.text);
-      print('dateTime: '+ _dateTime.toString());
-      print('details : ' + paragraphController.text);
-
-      //save to scheduleList
-      setState(() {
-        schedule.schedTitle = titleController.text;
-        schedule.schedDateTime = _dateTime;
-        schedule.schedDetails = paragraphController.text;
-      },);
-
-      dbconn.updateScheduleByID(schedule.uid, schedule);
-      print('sched Entry Edited');
-      showSuccessDialog(context, 'Your schedule has been edited.', ScheduleHomePage());
-   
-    }
-    else{
-      showErrorDialog(context, 'Date and Time must be in future.');
-    }
-
-    
   }
 }

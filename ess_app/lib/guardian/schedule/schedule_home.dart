@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../../Services/notif_service.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/schedule_tab_listview.dart';
 import '../create/create_entry_schedule.dart';
@@ -22,11 +23,10 @@ class ScheduleHomePage extends StatefulWidget {
 }
 
 class _ScheduleHomePageState extends State<ScheduleHomePage> {
-
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
-  DateTime dateClicked = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
+
   CalendarFormat _calendarFormat = CalendarFormat.month;
 
   @override
@@ -38,19 +38,18 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
         if (snapshot.hasData) {
           List<ScheduleModel> schedules = snapshot.data!;
           return Scaffold(
-            appBar:AppBar(
+            appBar: AppBar(
               backgroundColor: AppColors.firstColor,
               foregroundColor: Colors.black,
               centerTitle: true,
               title: Text(
                 'Schedule',
                 style: TextStyle(
-                  color: Colors.black, 
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.0,
-                  fontFamily: 'Montserrat'
-                ),
-              ), 
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.0,
+                    fontFamily: 'Montserrat'),
+              ),
             ),
             drawer: MainDrawer(),
             floatingActionButton: FloatingActionButton.extended(
@@ -59,14 +58,12 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
               label: Text('Add Schedule'),
               icon: Icon(Icons.add_box),
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => CreateEntrySchedule()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => CreateEntrySchedule()));
               },
             ),
             body: Container(
-              decoration: BoxDecoration(
-                color: AppColors.backColor
-              ),
+              decoration: BoxDecoration(color: AppColors.backColor),
               child: Column(
                 children: [
                   SizedBox(height: 10),
@@ -79,9 +76,8 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                         rowHeight: 50,
                         daysOfWeekHeight: 25,
                         headerStyle: HeaderStyle(
-                          decoration: BoxDecoration(
-                          ),
-                          formatButtonVisible: true, 
+                          decoration: BoxDecoration(),
+                          formatButtonVisible: true,
                           titleCentered: true,
                           titleTextStyle: TextStyle(
                             color: Colors.black,
@@ -110,10 +106,9 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           outsideTextStyle: TextStyle(
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15
-                          ),
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15),
                           weekendDecoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.rectangle,
@@ -173,7 +168,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                             });
                           }
                         },
-                        //date selector 
+                        //date selector
                         onDaySelected: ((selectedDay, focusedDay) {
                           print(selectedDay);
                           setState(() {
@@ -189,7 +184,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                   SizedBox(height: 10.0),
                   Expanded(
                     child: Container(
-                      width: width ,
+                      width: width,
                       decoration: BoxDecoration(
                         color: AppColors.secondColor,
                         borderRadius: BorderRadius.only(
@@ -202,7 +197,8 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                         children: [
                           SizedBox(height: 15),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -210,20 +206,22 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                                   child: Text(
                                     'Incoming Events',
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 25,
-                                      ),
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 25,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: 10),
                                 Text(
-                                  DateFormat(' dd MMM yyyy').format(_selectedDay).toString(),
+                                  DateFormat(' dd MMM yyyy')
+                                      .format(_selectedDay)
+                                      .toString(),
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 18,
-                                    ),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ],
                             ),
@@ -233,66 +231,81 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                           ),
                           Expanded(
                             child: Container(
-                              child: schedules.isEmpty? 
-                              Column(
-                                children: [
-                                  SizedBox(height: 20),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Icon(
-                                          Icons.event_busy_rounded,
-                                          size: 100,
-                                          color: Colors.white,
-                                        ),
-                                        Text(
-                                          'No Schedule.',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                              //listview builder of onclick date events
-                              :ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: schedules.length,
-                              itemBuilder: (context, index) {
-                                final schedule = schedules[index];
-                                return ScheduleTabListView(
-                                  tileIndex: index,
-                                  builderLength: schedules.length,
-                                  schedule: schedule,
-                                  editTapped: (context){
-                                    editScheduleEntry(context, schedule);
-                                  },
-                                  deleteTapped: (context) async {
-                                    try {
-                                      bool? deleteConfirmed = await showConfirmationDialog(context, 'Are you sure you want to delete?');
-                                      if (deleteConfirmed == true) {
-                                        // perform deletion
-                                        await deleteScheduleEntry(scheduleCollection, schedule.uid);
-                                      } else {
-                                        // user canceled deletion
-                                      }
-                                    } catch (e) {
-                                      // handle any errors that might occur here
-                                      print(e);
-                                    }
-                                  
-                                  }, 
-
-                                );
-                                
-                              },
-                            )),
+                                child: schedules.isEmpty
+                                    ? Column(
+                                        children: [
+                                          SizedBox(height: 20),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Icon(
+                                                  Icons.event_busy_rounded,
+                                                  size: 100,
+                                                  color: Colors.white,
+                                                ),
+                                                Text(
+                                                  'No Schedule.',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    //listview builder of onclick date events
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: schedules.length,
+                                        itemBuilder: (context, index) {
+                                          final schedule = schedules[index];
+                                          if (schedule.schedDateTime
+                                              .isAfter(DateTime.now())) {
+                                            NotificationService()
+                                                .scheduleNotification(
+                                                    id: int.parse(schedule.uid),
+                                                    body: schedule.schedDetails,
+                                                    title: schedule.schedTitle,
+                                                    scheduledNotificationDateTime:
+                                                        schedule.schedDateTime);
+                                          }
+                                          return ScheduleTabListView(
+                                            tileIndex: index,
+                                            builderLength: schedules.length,
+                                            schedule: schedule,
+                                            editTapped: (context) {
+                                              editScheduleEntry(
+                                                  context, schedule);
+                                            },
+                                            deleteTapped: (context) async {
+                                              try {
+                                                bool? deleteConfirmed =
+                                                    await showConfirmationDialog(
+                                                        context,
+                                                        'Are you sure you want to delete?');
+                                                if (deleteConfirmed == true) {
+                                                  // perform deletion
+                                                  await deleteScheduleEntry(
+                                                      scheduleCollection,
+                                                      schedule.uid);
+                                                } else {
+                                                  // user canceled deletion
+                                                }
+                                              } catch (e) {
+                                                // handle any errors that might occur here
+                                                print(e);
+                                              }
+                                            },
+                                          );
+                                        },
+                                      )),
                           )
                         ],
                       ),
@@ -318,7 +331,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
   //     print('dateTime $dateTime');
   //     final input = extractDatefromDTString(query);
   //     print("Input $input");
-  //     return dateTime.contains(input); 
+  //     return dateTime.contains(input);
 
   //   }).toList();
   //   print(filteredDates);
@@ -327,13 +340,13 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
   //   });
   // }
 
-  
-  Future <void> deleteScheduleEntry(String collectionCaller, String index) async{
+  Future<void> deleteScheduleEntry(
+      String collectionCaller, String index) async {
     print('Deleted schedule at index ' + index.toString());
     dbconn.deleteKeyFromCollectionByID(collectionCaller, index);
     showDeletionSuccessDialog(context, 'Schedule deleted successfully!');
-
   }
+
   void editScheduleEntry(BuildContext context, ScheduleModel schedule) {
     Navigator.of(context).push(
       PageTransition(

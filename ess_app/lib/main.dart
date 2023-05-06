@@ -3,15 +3,20 @@ import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'login/login_page.dart';
-
 // Firebase Plugins
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 
-Future main() async {
+//Notification Plugins
+import 'package:timezone/data/latest.dart' as tz;
+import 'Services/notif_service.dart';
 
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -31,33 +36,28 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "GeriAssis",
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-          fontFamily: "Montserrat"
-        ),
+        theme:
+            ThemeData(primarySwatch: Colors.blueGrey, fontFamily: "Montserrat"),
         home: MainPage(),
-      ), 
+      ),
     );
   }
 }
 
 class MainPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserModel?>(context);
-    
+
     // Return to choice page or login page
     if (user == null) {
       return LoginPage();
     } else {
       return StreamProvider<UserModel?>.value(
-        value: AuthServices().user, 
+        value: AuthServices().user,
         initialData: null,
         child: ChoicePage(),
-        );
+      );
     }
-    
   }
-
 }

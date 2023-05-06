@@ -11,7 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
+import '../../Services/notif_service.dart';
 import '../reminder/reminder_home.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class CreateEntryReminder extends StatefulWidget {
   const CreateEntryReminder({Key? key}) : super(key: key);
@@ -21,18 +24,23 @@ class CreateEntryReminder extends StatefulWidget {
 }
 
 class _CreateEntryReminderState extends State<CreateEntryReminder> {
+  String notificationID = generateUID();
+
   DateTime _dateTime = DateTime.now();
   TimeOfDay _timeOfDay = TimeOfDay.now();
+
+  late TimeOfDay _pickedTime;
+
   final titleController = TextEditingController(); //title textfield controller
-  final paragraphController = TextEditingController(); //paragraph textfield controller
+  final paragraphController =
+      TextEditingController(); //paragraph textfield controller
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
 
-  void dispose(){
+  void dispose() {
     titleController.dispose();
     paragraphController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +68,7 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
       ),
       body: SafeArea(
         child: Container(
-          color:AppColors.backColor,
+          color: AppColors.backColor,
           child: Center(
             child: Column(
               children: [
@@ -105,16 +113,15 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         decoration: InputDecoration(
-                          iconColor: Colors.black,
-                          prefixIcon: Icon(Icons.notifications, size: 30),
-                          border: UnderlineInputBorder(),
-                          hintText: 'Enter Reminder Title',
-                          hintStyle: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          )
-                        ),
+                            iconColor: Colors.black,
+                            prefixIcon: Icon(Icons.notifications, size: 30),
+                            border: UnderlineInputBorder(),
+                            hintText: 'Enter Reminder Title',
+                            hintStyle: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            )),
                       ),
                     ),
                   ),
@@ -138,22 +145,23 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
                       suffixIcon: IconButton(
                         icon: Icon(Icons.watch_later),
                         onPressed: () async {
-                          TimeOfDay? newTime = await showTimePicker(
-                            context: context,
-                            initialTime: _timeOfDay,
-                          );
-                          if (newTime == null) return;
-                          final newDateTime = DateTime(
-                            _dateTime.year,
-                            _dateTime.month,
-                            _dateTime.day,
-                            newTime.hour,
-                            newTime.minute,
-                          );
-                          setState(() {
-                            _dateTime = newDateTime;
-                            print(_dateTime);
-                          });
+                          _selectTime();
+                          // TimeOfDay? newTime = await showTimePicker(
+                          //   context: context,
+                          //   initialTime: _timeOfDay,
+                          // );
+                          // if (newTime == null) return;
+                          // final newDateTime = DateTime(
+                          //   _dateTime.year,
+                          //   _dateTime.month,
+                          //   _dateTime.day,
+                          //   newTime.hour,
+                          //   newTime.minute,
+                          // );
+                          // setState(() {
+                          //   _dateTime = newDateTime;
+                          //   print(_dateTime);
+                          // });
                         },
                       ),
                       filled: true,
@@ -209,30 +217,31 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
                     ),
                   ),
                 ),
-                height > 670?
-                Spacer(
-                  flex: 1,
-                ): Container(),
+                height > 670
+                    ? Spacer(
+                        flex: 1,
+                      )
+                    : Container(),
                 SizedBox(height: 20),
                 //save button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       saveReminderEntry();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
-                      overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
+                        backgroundColor:
+                            MaterialStateProperty.all(AppColors.firstColor),
+                        overlayColor: MaterialStateProperty.all(
+                            Color.fromARGB(255, 230, 177, 5)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                        )
-                      )
-                    ),
+                        ))),
                     child: Container(
                       height: 50,
-                      
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -242,15 +251,16 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
-                          width > 280 ?
-                          Text(
-                            'Save Reminder',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ): Container(),
+                          width > 280
+                              ? Text(
+                                  'Save Reminder',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ),
@@ -267,29 +277,73 @@ class _CreateEntryReminderState extends State<CreateEntryReminder> {
 
   //saving reminder
   void saveReminderEntry() {
+    debugPrint('DITO NA UNG KAPAG NAKASAVE NA YUNNG REMINDER');
+    NotificationService().scheduleNotification(
+        id: int.parse(notificationID),
+        title: titleController.text,
+        body: paragraphController.text,
+        scheduledNotificationDateTime: _dateTime);
+    print('ito naman yung current id counter $notificationID');
     //null or empty entries
-    if(titleController.text == null || titleController.text == ''){
+    if (titleController.text == null || titleController.text == '') {
       titleController.text = 'No Title';
     }
-    if(paragraphController.text == null || paragraphController.text == ''){
+    if (paragraphController.text == null || paragraphController.text == '') {
       paragraphController.text = 'No Details';
     }
 
     print('title : ' + titleController.text);
-    print('dateTime: '+ _dateTime.toString());
+    print('dateTime: ' + _dateTime.toString());
     print('details : ' + paragraphController.text);
 
     //add to reminderList
     ReminderModel scheduleEntry = new ReminderModel(
-      uid: generateUID(), 
-      reminderTitle: titleController.text, 
-      reminderDateTime: _dateTime, 
-      reminderDetails: paragraphController.text);
+        uid: notificationID,
+        reminderTitle: titleController.text,
+        reminderDateTime: _dateTime,
+        reminderDetails: paragraphController.text);
 
     dbconn.addData(reminderCollection, scheduleEntry);
 
     print('reminder Entry Added');
-    showSuccessDialog(context, 'Your reminder has been saved.', ReminderHomePage(activePage: 0));
+    showSuccessDialog(context, 'Your reminder has been saved.',
+        ReminderHomePage(activePage: 0));
   }
 
+  Future<void> _selectTime() async {
+    final TimeOfDay? newTime = await showTimePicker(
+      context: context,
+      initialTime: _timeOfDay,
+    );
+    if (newTime != null) {
+      final newDateTime = DateTime(
+        _dateTime.year,
+        _dateTime.month,
+        _dateTime.day,
+        newTime.hour,
+        newTime.minute,
+      );
+      setState(() {
+        _dateTime = newDateTime;
+        debugPrint('DATETIME NA NAPILI NG USER  >>>> $_dateTime');
+      });
+    }
+    print(
+        'ito yung dinedebug ko Notification #$notificationID na sinet ko sa time na $_dateTime');
+
+    //newTime nase-save ang date
+
+    // if (newTime == null) return;
+    // final newDateTime = DateTime(
+    //   _dateTime.year,
+    //   _dateTime.month,
+    //   _dateTime.day,
+    //   newTime.hour,
+    //   newTime.minute,
+    // );
+    // setState(() {
+    //   _dateTime = newDateTime;
+    //   print(_dateTime);
+    // });
+  }
 }
