@@ -42,20 +42,14 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                 //Email Verification
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: (Text(
+                  child: Text(
                     'Email Verification',
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       fontSize: 25,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.grey,
-                          offset: Offset(5.0, 5.0),
-                        ),
-                      ],
+                      
                     ),
-                  )),
+                  ),
                 ),
                 SizedBox(height: 30.0),
                 //yellow container
