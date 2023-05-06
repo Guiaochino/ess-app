@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/login/email_verification.dart';
 import 'package:ess_app/login/forgot_password.dart';
+import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -71,40 +72,6 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                       children: [
                         //verification code
                         SizedBox(height: 30),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: Container(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: TextField(
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  height: 1.0,
-                                  color: Colors.black,
-                                ),
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                  ),
-                                  hintText: 'Enter Verification Code Here',
-                                  contentPadding: EdgeInsets.only(
-                                    top: 25,
-                                    bottom: 25,
-                                    left: 10,
-                                    right: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
                         //resend
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -159,7 +126,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                               child: MaterialButton(
                                 onPressed: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ForgotPassword()));
+                                      builder: (context) => LoginPage()));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(20),
@@ -168,7 +135,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Center(
-                                    child: Text('Verify',
+                                    child: Text('Done',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
