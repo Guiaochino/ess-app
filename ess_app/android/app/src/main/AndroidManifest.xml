@@ -5,9 +5,9 @@
 <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
    <application
-        android:label="ess_app"
+        android:label="GeriAssis"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_g_icon">
 <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
 <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
     <intent-filter>
