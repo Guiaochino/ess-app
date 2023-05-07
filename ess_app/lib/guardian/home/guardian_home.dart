@@ -7,6 +7,7 @@ import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notifications.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/guardian/widgets/diary_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -247,7 +248,8 @@ class _guardianHomePageState extends State<guardianHomePage> {
                     children: [
                       //memories button
                       mainButtons(
-                        pageRedirect: () {                      
+                        pageRedirect: () {
+                          NotificationService.printAllScheduledNotifications();                   
                           Navigator.of(context).push(
                             PageTransition(
                               child: MemoryHomePage(activePage: 0),
