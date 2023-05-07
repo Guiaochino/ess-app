@@ -123,7 +123,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                                   onPressed: () {
                                     Navigator.of(context).push(
                                       PageTransition(
-                                        child: ForgotPassword(),
+                                        child: LoginPage(),
                                         type: PageTransitionType.rightToLeft,
                                       ),
                                     );

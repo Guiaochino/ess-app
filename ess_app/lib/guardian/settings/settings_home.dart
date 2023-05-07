@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/home/patient_home.dart';
+import 'package:ess_app/guardian/settings/change_password/change_password.dart';
 import 'package:ess_app/guardian/settings/change_password/email_verification_sent.dart';
 import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/models/user_model.dart';
@@ -258,7 +259,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   onTap:(){
                     Navigator.of(context).push(
                       PageTransition(
-                        child: EmailVerificationSentChangePass(),
+                        child: ChangePassword(),
                         type: PageTransitionType.leftToRight,
                       ),
                     );
