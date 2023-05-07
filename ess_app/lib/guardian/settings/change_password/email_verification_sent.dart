@@ -1,6 +1,8 @@
 
-import 'package:ess_app/guardian/settings/change_password/email_verification.dart';
+import 'package:ess_app/guardian/settings/settings_home.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'change_password.dart';
 
@@ -17,21 +19,26 @@ class _EmailVerificationSentChangePassState extends State<EmailVerificationSentC
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backColor,
           elevation: 0,
-          leading: (IconButton(
+          leading: IconButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EmailVerificationChangePass()));
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: SettingsHomePage(),
+                    type: PageTransitionType.leftToRight,
+                  ),
+                );
               },
               icon: Icon(
                 Icons.arrow_back_ios,
                 color: Colors.black,
                 size: 30,
-              ))),
+              ),),
         ),
         body: SafeArea(
           child: Container(
+            color: AppColors.backColor,
             child: Center(
                 child: ListView(
               children: [
@@ -40,20 +47,13 @@ class _EmailVerificationSentChangePassState extends State<EmailVerificationSentC
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: (Text(
+                    child: Text(
                       'Email Verification',
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        fontSize: 30,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 10.0,
-                            color: Colors.grey,
-                            offset: Offset(5.0, 5.0),
-                          ),
-                        ],
+                        fontSize: 25,
                       ),
-                    )),
+                    ),
                   ),
                 ),
                 //yellow container
@@ -69,39 +69,7 @@ class _EmailVerificationSentChangePassState extends State<EmailVerificationSentC
                   child: Column(
                     children: [
                       //verification code
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 30,
-                          left: 30,
-                          right: 30,
-                        ),
-                        child: Container(
-                            child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: TextField(
-                              style: (TextStyle(
-                                  fontSize: 18.0,
-                                  height: 1.0,
-                                  color: Colors.black)),
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      )),
-                                  hintText: 'Enter Verification Code Here',
-                                  contentPadding: EdgeInsets.only(
-                                    top: 25,
-                                    bottom: 25,
-                                    left: 10,
-                                    right: 10,
-                                  ))),
-                        )),
-                      ),
+                      SizedBox(height: 30),
                       //resend
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40.0),

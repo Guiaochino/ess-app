@@ -3,30 +3,50 @@ import 'package:ess_app/guardian/reminder/reminder_home.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:ess_app/models/reminder_model.dart';
+import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ViewReminder extends StatelessWidget {
   final ReminderModel reminder;
+  bool _isDone = false;
 
-  const ViewReminder({
+   ViewReminder({
     required this.reminder,
-  });
+  }){
+    final now = TimeOfDay.now();
+    if (reminder.reminderDateTime.hour < now.hour ||
+        (reminder.reminderDateTime.hour == now.hour && reminder.reminderDateTime.minute <= now.minute)) {
+      _isDone = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.backColor,
         elevation: 0,
+        title: Text(
+          'Reminder',
+          style: TextStyle(
+            color: Colors.grey[800],
+          ),
+        ),
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => ReminderHomePage(activePage: 0,)));
+              PageTransition(
+                child: ReminderHomePage(activePage: !_isDone? 0 : 1),
+                type: PageTransitionType.leftToRight,
+              ),
+            );
           },
           icon: Icon(
             Icons.arrow_back_ios,
             color: Colors.black,
-            size: 30,
           ),
         ),
         actions: [
@@ -36,12 +56,15 @@ class ViewReminder extends StatelessWidget {
               onPressed: () {
                 //edit
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EditEntryReminder(selectedReminder: reminder)));
+                  PageTransition(
+                    child: EditEntryReminder(selectedReminder: reminder),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
               icon: Icon(
                 Icons.edit,
                 color: Colors.black,
-                size: 30,
               )
             ),
           ),
@@ -50,112 +73,89 @@ class ViewReminder extends StatelessWidget {
       body: SafeArea(
         child: Container(
           color: AppColors.backColor,
-          child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                SizedBox(height: 10.0),
-                //add daily reminder
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: (Text(
-                      'Daily Reminder',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 30,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Colors.grey,
-                            offset: Offset(5.0, 5.0),
-                          ),
-                        ],
-                      ),
-                    )),
-                  ),
-                ),
                 SizedBox(height: 20.0),
-                //reminder title
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 300,
-                    child: Text(
-                      reminder.reminderTitle,            
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.black,
-                        overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.bold
+                Row(
+                  children: [
+                    Container(
+                      width: 5,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: _isDone? Colors.green: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                  ),
+                    SizedBox(width: 5),
+                    Expanded(
+                      child: Text(
+                        reminder.reminderTitle, 
+                        overflow: TextOverflow.visible,  
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.black,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20.0),
                 //time
                 Container(
                   height: 50,
+                  decoration: BoxDecoration(
+                    color: AppColors.firstColor.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Expanded(
-                      flex: 5,
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.watch_later,
-                              color: Color(0xFFE86166),
-                              size: 55,
-                            ),
-                            SizedBox(width: 5.0),
-                            Container(
-                              child: Text(
-                                reminder.reminderDateTime.toString(),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFFE86166),
-                                ),
-                              )
-                            )
-                          ],
-                        )
-                      ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.watch_later,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          DateFormat('h:mm a').format(reminder.reminderDateTime),
+                          overflow: TextOverflow.ellipsis, 
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 SizedBox(height: 20),
                 //paragraph
                 Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      color: Colors.white,
-                      child: TextFormField(
-                        initialValue: reminder.reminderDetails,
-                        enabled: false,
-                        maxLines: 40,
-                        keyboardType: TextInputType.multiline,
-                        style: TextStyle(
-                          fontSize: 20,
-                          height: 2,
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                            hintText: 'Enter details here...',
-                            hintStyle: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            )),
-                      ),
+                  flex: 1,
+                  child: Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      color: AppColors.secondColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
                     ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        reminder.reminderDetails,
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: Colors.black
+                        ),
+                      ),
+                    )
                   ),
                 ),
                 Expanded(
@@ -164,7 +164,6 @@ class ViewReminder extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 //save button
-                
                 SizedBox(height: 20),
               ],
             ),

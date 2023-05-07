@@ -1,10 +1,8 @@
-
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Create user object for data to be passed in to models of user
@@ -20,9 +18,14 @@ class AuthServices {
   // Signin with email & password
   Future SignInEmailPassword(String email, String password) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
-      return _userFromFirebase(user);
+      if (user != null) {
+        if (user.emailVerified) {
+          return _userFromFirebase(user);
+        }
+      }
     } catch (err) {
       print(err.toString());
       return null;
@@ -32,23 +35,31 @@ class AuthServices {
   // Register with email and password
   Future SignUpEmailPassword(String email, String password) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
 
       // create new document for user with uid
-      await DatabaseService(uid: user!.uid).createUserData(new UserModel(uid: user.uid, email: user.email));
- 
+      if (user != null) {
+        await verifyEmail(user);
+        await DatabaseService(uid: user.uid)
+            .createUserData(new UserModel(uid: user.uid, email: user.email));
+      }
       return _userFromFirebase(user);
-
     } catch (err) {
-      print (err.toString());
+      print(err.toString());
       return null;
-    }   
+    }
+  }
+
+  // Verify Email
+  Future verifyEmail(User user) async {
+    return await user.sendEmailVerification();
   }
 
   // Signout
   Future SignOut() async {
-    try{
+    try {
       return await _auth.signOut();
     } catch (err) {
       print(err.toString());
@@ -56,4 +67,17 @@ class AuthServices {
     }
   }
 
+  Future ResetPassword(String email) async {
+    try {
+      _auth.sendPasswordResetEmail(email: email);
+    } catch (err) {
+      print(err.toString());
+      return null;
+    }
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    User? user = await _auth.currentUser!;
+    await user.updatePassword(newPassword);
+  }
 }

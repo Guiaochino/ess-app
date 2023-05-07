@@ -3,6 +3,7 @@ import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:page_transition/page_transition.dart';
 import '../memory/memory_home_page.dart';
 
 class MemoryTabListView extends StatelessWidget {
@@ -103,7 +104,7 @@ class MemoryTabListView extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, 
+                          vertical: 5.0, 
                           horizontal: 10.0,
                         ),
                         child: Container(
@@ -123,34 +124,48 @@ class MemoryTabListView extends StatelessWidget {
                       ),
                     ),
                     //3rd Column - view details
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: MaterialButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ViewEntryDiary(
-                              diary: diary,
-                            ),
-                          ));
-                        },
-                        child: Container(
-                          height: 50,
-                          width: 120,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFE86166),
-                            borderRadius: BorderRadius.circular(12)
+                    Row(
+                      children: [
+                        SizedBox(width:10),
+                        Text(
+                          '${diary.diaryDateTime.month}/${diary.diaryDateTime.day}/${diary.diaryDateTime.year}',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
                           ),
-                          child: Center(
-                            child: Text('Read more',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
+                        ),
+                        Spacer(),
+                        MaterialButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              PageTransition(
+                                child: ViewEntryDiary(
+                                  diary: diary,
+                                ),
+                                type: PageTransitionType.bottomToTop
+                              )
+                            );
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFE86166),
+                              borderRadius: BorderRadius.circular(12)
+                            ),
+                            child: Center(
+                              child: Text('Read more',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     )
                   ],
                 ),

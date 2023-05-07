@@ -3,6 +3,7 @@ import 'package:ess_app/guardian/home/patient_home.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import '../home/guardian_home.dart';
 import '../reminder/reminder_home.dart';
 import '../schedule/schedule_home.dart';
@@ -25,16 +26,6 @@ class MainDrawer extends StatelessWidget {
                   'assets/images/geriAssisTransparent.png',
                   fit: BoxFit.cover,
                 )
-                // Center(
-                //     child: Text(
-                //   'G e r i A s s i s',
-                //   style: TextStyle(
-                //     fontSize: 30,
-                //     fontFamily: 'Montserrat',
-                //     fontWeight: FontWeight.w800,
-                //     color: Colors.black,
-                //   ),
-                // )),
               ),
             ),
             SizedBox(height: 10),
@@ -43,11 +34,19 @@ class MainDrawer extends StatelessWidget {
               title: 'Home', 
               navigation: () {
                 if (userPreference == guardianPreference) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => guardianHomePage()));
+                  Navigator.of(context).push(
+                    PageTransition(
+                      child: guardianHomePage(),
+                      type: PageTransitionType.rightToLeft,
+                    ),
+                  );
                 } else {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => patientHomePage()));
+                  Navigator.of(context).push(
+                    PageTransition(
+                      child: patientHomePage(),
+                      type: PageTransitionType.rightToLeft,
+                    ),
+                  );
                 }
               },
             ),
@@ -57,7 +56,11 @@ class MainDrawer extends StatelessWidget {
               title: 'Memories', 
               navigation: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
+                  PageTransition(
+                    child: MemoryHomePage(activePage: 0),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
             ),
             SizedBox(height: 10),
@@ -66,7 +69,11 @@ class MainDrawer extends StatelessWidget {
               title: 'Schedules', 
               navigation: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ScheduleHomePage()));
+                  PageTransition(
+                    child: ScheduleHomePage(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
             ),
             SizedBox(height: 10),
@@ -75,7 +82,11 @@ class MainDrawer extends StatelessWidget {
               title: 'Reminders', 
               navigation: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ReminderHomePage(activePage: 0,)));
+                  PageTransition(
+                    child: ReminderHomePage(activePage: 0),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
             ),
             SizedBox(height: 10.0),
@@ -86,7 +97,11 @@ class MainDrawer extends StatelessWidget {
               title: 'Settings', 
               navigation: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SettingsHomePage()));
+                  PageTransition(
+                    child: SettingsHomePage(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
             ),
           ],
@@ -106,23 +121,26 @@ class drawerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      selectedColor: AppColors.firstColor,
-      selectedTileColor: AppColors.firstColor.withOpacity(0.1),
-      leading: Icon(
-        icon,
-        size: 35,
-        color: Colors.black,
-      ),
-      minLeadingWidth: 40,
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 20, 
-          fontWeight: FontWeight.w600,
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: ListTile(
+        selectedColor: AppColors.firstColor,
+        selectedTileColor: AppColors.firstColor.withOpacity(0.1),
+        leading: Icon(
+          icon,
+          size: 30,
+          color: Colors.black,
         ),
+        minLeadingWidth: 40,
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 15, 
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        onTap: navigation
       ),
-      onTap: navigation
     );
   }
 }

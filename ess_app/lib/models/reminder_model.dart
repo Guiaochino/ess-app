@@ -7,7 +7,6 @@ class ReminderModel {
   String uid;
   String reminderTitle;
   DateTime reminderDateTime;
-  bool reminderIsDone;
   String reminderDetails;
   bool isDeleted = false;
 
@@ -15,7 +14,6 @@ class ReminderModel {
     required this.uid,
     required this.reminderTitle,
     required this.reminderDateTime,
-    required this.reminderIsDone,
     required this.reminderDetails,
   });
 
@@ -24,7 +22,6 @@ class ReminderModel {
       'uid': uid,
       'reminderTitle': reminderTitle,
       'reminderDateTime': reminderDateTime,
-      'reminderIsDone': reminderIsDone,
       'reminderDetails': reminderDetails,
       'isDeleted': isDeleted,
     };

@@ -2,6 +2,8 @@ import 'package:ess_app/guardian/edit/edit_entry_image.dart';
 import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import '../memory/memory_home_page.dart';
 
 class ViewEntryImage extends StatelessWidget {
@@ -15,20 +17,31 @@ class ViewEntryImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.backColor,
         elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Memory',
+          style: TextStyle(
+            color: Colors.grey[800],
+          ),
+        ),
         leading: 
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 0,)));
+                PageTransition(
+                  child: MemoryHomePage(activePage: 0),
+                  type: PageTransitionType.leftToRight,
+                ),
+              );
             },
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.black,
-              size: 30,
             )
           ),
         actions: [
@@ -38,7 +51,11 @@ class ViewEntryImage extends StatelessWidget {
               onPressed: () {
                 //edit
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EditEntryImage(selectedMemory: memory)));
+                  PageTransition(
+                    child: EditEntryImage(selectedMemory: memory),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
               icon: Icon(
                 Icons.edit,
@@ -52,122 +69,92 @@ class ViewEntryImage extends StatelessWidget {
       body: SafeArea(
         child: Container(
           color: AppColors.backColor,
-          child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                SizedBox(height: 10.0),
+                SizedBox(height: 20.0),
                 //how is your day
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: (Text(
-                      'Nice Image you got here!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 30,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Colors.grey,
-                            offset: Offset(5.0, 5.0),
-                          ),
-                        ],
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        DateFormat('EEEE, MMM d, yyyy').format(memory.memoryDateTime),
+                        overflow: TextOverflow.ellipsis, 
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          color: Colors.grey[600]
+                        ),
                       ),
-                    )),
+                      SizedBox(height: 5.0),
+                      //diary title
+                      Container(
+                        child: Text(
+                          memory.memoryTitle,
+                          maxLines: 2, 
+                          overflow: TextOverflow.ellipsis,  
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.black,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.w700
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 //image
                 Expanded(
                   flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(),
-                        ),
-                        Expanded(
-                          flex: 7,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Color(0xFFF2BA05),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: GestureDetector(
-                                child: Image.asset(
-                                  memory.memoryImg,
-                                  fit: BoxFit.cover,
-                                ),
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (_){
-                                    return ImageScreen(imgPath: memory.memoryImg);
-                                  }));
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Container(),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.0),
-                //diary title
-                Align(
-                  alignment: Alignment.center,
                   child: Container(
-                    width: 250,
-                    child: Text(
-                      memory.memoryTitle,            
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.black,
-                        overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.bold
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Color(0xFFF2BA05),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: GestureDetector(
+                        child: Image.network(
+                          memory.memoryImg,
+                          fit: BoxFit.cover,
+                        ),
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (_){
+                            return ImageScreen(imgPath: memory.memoryImg);
+                          }));
+                        },
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 //paragraph
                 Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      color: Colors.white,
-                      child: TextFormField(
-                        initialValue: memory.memoryDetails,
-                        enabled: false,
-                        textAlign: TextAlign.justify,
-                        maxLines: 40,
-                        keyboardType: TextInputType.multiline,
+                  flex: 1,
+                  child: Container(
+                    width: width,
+                    decoration: BoxDecoration(
+                      color: AppColors.secondColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+
+                        memory.memoryDetails,
                         style: TextStyle(
-                          fontSize: 20,
-                          height: 2,
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'populate image details here',
-                          hintStyle: TextStyle(
-                            color: Colors.grey[600],
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          )
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: Colors.black
                         ),
                       ),
-                    ),
+                    )
                   ),
                 ),
                 SizedBox(height: 20),
@@ -192,7 +179,7 @@ class ImageScreen extends StatelessWidget {
         child: Center(
           child: Hero(
             tag: 'imageHero',
-            child: Image.asset(
+            child: Image.network(
               imgPath,
               fit: BoxFit.cover,
             )

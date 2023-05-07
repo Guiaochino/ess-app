@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/constants.dart';
+import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/helpers.dart';
 import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/services/database.dart';
@@ -7,6 +8,7 @@ import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:page_transition/page_transition.dart';
 // import 'package:image_picker_web/image_picker_web.dart';
 import '../memory/memory_home_page.dart';
 import 'dart:io';
@@ -25,8 +27,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   DateTime _datetime = DateTime.now();
   final imagePicker = ImagePicker(); // imagepicker controller
   final titleController = TextEditingController(); //title textfield controller
-  final paragraphController =
-      TextEditingController(); //paragraph textfield controller
+  final paragraphController = TextEditingController(); //paragraph textfield controller
 
   final storage = StorageServices(uid: FirebaseAuth.instance.currentUser!.uid);
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
@@ -34,6 +35,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   void dispose() {
     titleController.dispose();
     paragraphController.dispose();
+    super.dispose();
   }
 
   @override
@@ -41,222 +43,233 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: AppColors.backColor,
-          elevation: 0,
-          leading: (IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MemoryHomePage(
-                          activePage: 0,
-                        )));
-              },
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 30,
-              ))),
-        ),
-        body: SafeArea(
-            child: Container(
-                color: AppColors.backColor,
-                child: Center(
-                    child: Column(children: [
-                  SizedBox(height: 10.0),
-                  //how is your day
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: (Text(
-                        'Nice Image you got here!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 30,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 5.0,
-                              color: Colors.grey,
-                              offset: Offset(5.0, 5.0),
-                            ),
-                          ],
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: AppColors.backColor,
+        elevation: 0,
+        leading: (IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              PageTransition(
+                child: MemoryHomePage(activePage: 0),
+                type: PageTransitionType.leftToRight,
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+        )),
+      ),
+      body: SafeArea(
+        child: Container(
+          color: AppColors.backColor,
+          child: Center(
+            child: Column(children: [
+              SizedBox(height: 10.0),
+              //how is your day
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    'Nice Image!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 25,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 5.0,
+                          color: Colors.grey,
+                          offset: Offset(5.0, 5.0),
                         ),
-                      )),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 20.0),
-                  //image container
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: _imageSelected == null
-                          ? Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Color(0xFFF2BA05),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    _asyncSimpleDialog(context);
-                                  },
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.add_photo_alternate,
-                                          color: Colors.black,
-                                          size: height > 645 ? 100 : 40,
-                                        ),
-                                        height > 670 && width > 280
-                                            ? Text(
-                                                'ADD IMAGE',
-                                                style: TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              )
-                                            : Container()
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    _asyncSimpleDialog(context);
-                                  },
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Image.file(
-                                      _imageSelected!,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  //memory title
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: 50,
-                      child: Container(
-                        width: width - 60,
-                        child: TextField(
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 25,
-                            color: Colors.black,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          decoration: InputDecoration(
-                            iconColor: Colors.black,
-                            prefixIcon: Icon(Icons.auto_stories, size: 30),
-                            border: UnderlineInputBorder(),
-                            hintText: 'Enter Memory Title',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  //paragraph
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Container(
-                        color: Colors.white,
-                        child: TextFormField(
-                          maxLines: 40,
-                          keyboardType: TextInputType.multiline,
-                          style: TextStyle(
-                            fontSize: 20,
-                            height: 2,
-                            color: Colors.black,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'What happened today?',
-                            hintStyle: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  //save button
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        saveMemoryEntry();
-                      },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(AppColors.firstColor),
-                          overlayColor: MaterialStateProperty.all(
-                              Color.fromARGB(255, 230, 177, 5)),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
+                ),
+              ),
+              SizedBox(height: 20.0),
+              //image container
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: _imageSelected == null
+                      ? Container(
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                          ))),
-                      child: Container(
-                        height: 80,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.save_alt,
-                              size: 35,
-                              color: Colors.black,
-                            ),
-                            SizedBox(width: 10),
-                            width > 280
-                                ? Text(
-                                    'Save',
-                                    style: TextStyle(
+                            color: Color(0xFFF2BA05),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: MaterialButton(
+                              onPressed: () {
+                                _asyncSimpleDialog(context);
+                              },
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add_photo_alternate,
                                       color: Colors.black,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
+                                      size: height > 645 ? 100 : 40,
                                     ),
-                                  )
-                                : Container()
-                          ],
+                                    height > 670 && width > 280
+                                        ? Text(
+                                            'ADD IMAGE',
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )
+                                        : Container()
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: MaterialButton(
+                              onPressed: () {
+                                _asyncSimpleDialog(context);
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.file(
+                                  _imageSelected!,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+              ),
+              SizedBox(height: 20.0),
+              //memory title
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 50,
+                  child: Container(
+                    width: width - 40,
+                    child: TextField(
+                      controller: titleController,
+                      textAlignVertical: TextAlignVertical.bottom,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      decoration: InputDecoration(
+                        iconColor: Colors.black,
+                        prefixIcon: Icon(Icons.auto_stories, size: 30),
+                        border: UnderlineInputBorder(),
+                        hintText: 'Enter Memory Title',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                ])))));
+                ),
+              ),
+              SizedBox(height: 20.0),
+              //paragraph
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Container(
+                    color: Colors.white,
+                    child: TextFormField(
+                      controller: paragraphController,
+                      maxLines: 40,
+                      keyboardType: TextInputType.multiline,
+                      style: TextStyle(
+                        fontSize: 15,
+                        height: 2,
+                        color: Colors.black,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: "What's this image about?",
+                        hintStyle: TextStyle(
+                          color: Colors.grey[600],
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                            width: 5.0,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              //save button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: ElevatedButton(
+                  onPressed: (){
+                    saveMemoryEntry();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
+                    overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      )
+                    )
+                  ),
+                  child: Container(
+                    height: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.save,
+                          size: 25,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 10),
+                        width > 280?
+                        Text(
+                          'Save Memory',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ): Container()
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+            ]),
+          ),
+        ),
+      ),
+    );
   }
 
-  void saveMemoryEntry() async {
+  Future <void> saveMemoryEntry() async {
     //null or empty entries
     if (titleController.text == null || titleController.text == '') {
       titleController.text = 'No Title';
@@ -273,87 +286,27 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
     //Upload image to Storage
     // Add to Database
     if (_imageSelected != '' && _imageSelected != null) {
-      var upload = await storage.uploadFile(_imageSelected!);
+      try{
+        var upload = await storage.uploadImage( generateUID(), _imageSelected!);
 
-      MemoryModel memoryEntry = new MemoryModel(
-        uid: generateUID(), 
-        memoryTitle: titleController.text, 
-        memoryDateTime: _datetime,
-        memoryImg: upload,
-        memoryDetails: paragraphController.text);
+        MemoryModel memoryEntry = new MemoryModel(
+          uid: generateUID(), 
+          memoryTitle: titleController.text, 
+          memoryDateTime: _datetime,
+          memoryImg: upload,
+          memoryDetails: paragraphController.text);
 
-      dbconn.addData(memoryCollection, memoryEntry);
-      print('Memory Entry Added');
-      successDialog(context).show();
+        dbconn.addData(memoryCollection, memoryEntry);
+        print('Memory Entry Added');
+        showSuccessDialog(context, 'Your memory entry has been saved.', MemoryHomePage(activePage: 0));
+      }catch(e){
+        print(e);
+      }
     } else {
-      errorDialog(context).show();
+      showErrorDialog(context, 'Attach an image and try again.');
     }
   }
 
-  //success
-  AwesomeDialog successDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Diary Entry Added!',
-      titleTextStyle: TextStyle(
-        color: Colors.green,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      onDissmissCallback: (type) {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MemoryHomePage(
-                  activePage: 0,
-                )));
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
-
-  //error
-  AwesomeDialog errorDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.ERROR,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'No Image!',
-      desc: 'Attach an image and try again.',
-      titleTextStyle: TextStyle(
-        color: Colors.red,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      descTextStyle: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
 
   //dialog options
   Future _asyncSimpleDialog(BuildContext context) async {
@@ -373,7 +326,7 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
               ),
               SimpleDialogOption(
                 onPressed: () {
-                  // getImageFiles();
+                  getImageFiles();
                   Navigator.of(context).pop();
                 },
                 child: Text('Select from files'),
@@ -398,9 +351,14 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   Future getCameraImage() async {
     //g
     final image = await imagePicker.pickImage(source: ImageSource.camera);
-    print(image);
+    if (image == null) {
+      // User canceled image selection
+      return;
+    }
     setState(() {
-      _imageSelected = File(image!.path);
+      _imageSelected = File(image.path);
+      print(_imageSelected);
+      print('ewe');
     });
   }
 
@@ -408,8 +366,14 @@ class _CreateEntryImageState extends State<CreateEntryImage> {
   Future getImageFiles() async {
     //for pc
     final image = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (image == null) {
+      // User canceled image selection
+      return;
+    }
     setState(() {
-      _imageSelected = File(image!.path);
+      _imageSelected = File(image.path);
+      print(_imageSelected);
+      print('ewe');
     });
   }
 }

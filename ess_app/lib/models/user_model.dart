@@ -3,25 +3,16 @@ class UserModel {
 
   final String uid;
   String? email = "";
-  String guardianName = "";
-  String patientName = "";
+  String? guardianName = "Guardian";
+  String? patientName = "Elderly";
   bool isDeleted = false;
-
-  // Getters & Setters
-  // Set Guardian
-  void set guardian_name(String guardian_name) {
-    this.guardianName = guardian_name;
-  }
-
-  // Set Patient
-  void set patient_name(String patient_name) {
-    this.patientName = patient_name;
-  }
 
   // constructor
   UserModel({ 
     required this.uid, 
     required this.email,
+    this.guardianName,
+    this.patientName,
   });
 
   Map<String, dynamic> stringMapping() {
