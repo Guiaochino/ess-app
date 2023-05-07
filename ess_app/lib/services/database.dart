@@ -93,6 +93,8 @@ class DatabaseService {
     }
   }
 
+  Stream<UserModel> get userData => userCollection.doc(this.uid).snapshots().map((element) => UserModel(uid: element.get('uid'), email: element.get('email'), guardianName: element.get('guardianName'), patientName: element.get('patientName')));
+
   // Streams for data in the diary
   Stream<List<DiaryModel>> get diaryData => userCollection
       .doc(this.uid)
@@ -197,15 +199,6 @@ class DatabaseService {
       });
       return reminders;
   });
-
-  // Past Reminder Stream
-  // Stream<List<ReminderModel>> get getPastReminder => userCollection
-  //     .doc(this.uid)
-  //     .collection(reminderCollection)
-  //     .where('isDeleted', isEqualTo: false)
-  //     .snapshots()
-  //     .map((element) => _dataListFromSnapshot(reminderCollection, element)
-  //         as List<ReminderModel>);
   
   Stream<List<ReminderModel>> get getPastReminders => userCollection
     .doc(this.uid)

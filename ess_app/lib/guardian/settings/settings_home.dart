@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/home/patient_home.dart';
 import 'package:ess_app/guardian/settings/change_password/email_verification_sent.dart';
@@ -9,7 +10,6 @@ import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 
 import '../home/guardian_home.dart';
 
@@ -21,8 +21,10 @@ class SettingsHomePage extends StatefulWidget {
 }
 
 class _SettingsHomePageState extends State<SettingsHomePage> {
+  UserModel user = UserModel(uid: '', email: '');
   late TextEditingController guardianController;
   late TextEditingController patientController;
+  late StreamSubscription<UserModel> _userStream;
 
   String guardianName = '';
   String patientName = '';
@@ -34,25 +36,32 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   void initState(){
     
     super.initState();
-    
-
+    _subscribeToStreams();
     guardianController = TextEditingController();
     patientController = TextEditingController();
+  }
+
+  void _subscribeToStreams() {
+    _userStream = dbconn.userData.listen((data) {
+      setState(() {
+        user = data;
+        guardianName = data.guardianName!;
+        patientName = data.patientName!;
+      });
+    });
   }
 
   @override
   void dispose(){
     guardianController.dispose();
     patientController.dispose();
-
+    _userStream.cancel();
     super.dispose();
   }
 
 
   @override
   Widget build(BuildContext context) {
-
-    final user = Provider.of<UserModel?>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -112,15 +121,13 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                     final guardianName = await openGuardianDialog();
                     if(guardianName == null || guardianName.isEmpty) {
                       setState(() {
-                        this.guardianName = 'Set Guardian Name';
+                        this.guardianName = 'Guardian';
                       });
                     } else {
                       setState(() {
-                        this.guardianName = user!.guardianName;
+                        this.guardianName = user.guardianName!;
                       });
                     };
-
-                    
                   },
                   child: Row(
                     children: [
@@ -183,11 +190,11 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                     final patientName = await openPatientDialog();
                     if(patientName == null || patientName.isEmpty) {
                       setState(() {
-                        this.patientName = 'Set Guardian Name';
+                        this.patientName = 'Patient';
                       });
                     } else {
                       setState(() {
-                        this.patientName = user!.patientName;
+                        this.patientName = user.patientName!;
                       });
                     };
                   },
@@ -385,6 +392,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     guardianController.clear();
   }
   Future <void> submitPatient() async {
+    dbconn.updatePatientName(patientController.text);
     Navigator.of(context).pop(patientController.text);
     patientController.clear();
   }

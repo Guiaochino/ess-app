@@ -17,6 +17,8 @@ class ChoicePage extends StatefulWidget {
 class _ChoicePageState extends State<ChoicePage> {
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserModel?>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.backColor,
