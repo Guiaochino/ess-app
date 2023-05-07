@@ -1,10 +1,10 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/login/create_account.dart';
-import 'package:ess_app/login/forgot_password.dart';
 import 'package:ess_app/services/auth.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:ess_app/login/email_verification.dart';
 
 import 'choice_page.dart';
 
