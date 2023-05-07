@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ess_app/login/account_verification_sent.dart';
 import 'package:ess_app/login/email_verification_sent.dart';
 import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/services/auth.dart';
@@ -24,7 +25,7 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: AppColors.backColor,
           elevation: 0,
@@ -212,7 +213,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: ((context) =>
-                                                EmailVerificationSent())));
+                                                AccountVerificationSent())));
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(20),

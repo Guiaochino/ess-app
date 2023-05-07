@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:ess_app/login/create_account.dart';
 import 'package:ess_app/login/email_verification.dart';
 import 'package:ess_app/login/forgot_password.dart';
 import 'package:ess_app/login/login_page.dart';
@@ -6,14 +7,14 @@ import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-class EmailVerificationSent extends StatefulWidget {
-  const EmailVerificationSent({Key? key}) : super(key: key);
+class AccountVerificationSent extends StatefulWidget {
+  const AccountVerificationSent({Key? key}) : super(key: key);
 
   @override
-  State<EmailVerificationSent> createState() => _EmailVerificationSentState();
+  State<AccountVerificationSent> createState() => _AccountVerificationSent();
 }
 
-class _EmailVerificationSentState extends State<EmailVerificationSent> {
+class _AccountVerificationSent extends State<AccountVerificationSent> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -24,7 +25,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
           leading: IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EmailVerification()));
+                  MaterialPageRoute(builder: (context) => CreateAccount()));
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -44,7 +45,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'Password Verification Verification',
+                      'Email Verification',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 25,
@@ -111,7 +112,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                             ),
                           ),
                           SizedBox(height: 20.0),
-                          //send email
+                          //done
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 30.0),
@@ -123,7 +124,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                                   onPressed: () {
                                     Navigator.of(context).push(
                                       PageTransition(
-                                        child: ForgotPassword(),
+                                        child: LoginPage(),
                                         type: PageTransitionType.rightToLeft,
                                       ),
                                     );

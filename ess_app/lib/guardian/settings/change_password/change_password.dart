@@ -3,6 +3,7 @@ import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../../services/auth.dart';
 import '../settings_home.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -16,6 +17,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   final TextEditingController newPassController = TextEditingController();
   final TextEditingController passConfirmController = TextEditingController();
   bool _errorLogin = false;
+  final _auth = AuthServices();
 
   void dispose() {
     newPassController.dispose();
@@ -90,27 +92,27 @@ class _ChangePasswordState extends State<ChangePassword> {
                         ),
                         SizedBox(height: 20),
                         _errorLogin
-                        ? Column(
-                          children: [
-                            Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Passwords don't match.",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        )
-                        : Container(),
+                            ? Column(
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "Passwords don't match.",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                ],
+                              )
+                            : Container(),
                         //new password
                         Container(
                           child: TextField(
@@ -177,18 +179,18 @@ class _ChangePasswordState extends State<ChangePassword> {
                         //done button
                         ElevatedButton(
                           onPressed: () {
-                            if (newPassController.text == passConfirmController.text) {
+                            if (newPassController.text ==
+                                passConfirmController.text) {
                               //TODO: add function that changes the auth password here
                               final String _newPass = newPassController.text;
-                              
+                              _auth.changePassword(_newPass);
                               Navigator.of(context).push(
                                 PageTransition(
                                   child: SettingsHomePage(),
                                   type: PageTransitionType.leftToRight,
                                 ),
                               );
-                            }
-                            else{
+                            } else {
                               setState(() {
                                 _errorLogin = true;
                               });
