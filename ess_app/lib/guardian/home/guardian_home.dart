@@ -34,12 +34,12 @@ class _guardianHomePageState extends State<guardianHomePage> {
   List<MemoryModel> memories = [];
   List<ReminderModel> reminders = [];
   List<ScheduleModel> schedules = [];
+  UserModel user = UserModel(uid: '', email: '');
 
   int _memoryCount = 0;
   int _diaryCount = 0;
   int _reminderCount = 0;
   int _scheduleCount = 0;
-  
 
   final _imagePageController = PageController();
   final _diaryPageController = PageController();
@@ -50,6 +50,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
   late StreamSubscription<List<MemoryModel>> _memoryDataHomeSubscription;
   late StreamSubscription<List<ReminderModel>> _reminderDataHomeSubscription;
   late StreamSubscription<List<ScheduleModel>> _scheduleDataHomeSubscription;
+  late StreamSubscription<UserModel> _userStream;
 
   @override
   void initState() {
@@ -105,6 +106,12 @@ class _guardianHomePageState extends State<guardianHomePage> {
         schedules = data;
       });
     });
+
+    _userStream = dbconn.userData.listen((data) {
+      setState(() {
+        user = data;
+      });
+    });
   }
 
   @override
@@ -118,12 +125,13 @@ class _guardianHomePageState extends State<guardianHomePage> {
     _memoryDataHomeSubscription.cancel();
     _reminderDataHomeSubscription.cancel();
     _scheduleDataHomeSubscription.cancel();
+    _userStream.cancel();
   }
 
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserModel?>(context);
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(238, 238, 238, 1),
       body: CustomScrollView(
@@ -193,7 +201,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        'Hi test',
+                                        'Hi ${user.guardianName}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontSize: 25,
