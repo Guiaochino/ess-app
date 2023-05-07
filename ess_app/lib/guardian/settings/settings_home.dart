@@ -8,6 +8,7 @@ import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/auth.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -111,7 +112,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w700,
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                   ),
                 ),
@@ -180,7 +181,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w700,
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                   ),
                 ),
@@ -245,11 +246,58 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
+                    'Notifications',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                //change password container
+                GestureDetector(
+                  onTap:(){
+                    NotificationService.syncNotifications(FirebaseAuth.instance.currentUser!.uid);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.sync,
+                        size: 40,
+                        color: Colors.black,
+                      ),
+                      SizedBox(width: 30.0),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Sync Notifications',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 20,
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
                     'Account',
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w700,
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                   ),
                 ),

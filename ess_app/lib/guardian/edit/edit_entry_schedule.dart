@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/guardian/schedule/schedule_home.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notifications.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -351,8 +352,17 @@ class _EditEntryScheduleState extends State<EditEntrySchedule> {
         schedule.schedDetails = paragraphController.text;
       },);
 
+      //save to database
       dbconn.updateScheduleByID(schedule.uid, schedule);
-      print('sched Entry Edited');
+      // remove then add notification
+      NotificationService.removeNotificationWithId(int.parse(schedule.uid));
+      NotificationService.reminderNotification(
+        id: int.parse(schedule.uid),
+        title: "Here's a reminder!",
+        body: '${schedule.schedTitle} \n${schedule.schedDetails}',
+        scheduledDate: _dateTime,
+      );
+      print('Schedule Entry Edited');
       showSuccessDialog(context, 'Your schedule has been edited.', ScheduleHomePage());
    
     }

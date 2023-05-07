@@ -3,6 +3,7 @@ import 'package:ess_app/guardian/reminder/reminder_home.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/services/database.dart';
+import 'package:ess_app/services/notifications.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -294,7 +295,16 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
       reminder.reminderDetails = paragraphController.text;
     },);
 
+    //save to database
     dbconn.updateRemidnerByID(reminder.uid, reminder);
+    //remove and add updated notif
+    NotificationService.removeNotificationWithId(int.parse(reminder.uid));
+    NotificationService.reminderNotification(
+      id: int.parse(reminder.uid),
+      title: "Here's a reminder!",
+      body: '${reminder.reminderTitle} \n${reminder.reminderDetails}',
+      scheduledDate: _dateTime,
+    );
     
     print('Reminder Entry Edited');
     showSuccessDialog(context, 'Your reminder has been edited.', ReminderHomePage(activePage: 0));

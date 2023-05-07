@@ -3,6 +3,7 @@ import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/schedule_model.dart';
+import 'package:ess_app/services/notifications.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -330,6 +331,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
   
   Future <void> deleteScheduleEntry(String collectionCaller, String index) async{
     print('Deleted schedule at index ' + index.toString());
+    NotificationService.removeNotificationWithId(int.parse(index));
     dbconn.deleteKeyFromCollectionByID(collectionCaller, index);
     showDeletionSuccessDialog(context, 'Schedule deleted successfully!');
 
