@@ -6,6 +6,7 @@
 */
 
 String userPreference = '';
+String userPreferenceKey = 'choice';
 
 const String patientPreference = 'patient';
 const String guardianPreference = 'guardian';
