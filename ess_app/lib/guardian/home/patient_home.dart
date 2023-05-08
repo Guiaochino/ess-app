@@ -11,11 +11,13 @@ import 'package:ess_app/guardian/schedule/schedule_home.dart';
 import 'package:ess_app/guardian/widgets/main_drawer.dart';
 import 'package:ess_app/guardian/widgets/reminder_tab_listview.dart';
 import 'package:ess_app/guardian/widgets/schedule_tab_listview.dart';
+import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class patientHomePage extends StatefulWidget {
   const patientHomePage({super.key});
@@ -68,7 +70,11 @@ class _patientHomePageState extends State<patientHomePage> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    
+    final user = Provider.of<UserModel?>(context);
+
+    if (user == null) {
+      return Center(child: CircularProgressIndicator());
+    }
 
     return Scaffold(
       backgroundColor: AppColors.backColor,

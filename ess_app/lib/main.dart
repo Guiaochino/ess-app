@@ -1,39 +1,51 @@
-import 'package:ess_app/guardian/settings/change_password/change_password.dart';
-import 'package:ess_app/guardian/settings/settings_home.dart';
 import 'package:ess_app/login/choice_page.dart';
-import 'package:ess_app/login/email_verification_sent.dart';
+import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'login/login_page.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:ess_app/constants.dart';
+import 'package:ess_app/guardian/home/patient_home.dart';
+import 'package:ess_app/guardian/home/guardian_home.dart';
 // Firebase Plugins
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future main() async {
   //local notif init
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  
-    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher'); // <- default icon name is @mipmap/ic_launcher
-    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, );
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  var initializationSettingsAndroid = AndroidInitializationSettings(
+      '@mipmap/ic_launcher'); // <- default icon name is @mipmap/ic_launcher
+  var initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
 
   WidgetsFlutterBinding.ensureInitialized();
-  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-    AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-  flutterLocalNotificationsPlugin.initialize(initializationSettings,);
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestPermission();
+  flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   tz.initializeTimeZones(); //timezone init
 
-  runApp(const MyApp());
+  SharedPreferences _prefs = await SharedPreferences.getInstance();
+  userPreference = _prefs.getString(userPreferenceKey) ?? '';
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -44,33 +56,31 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "GeriAssis",
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-          fontFamily: "Montserrat"
-        ),
+        theme:
+            ThemeData(primarySwatch: Colors.blueGrey, fontFamily: "Montserrat"),
         home: MainPage(),
-      ), 
+      ),
     );
   }
 }
 
 class MainPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserModel?>(context);
-    
+
     // Return to choice page or login page
     if (user == null) {
       return LoginPage();
     } else {
       return StreamProvider<UserModel?>.value(
-        value: AuthServices().user, 
-        initialData: null,
-        child: ChoicePage()
-        );
+          value: AuthServices().user,
+          initialData: null,
+          child: userPreference.isEmpty
+              ? ChoicePage()
+              : userPreference == guardianPreference
+                  ? guardianHomePage()
+                  : patientHomePage());
     }
-    
   }
-
 }
