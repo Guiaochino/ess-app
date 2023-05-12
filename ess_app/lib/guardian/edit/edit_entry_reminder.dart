@@ -85,13 +85,6 @@ class _EditEntryReminderState extends State<EditEntryReminder> {
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 25,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Colors.grey,
-                            offset: Offset(5.0, 5.0),
-                          ),
-                        ],
                       ),
                     )),
                   ),

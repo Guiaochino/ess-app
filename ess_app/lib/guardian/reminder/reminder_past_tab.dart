@@ -40,28 +40,20 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
                 Expanded(
                   child: pastReminders.isEmpty?
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.notifications_off,
-                              size: 200,
-                              color: Colors.black,
-                            ),
-                            Text(
-                              'No Reminders',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25),
-                            ),
-                          ],
-                        ),
+                      SizedBox(height:40),
+                      Icon(
+                        Icons.notifications_off,
+                        size: 100,
+                        color: Colors.black,
+                      ),
+                      Text(
+                        'No Reminders',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25),
                       ),
                     ],
                   )

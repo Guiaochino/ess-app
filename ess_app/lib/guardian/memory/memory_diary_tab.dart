@@ -7,7 +7,6 @@ import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../widgets/memory_tab_listview.dart';
 import 'package:ess_app/constants.dart';
 
@@ -39,7 +38,25 @@ class _MemoryDiaryTabState extends State<MemoryDiaryTab> {
                 if (snapshot.hasData) {
                   List<DiaryModel> data = snapshot.data!;
                   if (data.isEmpty) {
-                    return Text('No Diary Available');
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(height:40),
+                        Icon(
+                          Icons.browser_not_supported_outlined,
+                          size: 100,
+                          color: Colors.black,
+                        ),
+                        Text(
+                          'No Diaries Yet.',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                          ),
+                        ),
+                      ],
+                    );
                   } else {
                     return ListView.builder(
                         itemCount: data.length,

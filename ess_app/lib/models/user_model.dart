@@ -5,7 +5,7 @@ class UserModel {
   String? email = "";
   String? guardianName = "Guardian";
   String? patientName = "Elderly";
-  bool isDeleted = false;
+  bool? isDeleted = false;
 
   // constructor
   UserModel({ 

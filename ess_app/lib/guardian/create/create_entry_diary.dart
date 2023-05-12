@@ -72,13 +72,6 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 25,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Colors.grey,
-                            offset: Offset(5.0, 5.0),
-                          ),
-                        ],
                       ),
                     ),
                   ),
