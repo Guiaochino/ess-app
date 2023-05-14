@@ -1,28 +1,26 @@
-
 class UserModel {
-
   final String uid;
   String? email = "";
-  String? guardianName = "Guardian";
-  String? patientName = "Elderly";
-  bool? isDeleted = false;
+  String guardianName;
+  String patientName;
+  bool isDeleted = false;
 
   // constructor
-  UserModel({ 
-    required this.uid, 
+  UserModel({
+    required this.uid,
     required this.email,
-    this.guardianName,
-    this.patientName,
-  });
+    String? guardianName,
+    String? patientName,
+  })  : this.guardianName = guardianName ?? "Guardian",
+        this.patientName = patientName ?? "Elderly";
 
   Map<String, dynamic> stringMapping() {
     return {
-      if (uid != null) "uid": uid,
+      "uid": uid,
       if (email != null) "email": email,
-      if (guardianName != null) "guardianName": guardianName,
-      if (patientName != null) "patientName": patientName,
+      "guardianName": guardianName,
+      "patientName": patientName,
       "isDeleted": isDeleted,
     };
   }
-  
 }
