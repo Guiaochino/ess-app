@@ -96,18 +96,14 @@ class _EmailVerificationState extends State<EmailVerification> {
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: TextField(
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                height: 1.0,
-                                color: Colors.black,
-                              ),
+                              textAlignVertical: TextAlignVertical.center,
                               controller: email_su_controller,
                               keyboardType: TextInputType.emailAddress,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(8),
                                   borderSide: BorderSide(
                                     width: 0,
                                     style: BorderStyle.none,
@@ -115,8 +111,8 @@ class _EmailVerificationState extends State<EmailVerification> {
                                 ),
                                 hintText: 'Email Address',
                                 contentPadding: EdgeInsets.only(
-                                  top: 25,
-                                  bottom: 25,
+                                  top: 15,
+                                  bottom: 15,
                                   left: 10,
                                   right: 10,
                                 ),
@@ -133,15 +129,17 @@ class _EmailVerificationState extends State<EmailVerification> {
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                _auth.ResetPassword(email_su_controller.text);
-                                //TODO: add a send email implementation
-                                //_auth.verifyEmail( );
-                                Navigator.of(context).push(
-                                  PageTransition(
-                                    child: EmailVerificationSent(),
-                                    type: PageTransitionType.rightToLeft,
-                                  ),
-                                );
+                                if (email_su_controller.text != '') {
+                                  _auth.ResetPassword(email_su_controller.text);
+                                  //TODO: add a send email implementation
+                                  //_auth.verifyEmail( );
+                                  Navigator.of(context).push(
+                                    PageTransition(
+                                      child: EmailVerificationSent(),
+                                      type: PageTransitionType.rightToLeft,
+                                    ),
+                                  );
+                                }
                               },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
@@ -151,10 +149,10 @@ class _EmailVerificationState extends State<EmailVerification> {
                                   shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(8),
                                   ))),
                               child: Container(
-                                height: 60,
+                                height: 50,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

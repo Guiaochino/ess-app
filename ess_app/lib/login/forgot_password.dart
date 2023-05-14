@@ -32,10 +32,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).push(PageTransition(
-              child: LoginPage(),
-              type: PageTransitionType.leftToRight,
-            ));
+            Navigator.of(context).push(
+                PageTransition(
+                child: LoginPage(),
+                type: PageTransitionType.leftToRight,
+              ),
+            );
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -125,7 +127,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               filled: true,
                               fillColor: Colors.white,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide(
                                   width: 0,
                                   style: BorderStyle.none,
@@ -201,7 +203,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(8),
                               ))),
                           child: Container(
                             height: 60,

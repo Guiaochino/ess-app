@@ -36,44 +36,35 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Container(
-                    child: StreamBuilder<List<MemoryModel>>(
-                        stream: dbconn.memoryData,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            List<MemoryModel> data = snapshot.data!;
-                            if (data.isEmpty) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Icon(
-                                          Icons.image_not_supported_outlined,
-                                          size: 200,
-                                          color: Colors.black,
-                                        ),
-                                        Text(
-                                          'No Images Yet.',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 25),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return StaggeredGridView.countBuilder(
-                                staggeredTileBuilder: (index) =>
-                                    index % 7 == 0
-                                        ? StaggeredTile.count(2, 2)
-                                        : StaggeredTile.count(1, 1),
+                  child: StreamBuilder<List<MemoryModel>>(
+                      stream: dbconn.memoryData,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<MemoryModel> data = snapshot.data!;
+                          if (data.isEmpty) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 40),
+                                Icon(
+                                  Icons.image_not_supported_outlined,
+                                  size: 100,
+                                  color: Colors.black,
+                                ),
+                                Text(
+                                  'No Images Yet.',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 25),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return StaggeredGridView.countBuilder(
+                                staggeredTileBuilder: (index) => index % 7 == 0
+                                    ? StaggeredTile.count(2, 2)
+                                    : StaggeredTile.count(1, 1),
                                 mainAxisSpacing: 8,
                                 crossAxisSpacing: 8,
                                 crossAxisCount: 3,
@@ -81,35 +72,33 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
                                 itemBuilder: (context, index) {
                                   final docs = data[index];
                                   return MemoryImageCard(
-                                      memory: docs,
-                                      deleteTapped: (context) {
+                                    memory: docs,
+                                    deleteTapped: (context) {
+                                      deleteMemoryEntry(
+                                          memoryCollection, docs.uid);
+                                    },
+                                    editTapped: (context) {
+                                      // editMemoryEntry(context, docs);
+                                    },
+                                    longPressed: () {
+                                      _asyncSimpleDialog(context, () {
+                                        editMemoryEntry(context, docs);
+                                      }, () {
                                         deleteMemoryEntry(
                                             memoryCollection, docs.uid);
-                                      },
-                                      editTapped: (context) {
-                                        // editMemoryEntry(context, docs);
-                                      }, longPressed: () { 
-                                        _asyncSimpleDialog(
-                                          context, 
-                                          (){
-                                            editMemoryEntry(context, docs);
-                                          },
-                                          (){
-                                            deleteMemoryEntry(memoryCollection, docs.uid);
-                                          }
-                                        );
-                                       },
+                                      });
+                                    },
                                   );
-                                }
-                              );
-                            }
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else {
-                            return Text('$snapshot.error');
+                                });
                           }
-                        })),
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          return Text('$snapshot.error');
+                        }
+                      }),
+                ),
               ),
             )
           ],
@@ -125,17 +114,20 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
   }
 
   //edit
-  void editMemoryEntry(BuildContext context, MemoryModel memory){
+  void editMemoryEntry(BuildContext context, MemoryModel memory) {
     Navigator.of(context).push(
       PageTransition(
-        child: EditEntryImage(selectedMemory: memory,),
+        child: EditEntryImage(
+          selectedMemory: memory,
+        ),
         type: PageTransitionType.rightToLeft,
       ),
     );
   }
 
   //simple dialog
-  Future _asyncSimpleDialog(BuildContext context1,Function editPress, Function deletePress) async {
+  Future _asyncSimpleDialog(
+      BuildContext context1, Function editPress, Function deletePress) async {
     return await showDialog(
         context: context1,
         barrierDismissible: true,
@@ -153,14 +145,16 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
               ),
               SimpleDialogOption(
                 onPressed: () async {
-                 try {
-                    bool? deleteConfirmed = await showConfirmationDialog(context, 'Are you sure you want to delete?');
+                  try {
+                    bool? deleteConfirmed = await showConfirmationDialog(
+                        context, 'Are you sure you want to delete?');
                     if (deleteConfirmed == true) {
                       // perform deletion
                       deletePress();
                       Navigator.of(context).pop();
                       // deleteTapped;
-                      showDeletionSuccessDialog(context, 'Memory deleted successfully!');
+                      showDeletionSuccessDialog(
+                          context, 'Memory deleted successfully!');
                     } else {
                       // user canceled deletion
                       print('cancelled');
@@ -172,12 +166,10 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
                 },
                 child: Text('Delete'),
               ),
-              
             ],
           );
-        }
-      );
+        });
   }
-  
+
   //dialog options
 }

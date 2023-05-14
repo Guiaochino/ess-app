@@ -40,31 +40,23 @@ class _ReminderIncomingTabState extends State<ReminderIncomingTab> {
                   Expanded(
                     child: incomingReminders.isEmpty
                         ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.notifications_off,
-                                      size: 200,
-                                      color: Colors.black,
-                                    ),
-                                    Text(
-                                      'No Reminders',
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(height:40),
+                            Icon(
+                              Icons.notifications_off,
+                              size: 100,
+                              color: Colors.black,
+                            ),
+                            Text(
+                              'No Reminders',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25),
+                            ),
+                          ],
+                        )
                         : Container(
                             child: ListView.builder(
                               itemCount: incomingReminders.length,

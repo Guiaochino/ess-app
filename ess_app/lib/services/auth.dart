@@ -43,7 +43,7 @@ class AuthServices {
       if (user != null) {
         await verifyEmail(user);
         await DatabaseService(uid: user.uid)
-            .createUserData(new UserModel(uid: user.uid, email: user.email));
+            .createUserData(new UserModel(uid: user.uid, email: user.email, guardianName: 'guardian', patientName: 'elderly',));
       }
       return _userFromFirebase(user);
     } catch (err) {
