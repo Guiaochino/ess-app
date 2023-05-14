@@ -140,7 +140,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                                         borderRadius: BorderRadius.circular(10),
                                       ))),
                                   child: Container(
-                                    height: 60,
+                                    height: 50,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

@@ -255,9 +255,9 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   ),
                 ),
                 SizedBox(height: 10.0),
-                //change password container
                 GestureDetector(
                   onTap:(){
+                    showLoadingDialog(context);
                     NotificationService.syncNotifications(FirebaseAuth.instance.currentUser!.uid);
                   },
                   child: Row(
@@ -486,5 +486,36 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       ],
     )
   );
+  void showLoadingDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16.0),
+                Text('Syncing all notifications'),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    await Future.delayed(Duration(seconds: 4));
+
+    Navigator.pop(context); // Close the dialog after 4 seconds
+    // Show the Snackbar message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Notifications are synced'),
+      ),
+    );
+  }
 
 }

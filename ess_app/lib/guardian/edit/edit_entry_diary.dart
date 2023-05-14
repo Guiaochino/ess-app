@@ -48,6 +48,7 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
   void dispose(){
     titleController.dispose();
     paragraphController.dispose();
+    super.dispose();
   }
   
   @override
@@ -88,13 +89,6 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 30,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Colors.grey,
-                            offset: Offset(5.0, 5.0),
-                          ),
-                        ],
                       ),
                     ),
                   ),

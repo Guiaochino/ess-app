@@ -76,203 +76,208 @@ class _patientHomePageState extends State<patientHomePage> {
       return Center(child: CircularProgressIndicator());
     }
 
-    return Scaffold(
-      backgroundColor: AppColors.backColor,
-      appBar: AppBar(
-        foregroundColor: Colors.black,
-        backgroundColor: AppColors.firstColor,
-        centerTitle: true,
-        title: Text(
-          DateFormat.MMMMEEEEd().format(DateTime.now()).toString(),
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 15,
-            fontFamily: 'Montserrat',
-            color: Colors.black
+    return WillPopScope(
+      onWillPop:() async{
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.backColor,
+        appBar: AppBar(
+          foregroundColor: Colors.black,
+          backgroundColor: AppColors.firstColor,
+          centerTitle: true,
+          title: Text(
+            DateFormat.MMMMEEEEd().format(DateTime.now()).toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              fontFamily: 'Montserrat',
+              color: Colors.black
+            ),
           ),
         ),
-      ),
-      drawer: MainDrawer(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //appbar
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text(
-              //         'Hello, Akachiii',
-              //         style: TextStyle(
-              //           fontWeight: FontWeight.w600,
-              //           fontSize: 18,
-              //           fontFamily: 'Montserrat',
-              //           color: Colors.black
-              //         ),
-              //       ),
-              //       Container(
-              //         height: 50,
-              //         width: 50,
-              //         decoration: BoxDecoration(
-              //           color: AppColors.secondColor.withOpacity(0.1),
-              //           borderRadius: BorderRadius.all(Radius.circular(12)),
-              //         ),
-              //         child: Icon(
-              //           Icons.person,
-              //           size: 30,
-              //           color: AppColors.secondColor, 
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              SizedBox(height: 20),
-              Container(
-                height: 120,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:20.0),
-                  child: Row(
-                    children: [
-                      //memories button
+        drawer: MainDrawer(),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //appbar
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Text(
+                //         'Hello, Akachiii',
+                //         style: TextStyle(
+                //           fontWeight: FontWeight.w600,
+                //           fontSize: 18,
+                //           fontFamily: 'Montserrat',
+                //           color: Colors.black
+                //         ),
+                //       ),
+                //       Container(
+                //         height: 50,
+                //         width: 50,
+                //         decoration: BoxDecoration(
+                //           color: AppColors.secondColor.withOpacity(0.1),
+                //           borderRadius: BorderRadius.all(Radius.circular(12)),
+                //         ),
+                //         child: Icon(
+                //           Icons.person,
+                //           size: 30,
+                //           color: AppColors.secondColor, 
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                SizedBox(height: 20),
+                Container(
+                  height: 120,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:20.0),
+                    child: Row(
+                      children: [
+                        //memories button
+                        mainButtons(
+                          pageRedirect: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => MemoryHomePage(activePage: 0,)));
+                          }, 
+                          imgAsset: 'assets/images/memory.jpg', 
+                          title: 'Memories',
+                        ),
+                        SizedBox(width: 10.0),
+                        //schedules button
+                        mainButtons(
+                          pageRedirect: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ScheduleHomePage()));
+                          }, 
+                          imgAsset: 'assets/images/schedule.jpg', 
+                          title: 'Schedules',
+                        ),
+                        SizedBox(width: 10.0),
+                        //reminders button
                       mainButtons(
-                        pageRedirect: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => MemoryHomePage(activePage: 0,)));
-                        }, 
-                        imgAsset: 'assets/images/memory.jpg', 
-                        title: 'Memories',
-                      ),
-                      SizedBox(width: 10.0),
-                      //schedules button
-                      mainButtons(
-                        pageRedirect: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ScheduleHomePage()));
-                        }, 
-                        imgAsset: 'assets/images/schedule.jpg', 
-                        title: 'Schedules',
-                      ),
-                      SizedBox(width: 10.0),
-                      //reminders button
-                    mainButtons(
-                        pageRedirect: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => ReminderHomePage(activePage: 0,)));
-                        }, 
-                        imgAsset: 'assets/images/reminder.jpg', 
-                        title: 'Reminders',
-                      ),
-                    ],
+                          pageRedirect: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ReminderHomePage(activePage: 0,)));
+                          }, 
+                          imgAsset: 'assets/images/reminder.jpg', 
+                          title: 'Reminders',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-              //datetimeline
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  width: width,
+                SizedBox(height: 20),
+                //datetimeline
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Container(
+                    width: width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Today's Events",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            fontFamily: 'Montserrat',
+                            color: Colors.black
+                          ),
+                        ),
+                        SizedBox(height: 10),     
+                        schedules.isEmpty? 
+                        Center(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 20),
+                              emptyCategory(
+                                icon: Icons.event_busy,
+                                detail: 'No Schedules Today',
+                              ),
+                              SizedBox(height: 20),
+                            ],
+                          ),
+                        )
+                        //listview builder of onclick date events
+                        :ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: schedules.length,
+                        itemBuilder: (context, index) {
+                          final schedule = schedules[index];
+                          return UpcomingScheduleListView(
+                            tileIndex: index,
+                            builderLength: schedules.length,
+                            schedule: schedule,
+                          );
+                        },
+                        )               
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  height: 400,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Today's Events",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          fontFamily: 'Montserrat',
-                          color: Colors.black
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          'Upcoming Reminders',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600, 
+                            fontSize: 20,
+                            fontFamily: 'Montserrat',
+                          ),
                         ),
                       ),
-                      SizedBox(height: 10),     
-                      schedules.isEmpty? 
-                      Center(
-                        child: Column(
-                          children: [
-                            SizedBox(height: 20),
-                            emptyCategory(
-                              icon: Icons.event_busy,
-                              detail: 'No Schedules Today',
-                            ),
-                            SizedBox(height: 20),
-                          ],
+                      SizedBox(height: 10),
+                      Expanded(
+                        child: reminders.isEmpty?
+                        Center(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 20),
+                              emptyCategory(
+                                icon: Icons.event_busy,
+                                detail: 'No Reminders Today',
+                              ),
+                              SizedBox(height: 20),
+                            ],
+                          ),
+                        )
+                        :Container(
+                          child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: reminders.length,
+                            itemBuilder: ((context, index) {
+                              final reminder = reminders[index];
+                              return UpcomingReminderListView(reminder: reminder);
+                            }),
+                          ),
                         ),
-                      )
-                      //listview builder of onclick date events
-                      :ListView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: schedules.length,
-                      itemBuilder: (context, index) {
-                        final schedule = schedules[index];
-                        return UpcomingScheduleListView(
-                          tileIndex: index,
-                          builderLength: schedules.length,
-                          schedule: schedule,
-                        );
-                      },
-                      )               
+                      ),
                     ],
                   ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                height: 400,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Text(
-                        'Upcoming Reminders',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600, 
-                          fontSize: 20,
-                          fontFamily: 'Montserrat',
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Expanded(
-                      child: reminders.isEmpty?
-                      Center(
-                        child: Column(
-                          children: [
-                            SizedBox(height: 20),
-                            emptyCategory(
-                              icon: Icons.event_busy,
-                              detail: 'No Reminders Today',
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        ),
-                      )
-                      :Container(
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: reminders.length,
-                          itemBuilder: ((context, index) {
-                            final reminder = reminders[index];
-                            return UpcomingReminderListView(reminder: reminder);
-                          }),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-              //scheds
-              
-              //reminders
-              
-              //listview of buttons
-            ],
+                )
+                //scheds
+                
+                //reminders
+                
+                //listview of buttons
+              ],
+            ),
           ),
         ),
       ),

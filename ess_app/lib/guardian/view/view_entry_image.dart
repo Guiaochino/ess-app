@@ -133,7 +133,7 @@ class ViewEntryImage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 20.0),
                 //paragraph
                 Expanded(
                   flex: 1,
@@ -145,20 +145,24 @@ class ViewEntryImage extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(
-
-                        memory.memoryDetails,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: Colors.black
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Text(
+                          memory.memoryDetails,
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                            height: 1.5,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            color: Colors.black
+                          ),
                         ),
                       ),
                     )
                   ),
                 ),
                 SizedBox(height: 20),
-
+        
                 SizedBox(height: 20),
               ],
             ),
