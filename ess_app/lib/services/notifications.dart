@@ -13,7 +13,8 @@ class NotificationService {
           importance: Importance.max,
           enableLights: true,
           enableVibration: true,
-          playSound: true),
+          playSound: true,
+          priority: Priority.high),
     );
   }
 
