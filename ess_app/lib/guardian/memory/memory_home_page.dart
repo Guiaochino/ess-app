@@ -51,7 +51,7 @@ class MemoryHomePage extends StatelessWidget {
                 Icons.add_a_photo,
                 color: Colors.white,
               ),
-              label: 'Add Image',
+              label: 'Add Image Entry',
               backgroundColor: Colors.grey[800],
 
               onTap: () {
@@ -74,8 +74,8 @@ class MemoryHomePage extends StatelessWidget {
         body: Column(
           children: [
             categoryTab(
-              icon1: Icons.photo_album_outlined,
-              icon2: Icons.book_outlined,
+              icon1: Icons.photo_library,
+              icon2: Icons.book_rounded,
               tabLabel1: 'IMAGES',
               tabLabel2: 'DIARY',
             ),
