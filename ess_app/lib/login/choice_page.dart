@@ -27,6 +27,7 @@ class _ChoicePageState extends State<ChoicePage> {
         _userPreference = prefs.getString(userPreferenceKey);
       });
     });
+    
   }
 
   @override
@@ -167,4 +168,5 @@ class _ChoicePageState extends State<ChoicePage> {
       ),
     );
   }
+
 }
