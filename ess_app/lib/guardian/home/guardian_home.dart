@@ -252,8 +252,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                       children: [
                         //memories button
                         mainButtons(
-                          pageRedirect: () {
-                            NotificationService.printAllScheduledNotifications();                   
+                          pageRedirect: () {                
                             Navigator.of(context).push(
                               PageTransition(
                                 child: MemoryHomePage(activePage: 0),
@@ -802,7 +801,7 @@ class statCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 10),
+                  SizedBox(width: 5),
                   Container(
                     height: 40,
                     width: 40,
@@ -831,7 +830,7 @@ class statCard extends StatelessWidget {
                           )
                         : Container(),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 5),
                 ],
               ),
               Text(

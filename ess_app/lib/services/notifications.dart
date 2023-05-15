@@ -126,34 +126,35 @@ class NotificationService {
     print(reminderIds);
     print(scheduleIds);
 
-    // the goal of this for loop is to delete any running notifs that arent in the database
-    // for every notification in notification list
-    for (final notification in notifications) {
-      //getting the id of notification into id
-      final id = notification.id.toString();
-      // checking if any of id of notification is in any of the schedule and reminder ids
-      if (reminderIds.contains(id) || scheduleIds.contains(id)) {
-        // add the notification id into the reminder
-        notificationIds.add(int.parse(id));
-      } else {
-        // delete notif
-        // await FlutterLocalNotificationsPlugin().cancel(id);
-      }
-    }
+    // // the goal of this for loop is to delete any running notifs that arent in the database
+    // // for every notification in notification list
+    // for (final notification in notifications) {
+    //   //getting the id of notification into id
+    //   final id = notification.id.toString();
+    //   // checking if any of id of notification is in any of the schedule and reminder ids
+    //   if (reminderIds.contains(id) || scheduleIds.contains(id)) {
+    //     // add the notification id into the reminder
+    //     notificationIds.add(int.parse(id));
+    //   } else {
+    //     // delete notif
+    //     // await FlutterLocalNotificationsPlugin().cancel(id);
+    //   }
+    // }
 
-    print('Notification Ids');
-    print(notificationIds);
+    // print('Notification Ids');
+    // print(notificationIds);
 
-    // the goal of this is to add any docus that arent in the notif list
-    final reminderNotifications = reminderIds.difference(notificationIds.map((id) => id.toString()).toSet());
-    final scheduleNotifications = scheduleIds.difference(notificationIds.map((id) => id.toString()).toSet());
+    // // the goal of this is to add any docus that arent in the notif list
+    // final reminderNotifications = reminderIds.difference(notificationIds.map((id) => id.toString()).toSet());
+    // final scheduleNotifications = scheduleIds.difference(notificationIds.map((id) => id.toString()).toSet());
 
-    print(reminderNotifications);
-    print(scheduleNotifications);
+    // print(reminderNotifications);
+    // print(scheduleNotifications);
 
+    await FlutterLocalNotificationsPlugin().cancelAll();
     
-    if (reminderNotifications.isNotEmpty) {
-      for(final id in reminderNotifications){
+    if (reminderIds.isNotEmpty) {
+      for(final id in reminderIds){
         final reminderDoc = reminderDocs.docs.where((doc) => doc.id == id.toString()).first;
         ReminderModel reminderEntry = new ReminderModel(
           uid:  reminderDoc['uid'],
@@ -174,8 +175,8 @@ class NotificationService {
       print('Reminders are updated');
     }
     
-    if (scheduleNotifications.isNotEmpty) {
-      for(final id in scheduleNotifications){
+    if (scheduleIds.isNotEmpty) {
+      for(final id in scheduleIds){
         final scheduleDoc = scheduleDocs.docs.where((doc) => doc.id == id.toString()).first;
         ScheduleModel scheduleEntry = new ScheduleModel(
           uid:  scheduleDoc['uid'],
