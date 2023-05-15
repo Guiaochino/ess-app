@@ -175,6 +175,11 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       } else {
                         print("Login Successfully!");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Logged in successfully'),
+                          ),
+                        );
                         Navigator.of(context).push(
                           PageTransition(
                             child: ChoicePage(),
