@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
@@ -10,49 +9,41 @@ class NotificationService {
 
   static Future _notificationDetails() async {
     return NotificationDetails(
-      android: AndroidNotificationDetails(
-        'channel id',
-        'channel name',
-        importance: Importance.max,
-        enableLights: true,
-        enableVibration: true,
-        playSound: true
-      ),
+      android: AndroidNotificationDetails('channel id', 'channel name',
+          importance: Importance.max,
+          enableLights: true,
+          enableVibration: true,
+          playSound: true),
     );
   }
 
   static Future testNotification({
-    int id = 0,   // id is from the firestore document
+    int id = 0, // id is from the firestore document
     String? title,
     String? body,
     String? payload,
-  }) async{
-    await _notifications.show(
-      id, 
-      title, 
-      body, 
-      await _notificationDetails()
-    );
+  }) async {
+    await _notifications.show(id, title, body, await _notificationDetails());
   }
 
-  static Future removeAllNotification() async{
+  static Future removeAllNotification() async {
     print('removed all notifications');
     await _notifications.cancelAll();
   }
-  
-  static Future removeNotificationWithId(int docId) async{
+
+  static Future removeNotificationWithId(int docId) async {
     print('removed notification with id $docId');
     await _notifications.cancel(docId);
   }
 
   //scheduled notification
-  static Future scheduleNotification({
-    int id = 0,   // id is from the firestore document
-    String? title,
-    String? body,
-    String? payload,
-    required DateTime scheduledDate,
-  }) async {
+  static Future scheduleNotification(
+      {int id = 0, // id is from the firestore document
+      String? title,
+      String? body,
+      String? payload,
+      required DateTime scheduledDate,
+      AndroidScheduleMode? androidScheduleMode}) async {
     print('Scheduling notification for id $id at $scheduledDate');
     final location = tz.getLocation('Asia/Manila');
     final scheduledDateTime = tz.TZDateTime.from(scheduledDate, location);
@@ -63,19 +54,20 @@ class NotificationService {
       body,
       scheduledDateTime,
       notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
   //reminder daily notification
-  static Future reminderNotification({
-    int id = 0,   // id is from the firestore document
-    String? title,
-    String? body,
-    String? payload,
-    required DateTime scheduledDate,
-  }) async {
+  static Future reminderNotification(
+      {int id = 0, // id is from the firestore document
+      String? title,
+      String? body,
+      String? payload,
+      required DateTime scheduledDate,
+      AndroidScheduleMode? androidScheduleMode}) async {
     print('Scheduling daily notification with id $id for $scheduledDate');
     final location = tz.getLocation('Asia/Manila');
     final scheduledDateTime = tz.TZDateTime.from(scheduledDate, location);
@@ -86,6 +78,7 @@ class NotificationService {
       body,
       scheduledDateTime,
       notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
@@ -93,7 +86,8 @@ class NotificationService {
   }
 
   //get list of notifications
-  static Future<List<PendingNotificationRequest>> getAllScheduledNotifications() async {
+  static Future<List<PendingNotificationRequest>>
+      getAllScheduledNotifications() async {
     return await _notifications.pendingNotificationRequests();
   }
 
@@ -101,7 +95,8 @@ class NotificationService {
   static void printAllScheduledNotifications() async {
     final pendingNotifications = await getAllScheduledNotifications();
     print('Number of Pending Notifications: ${pendingNotifications.length}');
-    for (PendingNotificationRequest pendingNotification in pendingNotifications) {
+    for (PendingNotificationRequest pendingNotification
+        in pendingNotifications) {
       print('Notification ID: ${pendingNotification.id}');
       print('Title: ${pendingNotification.title}');
       print('Body: ${pendingNotification.body}');
@@ -109,20 +104,32 @@ class NotificationService {
       print('-----------------------------------');
     }
   }
-  
 
   // this function is for syncing documents that arent in the notification
   // downsides is that edited notification from the other side arent updated
   static Future<void> syncNotifications(String user) async {
     // fetching
-    final notifications = await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
-    final reminderDocs = await FirebaseFirestore.instance.collection('users').doc(user).collection('reminders').where('isDeleted', isEqualTo: false).get();
-    final scheduleDocs = await FirebaseFirestore.instance.collection('users').doc(user).collection('schedules').where('isDeleted', isEqualTo: false).get();
+    final notifications =
+        await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
+    final reminderDocs = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user)
+        .collection('reminders')
+        .where('isDeleted', isEqualTo: false)
+        .get();
+    final scheduleDocs = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user)
+        .collection('schedules')
+        .where('isDeleted', isEqualTo: false)
+        .get();
 
     // getting the ids of the current notifications in the database
     final notificationIds = Set<int>();
-    final reminderIds = Set<String>.from(reminderDocs.docs.map((doc) => doc.id));
-    final scheduleIds = Set<String>.from(scheduleDocs.docs.map((doc) => doc.id));
+    final reminderIds =
+        Set<String>.from(reminderDocs.docs.map((doc) => doc.id));
+    final scheduleIds =
+        Set<String>.from(scheduleDocs.docs.map((doc) => doc.id));
     print(reminderIds);
     print(scheduleIds);
 
@@ -145,45 +152,50 @@ class NotificationService {
     print(notificationIds);
 
     // the goal of this is to add any docus that arent in the notif list
-    final reminderNotifications = reminderIds.difference(notificationIds.map((id) => id.toString()).toSet());
-    final scheduleNotifications = scheduleIds.difference(notificationIds.map((id) => id.toString()).toSet());
+    final reminderNotifications = reminderIds
+        .difference(notificationIds.map((id) => id.toString()).toSet());
+    final scheduleNotifications = scheduleIds
+        .difference(notificationIds.map((id) => id.toString()).toSet());
 
     print(reminderNotifications);
     print(scheduleNotifications);
 
-    
     if (reminderNotifications.isNotEmpty) {
-      for(final id in reminderNotifications){
-        final reminderDoc = reminderDocs.docs.where((doc) => doc.id == id.toString()).first;
+      for (final id in reminderNotifications) {
+        final reminderDoc =
+            reminderDocs.docs.where((doc) => doc.id == id.toString()).first;
         ReminderModel reminderEntry = new ReminderModel(
-          uid:  reminderDoc['uid'],
+          uid: reminderDoc['uid'],
           reminderTitle: reminderDoc['reminderTitle'],
-          reminderDateTime: DateTime.fromMillisecondsSinceEpoch(reminderDoc['reminderDateTime'].millisecondsSinceEpoch),
+          reminderDateTime: DateTime.fromMillisecondsSinceEpoch(
+              reminderDoc['reminderDateTime'].millisecondsSinceEpoch),
           reminderDetails: reminderDoc['reminderDetails'],
         );
-      
+
         NotificationService.reminderNotification(
           id: int.parse(reminderEntry.uid),
           title: "Here's a reminder!",
-          body: '${reminderEntry.reminderTitle} \n${reminderEntry.reminderDetails}',
+          body:
+              '${reminderEntry.reminderTitle} \n${reminderEntry.reminderDetails}',
           scheduledDate: reminderEntry.reminderDateTime,
         );
       }
-    }
-    else{
+    } else {
       print('Reminders are updated');
     }
-    
+
     if (scheduleNotifications.isNotEmpty) {
-      for(final id in scheduleNotifications){
-        final scheduleDoc = scheduleDocs.docs.where((doc) => doc.id == id.toString()).first;
+      for (final id in scheduleNotifications) {
+        final scheduleDoc =
+            scheduleDocs.docs.where((doc) => doc.id == id.toString()).first;
         ScheduleModel scheduleEntry = new ScheduleModel(
-          uid:  scheduleDoc['uid'],
+          uid: scheduleDoc['uid'],
           schedTitle: scheduleDoc['schedTitle'],
-          schedDateTime: DateTime.fromMillisecondsSinceEpoch(scheduleDoc['schedDateTime'].millisecondsSinceEpoch),
+          schedDateTime: DateTime.fromMillisecondsSinceEpoch(
+              scheduleDoc['schedDateTime'].millisecondsSinceEpoch),
           schedDetails: scheduleDoc['schedDetails'],
         );
-      
+
         if (scheduleEntry.schedDateTime.isAfter(DateTime.now())) {
           NotificationService.scheduleNotification(
             id: int.parse(scheduleEntry.uid),
@@ -191,13 +203,12 @@ class NotificationService {
             body: '${scheduleEntry.schedTitle} \n${scheduleEntry.schedDetails}',
             scheduledDate: scheduleEntry.schedDateTime,
           );
-        }
-        else{
-          print('Cant add schedule with id ${scheduleEntry.uid} since the datetime has passed');
+        } else {
+          print(
+              'Cant add schedule with id ${scheduleEntry.uid} since the datetime has passed');
         }
       }
-    }
-    else{
+    } else {
       print('Schedules are updated');
     }
 
@@ -228,5 +239,4 @@ class NotificationService {
     //   );
     // }
   }
-
 }
