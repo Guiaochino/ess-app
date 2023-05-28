@@ -79,7 +79,7 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
                 SizedBox(height: 20.0),
                 // mood radio buttons -
                 Container(
-                  height: 50,
+                  height: 70,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: SingleChildScrollView(
@@ -270,37 +270,37 @@ class _CreateEntryDiaryState extends State<CreateEntryDiary> {
       }, 
       child: Icon(
         icon,
-        size: (selectedMood == index) ? 60.0 : 45.0,
+        size: (selectedMood == index) ? 55.0 : 40.0,
         color: (selectedMood == index) ? iconColor(index) : Colors.grey[700],
       ),
     );
   }
 
   //color of radiobuttons
-  Color iconColor(int index){
+  Color iconColor(int index) {
     Color iconColor = Colors.grey;
-    switch (index){
+    switch (index) {
       case 1:
-      iconColor = Colors.red;
-      break;
+        iconColor = Color(0xFF333399); // Very Sad (Dark Indigo)
+        break;
       case 2:
-      iconColor = Color.fromARGB(255, 204, 0, 112);
-      break;
+        iconColor = Color(0xFF6699CC); // Sad (Steel Blue)
+        break;
       case 3:
-      iconColor = Color.fromARGB(255, 192, 0, 160);
-      break;
+        iconColor = Color(0xFF99CCFF); // Somewhat Sad (Light Blue)
+        break;
       case 4:
-      iconColor = Color.fromARGB(255, 255, 197, 6);
-      break;
+        iconColor = Color(0xFFCCCCCC); // Neutral (Light Gray)
+        break;
       case 5:
-      iconColor = Color.fromARGB(255, 10, 72, 187);
-      break;
+        iconColor = Color(0xFFFFCC99); // Somewhat Happy (Peach)
+        break;
       case 6:
-      iconColor = Color.fromARGB(255, 241, 110, 35);
-      break;
+        iconColor = Color(0xFFFF9933); // Happy (Orange)
+        break;
       case 7:
-      iconColor = Color.fromARGB(255, 12, 148, 0);
-      break;
+        iconColor = Color(0xFFFF6633); // Very Happy (Vibrant Orange)
+        break;
     }
     return iconColor;
   }

@@ -43,14 +43,13 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
               backgroundColor: AppColors.firstColor,
               foregroundColor: Colors.black,
               centerTitle: true,
-              title: Text(
+              title: const Text(
                 'Schedule',
                 style: TextStyle(
-                  color: Colors.black, 
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.0,
-                  fontFamily: 'Montserrat'
-                ),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                    color: Colors.black),
               ), 
             ),
             drawer: MainDrawer(),

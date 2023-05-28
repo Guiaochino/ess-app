@@ -111,28 +111,54 @@ class ViewEntryImage extends StatelessWidget {
                 SizedBox(height: 10.0),
                 //image
                 Expanded(
-                  flex: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Color(0xFFF2BA05),
-                    ),
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (_){
+                        return ImageScreen(imgPath: memory.memoryImg);
+                      }));
+                    },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: GestureDetector(
-                        child: Image.network(
-                          memory.memoryImg,
-                          fit: BoxFit.cover,
-                        ),
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (_){
-                            return ImageScreen(imgPath: memory.memoryImg);
-                          }));
-                        },
+                      child: Stack(
+                        children: [
+                          Image.network(
+                            memory.memoryImg,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withOpacity(0.7),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 20,
+                            left: 20,
+                            child: Text(
+                              DateFormat('hh:mm aa').format(memory.memoryDateTime),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
+                
                 SizedBox(height: 20.0),
                 //paragraph
                 Expanded(

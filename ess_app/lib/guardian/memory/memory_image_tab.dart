@@ -30,11 +30,11 @@ class _MemoryImageTabState extends State<MemoryImageTab> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 20.0),
+            SizedBox(height: 15.0),
             //container for gridview contents
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Container(
                   child: StreamBuilder<List<MemoryModel>>(
                       stream: dbconn.memoryData,

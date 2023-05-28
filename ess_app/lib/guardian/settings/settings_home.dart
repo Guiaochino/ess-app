@@ -101,7 +101,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       ),
       body: SafeArea(
         child: Container(
-          color: Colors.grey[300],
+          color: AppColors.backColor,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
