@@ -1,28 +1,19 @@
 import 'package:ess_app/guardian/view/view_entry_diary.dart';
 import 'package:ess_app/models/diary_model.dart';
-import 'package:ess_app/utils/dateTime_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:page_transition/page_transition.dart';
-import '../memory/memory_home_page.dart';
+import 'package:intl/intl.dart';
 
 class MemoryTabListView extends StatelessWidget {
-  // final int diaryIndex;
-  // final String diaryTitle;
-  // final DateTime diaryDateTime;
-  // final String diaryDetails;
-  // final int emoteRate;
   final DiaryModel diary;
   final Function(BuildContext)? deleteTapped;
   final Function(BuildContext)? editTapped;
 
   MemoryTabListView({
     required this.diary,
-    required this.deleteTapped, 
+    required this.deleteTapped,
     required this.editTapped,
   });
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +29,9 @@ class MemoryTabListView extends StatelessWidget {
               icon: Icons.edit_note,
               label: 'Edit',
               borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomRight: Radius.circular(20)),
+                topRight: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
             )
           ],
         ),
@@ -47,13 +39,14 @@ class MemoryTabListView extends StatelessWidget {
           motion: DrawerMotion(),
           children: [
             SlidableAction(
-              onPressed: deleteTapped, //delete function
+              onPressed: deleteTapped,
               icon: Icons.delete_forever,
               label: 'Delete',
               backgroundColor: Colors.red,
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20)),
+                topLeft: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+              ),
             )
           ],
         ),
@@ -64,172 +57,170 @@ class MemoryTabListView extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
-            ),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    //1st column - icon and title
-                    Container(
-                      height: 50,
-                      child: Row(
-                        children: [
-                          SizedBox(width: 10),
-                          Center(
-                            child: Icon(
-                              icon(diary.emoteRate),
-                              size: 50,
-                              color: iconColor(diary.emoteRate),
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                diary.diaryTitle,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 20, 
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    //2nd Column -  diary details
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 5.0, 
-                          horizontal: 10.0,
-                        ),
-                        child: Container(
-                          child: Container(
-                            child: Text(
-                              diary.diaryDetails,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(
-                                fontSize: 15, 
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    //3rd Column - view details
-                    Row(
-                      children: [
-                        SizedBox(width:10),
-                        Text(
-                          '${diary.diaryDateTime.month}/${diary.diaryDateTime.day}/${diary.diaryDateTime.year}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                          ),
-                        ),
-                        Spacer(),
-                        MaterialButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              PageTransition(
-                                child: ViewEntryDiary(
-                                  diary: diary,
-                                ),
-                                type: PageTransitionType.bottomToTop
-                              )
-                            );
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFE86166),
-                              borderRadius: BorderRadius.circular(12)
-                            ),
-                            child: Center(
-                              child: Text('Read more',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
                 ),
-              ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 50,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      Icon(
+                        icon(diary.emoteRate),
+                        size: 40,
+                        color: iconColor(diary.emoteRate),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          diary.diaryTitle,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      diary.diaryDetails,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                        fontFamily: 'Montserrat',
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 14,
+                        color: Colors.grey[600],
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        DateFormat('MMM d, yyyy').format(diary.diaryDateTime),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                      Spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ViewEntryDiary(diary: diary),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFE86166),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Read more',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
         ),
       ),
     );
   }
-  //get icon
-  IconData icon(int index){
+
+  IconData icon(int index) {
     IconData iconRate = Icons.sentiment_neutral_outlined;
-    switch (index){
+    switch (index) {
       case 1:
-      iconRate = Icons.sentiment_very_dissatisfied_outlined;
-      break;
+        iconRate = Icons.sentiment_very_dissatisfied_outlined;
+        break;
       case 2:
-      iconRate = Icons.sentiment_very_dissatisfied;
-      break;
+        iconRate = Icons.sentiment_very_dissatisfied;
+        break;
       case 3:
-      iconRate = Icons.sentiment_dissatisfied;
-      break;
+        iconRate = Icons.sentiment_dissatisfied;
+        break;
       case 4:
-      iconRate = Icons.sentiment_neutral_rounded;
-      break;
+        iconRate = Icons.sentiment_neutral_rounded;
+        break;
       case 5:
-      iconRate = Icons.sentiment_satisfied;
-      break;
+        iconRate = Icons.sentiment_satisfied;
+        break;
       case 6:
-      iconRate = Icons.sentiment_satisfied_outlined;
-      break;
+        iconRate = Icons.sentiment_satisfied_outlined;
+        break;
       case 7:
-      iconRate = Icons.sentiment_very_satisfied_outlined;
-      break;
+        iconRate = Icons.sentiment_very_satisfied_outlined;
+        break;
     }
     return iconRate;
   }
 
-  Color iconColor(int index){
+  Color iconColor(int index) {
     Color iconColor = Colors.grey;
-    switch (index){
+    switch (index) {
       case 1:
-      iconColor = Colors.red;
-      break;
+        iconColor = Color(0xFF333399); // Very Sad (Dark Indigo)
+        break;
       case 2:
-      iconColor = Color.fromARGB(255, 204, 0, 112);
-      break;
+        iconColor = Color(0xFF6699CC); // Sad (Steel Blue)
+        break;
       case 3:
-      iconColor = Color.fromARGB(255, 192, 0, 160);
-      break;
+        iconColor = Color(0xFF99CCFF); // Somewhat Sad (Light Blue)
+        break;
       case 4:
-      iconColor = Color.fromARGB(255, 255, 197, 6);
-      break;
+        iconColor = Color(0xFFCCCCCC); // Neutral (Light Gray)
+        break;
       case 5:
-      iconColor = Color.fromARGB(255, 10, 72, 187);
-      break;
+        iconColor = Color(0xFFFFCC99); // Somewhat Happy (Peach)
+        break;
       case 6:
-      iconColor = Color.fromARGB(255, 241, 110, 35);
-      break;
+        iconColor = Color(0xFFFF9933); // Happy (Orange)
+        break;
       case 7:
-      iconColor = Color.fromARGB(255, 12, 148, 0);
-      break;
+        iconColor = Color(0xFFFF6633); // Very Happy (Vibrant Orange)
+        break;
     }
     return iconColor;
   }
 }
+

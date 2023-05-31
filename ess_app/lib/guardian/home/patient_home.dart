@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:ess_app/guardian/view/view_entry_image.dart';
 import 'package:ess_app/guardian/widgets/patient_upcoming_reminder.dart';
 import 'package:ess_app/guardian/widgets/patient_upcoming_schedule.dart';
 import 'package:ess_app/guardian/widgets/upcoming_reminder.dart';
+import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
@@ -17,6 +19,7 @@ import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class patientHomePage extends StatefulWidget {
@@ -34,6 +37,13 @@ class _patientHomePageState extends State<patientHomePage> {
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
   late StreamSubscription<List<ReminderModel>> _reminderDataHomeSubscription;
   late StreamSubscription<List<ScheduleModel>> _scheduleDataHomeSubscription;
+  final MemoryModel sampleData  = MemoryModel(
+    uid: '12312',
+    memoryTitle: 'Test 123',
+    memoryImg: 'https://firebasestorage.googleapis.com/v0/b/ess-back.appspot.com/o/images%2F36423?alt=media&token=eca6a10e-def8-4149-97ab-9de9e7f5d7b8',
+    memoryDateTime: DateTime.now(),
+    memoryDetails: 'Testasdasdasdsa',
+  );
 
   @override
   void initState() {
@@ -174,6 +184,26 @@ class _patientHomePageState extends State<patientHomePage> {
                   ),
                 ),
                 SizedBox(height: 20),
+                Container(
+                  width: width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                          "Your Memory of the Day",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            fontFamily: 'Montserrat',
+                            color: Colors.black
+                          ),
+                        ),
+                        MemoryCard(memory: sampleData),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 20),
                 //datetimeline
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -280,6 +310,110 @@ class _patientHomePageState extends State<patientHomePage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MemoryCard extends StatelessWidget {
+  final MemoryModel memory;
+
+  const MemoryCard({
+    required this.memory,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            memory.memoryTitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 10),
+          Image.network(
+            memory.memoryImg,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 200,
+          ),
+          SizedBox(height: 10),
+          Text(
+            memory.memoryDetails,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_today,
+                size: 14,
+                color: Colors.grey[600],
+              ),
+              SizedBox(width: 4),
+              Text(
+                DateFormat('MMM d, yyyy').format(memory.memoryDateTime),
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 14,
+                ),
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    PageTransition(
+                      child: ViewEntryImage(
+                        memory: memory,
+                      ),
+                      type: PageTransitionType.bottomToTop
+                    )
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xFFE86166),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  'Read More',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

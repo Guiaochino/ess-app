@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/diary_model.dart';
@@ -7,7 +6,7 @@ import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import '../widgets/memory_tab_listview.dart';
+import 'package:ess_app/guardian/widgets/memory_tab_listview.dart';
 import 'package:ess_app/constants.dart';
 
 class MemoryDiaryTab extends StatefulWidget {

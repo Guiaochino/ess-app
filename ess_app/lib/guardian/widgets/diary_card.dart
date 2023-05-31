@@ -1,114 +1,111 @@
-import 'package:ess_app/guardian/view/view_entry_diary.dart';
-import 'package:ess_app/guardian/view/view_entry_image.dart';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DiaryCard extends StatelessWidget {
-  // final int diaryId;
-  // final String title;
-  // final int emoteRate;
-  // final String details;
-  // final DateTime dateTime;
   final DiaryModel diary;
 
   const DiaryCard({
     Key? key,
-    required this.diary
+    required this.diary,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width - 40;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
-            color: iconColor(diary.emoteRate), borderRadius: BorderRadius.circular(15)),
+          color: const Color(0xFFE86166),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
         width: width,
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ViewEntryDiary(
-                diary: diary,
-              )
-            ));
-          },
+        child: Padding(
+          padding: const EdgeInsets.all(15),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                icon(diary.emoteRate),
-                size: 60,
-                color: Colors.white,
-              ),
-              SizedBox(height: 10),
-              Text(
-                  diary.diaryTitle,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    DateFormat('MMM d, yyyy').format(diary.diaryDateTime),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white.withOpacity(0.7),
+                      fontFamily: 'Montserrat',
+                    ),
                   ),
+                  Icon(
+                    icon(diary.emoteRate),
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                diary.diaryTitle,
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Montserrat',
                 ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                diary.diaryDetails,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white.withOpacity(0.7),
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
     );
   }
-  IconData icon(int index){
+
+  IconData icon(int index) {
     IconData iconRate = Icons.sentiment_neutral_outlined;
-    switch (index){
+    switch (index) {
       case 1:
-      iconRate = Icons.sentiment_very_dissatisfied_outlined;
-      break;
+        iconRate = Icons.sentiment_very_dissatisfied_outlined;
+        break;
       case 2:
-      iconRate = Icons.sentiment_very_dissatisfied;
-      break;
+        iconRate = Icons.sentiment_very_dissatisfied;
+        break;
       case 3:
-      iconRate = Icons.sentiment_dissatisfied;
-      break;
+        iconRate = Icons.sentiment_dissatisfied;
+        break;
       case 4:
-      iconRate = Icons.sentiment_neutral_rounded;
-      break;
+        iconRate = Icons.sentiment_neutral_rounded;
+        break;
       case 5:
-      iconRate = Icons.sentiment_satisfied;
-      break;
+        iconRate = Icons.sentiment_satisfied;
+        break;
       case 6:
-      iconRate = Icons.sentiment_satisfied_outlined;
-      break;
+        iconRate = Icons.sentiment_satisfied_outlined;
+        break;
       case 7:
-      iconRate = Icons.sentiment_very_satisfied_outlined;
-      break;
+        iconRate = Icons.sentiment_very_satisfied_outlined;
+        break;
     }
     return iconRate;
-  }
-  Color iconColor(int index){
-    Color iconColor = Colors.grey;
-    switch (index){
-      case 1:
-      iconColor = Colors.red;
-      break;
-      case 2:
-      iconColor = Color.fromARGB(255, 204, 0, 112);
-      break;
-      case 3:
-      iconColor = Color.fromARGB(255, 192, 0, 160);
-      break;
-      case 4:
-      iconColor = Color.fromARGB(255, 255, 197, 6);
-      break;
-      case 5:
-      iconColor = Color.fromARGB(255, 10, 72, 187);
-      break;
-      case 6:
-      iconColor = Color.fromARGB(255, 241, 110, 35);
-      break;
-      case 7:
-      iconColor = Color.fromARGB(255, 12, 148, 0);
-      break;
-    }
-    return iconColor;
   }
 }

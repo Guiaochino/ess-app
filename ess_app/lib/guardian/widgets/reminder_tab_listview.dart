@@ -16,7 +16,7 @@ class ReminderTabListView extends StatelessWidget {
     required this.reminder,
     required this.deleteTapped,
     required this.editTapped, 
-  }){
+  }) {
     final now = TimeOfDay.now();
     if (reminder.reminderDateTime.hour < now.hour ||
         (reminder.reminderDateTime.hour == now.hour && reminder.reminderDateTime.minute <= now.minute)) {
@@ -27,7 +27,7 @@ class ReminderTabListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Slidable(
         startActionPane: ActionPane(
           motion: DrawerMotion(),
@@ -73,43 +73,70 @@ class ReminderTabListView extends StatelessWidget {
           child: Container(
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: _isDone ? Colors.grey[200] : Colors.grey[100],
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _isDone ? Colors.grey[400]! : Colors.grey[400]!,
+              ),
             ),
-            child: Center(
-              child: ListTile(
-                 title: Text(
-                  reminder.reminderTitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    decoration: _isDone ? TextDecoration.lineThrough: TextDecoration.none,
-                    color: _isDone ? Colors.grey[800]:Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Icon(
+                    Icons.alarm,
+                    color: _isDone ? Colors.grey[600] : Color(0xFFE86166),
+                    size: 32,
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          reminder.reminderTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            decoration: _isDone ? TextDecoration.lineThrough : TextDecoration.none,
+                            color: _isDone ? Colors.grey[800] : Colors.black,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          reminder.reminderDetails,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            decoration: _isDone ? TextDecoration.lineThrough : TextDecoration.none,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                subtitle: Text(
-                  reminder.reminderDetails,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    decoration: _isDone ? TextDecoration.lineThrough: TextDecoration.none,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                    fontSize:12,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Text(
+                    extractTimefromDTString(reminder.reminderDateTime.toString()),
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: _isDone ? Colors.grey[400]! : Color(0xFFE86166),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-                trailing: Text(
-                  extractTimefromDTString(reminder.reminderDateTime.toString()),
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: Color(0xFFE86166),
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
+              ],
             ),
           ),
         ),

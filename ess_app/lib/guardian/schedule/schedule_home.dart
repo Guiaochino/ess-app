@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
@@ -9,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../widgets/main_drawer.dart';
-import '../widgets/schedule_tab_listview.dart';
-import '../create/create_entry_schedule.dart';
+import 'package:ess_app/guardian/widgets/main_drawer.dart';
+import 'package:ess_app/guardian/widgets/schedule_tab_listview.dart';
+import 'package:ess_app/guardian/create/create_entry_schedule.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -47,7 +46,8 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                 'Schedule',
                 style: TextStyle(
                   color: Colors.black, 
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 1.0,
                   fontFamily: 'Montserrat'
                 ),

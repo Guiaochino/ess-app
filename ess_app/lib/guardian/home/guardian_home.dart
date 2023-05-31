@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:ess_app/guardian/settings/settings_home.dart';
 import 'package:ess_app/guardian/widgets/upcoming_reminder.dart';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/models/memory_model.dart';
@@ -138,122 +139,168 @@ class _guardianHomePageState extends State<guardianHomePage> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: Color.fromRGBO(238, 238, 238, 1),
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              iconTheme: IconThemeData(color: Colors.black),
-              backgroundColor: Color(0xFFF2BA05),
-              elevation: 0,
-              expandedHeight: 170,
-              floating: false,
-              pinned: true,
-              centerTitle: false,
-              title: Text(
-                'Dashboard',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 25.0,
-                  letterSpacing: 1.0,
-                  fontFamily: 'Montserrat',
-                ),
-              ),
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 238, 200, 76),
-                          AppColors.firstColor,
-                        ],
-                        stops: [
-                          0.20,
-                          1,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+        backgroundColor: AppColors.backColor,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: AppColors.firstColor,
+          foregroundColor: Colors.black,
+          centerTitle: true,
+          title: const Text(
+            'Dashboard',
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+                color: Colors.black),
+          ),
+        ),
+        drawer: MainDrawer(),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  SizedBox(height:30),
+                  TopBar(user: user),
+                  SizedBox(height: 30),
+
+                  Center(
+                    child: Text(
+                      DateFormat('E, d MMM yyyy')
+                          .format(DateTime.now())
+                          .toString(),
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        fontFamily: 'Montserrat',
+                        color: Colors.black,
                       ),
                     ),
+                  ),
+                  //buttons
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Container(
+                      height: 120,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Row(
+                          children: [
+                            //memories button
+                            mainButtons(
+                              pageRedirect: () {                
+                                Navigator.of(context).push(
+                                  PageTransition(
+                                    child: MemoryHomePage(activePage: 0),
+                                    type: PageTransitionType.rightToLeft,
+                                  ),
+                                );
+                              },
+                              imgAsset: 'assets/images/memory.jpg',
+                              title: 'Memories',
+                            ),
+                            SizedBox(width: 10.0),
+                            //schedules button
+                            mainButtons(
+                              pageRedirect: () {
+                                Navigator.of(context).push(
+                                  PageTransition(
+                                    child: ScheduleHomePage(),
+                                    type: PageTransitionType.rightToLeft,
+                                  ),
+                                );
+                              },
+                              imgAsset: 'assets/images/schedule.jpg',
+                              title: 'Schedules',
+                            ),
+                            SizedBox(width: 10.0),
+                            //reminders button
+                            mainButtons(
+                              pageRedirect: () {
+                                Navigator.of(context).push(
+                                  PageTransition(
+                                    child: ReminderHomePage(activePage: 0),
+                                    type: PageTransitionType.rightToLeft,
+                                  ),
+                                );
+                              },
+                              imgAsset: 'assets/images/reminder.jpg',
+                              title: 'Reminders',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+
+                  //overview
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       children: [
-                        //items in flexappbar
-                        SizedBox(
-                          height: 56.0,
-                        ),
-                        //full container of hello guardian and icon
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Center(
-                              child: Container(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          DateFormat.yMMMEd().format(DateTime.now()).toString(),
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: 'Montserrat',
-                                            color: Colors.grey[800],
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          'Hi ${user.guardianName}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 25,
-                                            fontFamily: 'Montserrat',
-                                            color: Colors.black
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 241, 222, 160).withOpacity(0.5),
-                                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                                      ),
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 40,
-                                        color: Colors.grey[900], 
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "${user.patientName}'s Overview",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Montserrat',
                             ),
                           ),
                         ),
+                        SizedBox(height: 20.0),
+                        Row(
+                          children: [
+                            statCard(
+                              title: 'Images',
+                              icon: Icons.photo,
+                              iconColor: Color.fromARGB(255, 223, 171, 1),
+                              statNum: _memoryCount,
+                            ),
+                            SizedBox(width: 10.0),
+                            statCard(
+                              title: 'Diaries',
+                              icon: Icons.book_sharp,
+                              iconColor: AppColors.secondColor,
+                              statNum: _diaryCount,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            statCard(
+                              title: 'Schedules',
+                              icon: Icons.calendar_month_outlined,
+                              iconColor: Color.fromARGB(255, 47, 92, 150),
+                              statNum: _scheduleCount,
+                            ),
+                            SizedBox(width: 10.0),
+                            statCard(
+                              title: 'Reminders',
+                              icon: Icons.notifications_active,
+                              iconColor: Color.fromARGB(255, 145, 20, 167),
+                              statNum: _reminderCount,
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                    ),
-              ),
-            ),
-            //categories
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Container(
-                  height: 120,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
+                  ),
+                  SizedBox(height: 30),
+
+                  //memories
+                  Container(
+                    child: Column(
                       children: [
-                        //memories button
-                        mainButtons(
+                        //title
+                        categoryHeading(
+                          title: 'Recent Memories',
                           pageRedirect: () {
-                            NotificationService.printAllScheduledNotifications();                   
                             Navigator.of(context).push(
                               PageTransition(
                                 child: MemoryHomePage(activePage: 0),
@@ -261,12 +308,103 @@ class _guardianHomePageState extends State<guardianHomePage> {
                               ),
                             );
                           },
-                          imgAsset: 'assets/images/memory.jpg',
-                          title: 'Memories',
                         ),
-                        SizedBox(width: 10.0),
-                        //schedules button
-                        mainButtons(
+                        SizedBox(height: 10.0),
+                        memories.isNotEmpty
+                          ? Column(
+                              children: [
+                                Container(
+                                  height: 220,
+                                  child: PageView.builder(
+                                    controller: _imagePageController,
+                                    itemCount: memories.length,
+                                    itemBuilder: ((context, index) {
+                                      return MemoryCard(
+                                        memory: memories[index],
+                                      );
+                                    }),
+                                  ),
+                                ),
+                                SizedBox(height: memories.isEmpty ? 0 : 10.0),
+                                SmoothPageIndicator(
+                                  controller: _imagePageController,
+                                  count: memories.length,
+                                  effect: ExpandingDotsEffect(
+                                    dotWidth: 10,
+                                    dotHeight: 10,
+                                    activeDotColor:Color.fromARGB(255, 228, 175, 0),
+                                  ),
+                                )
+                              ],
+                            )
+                          : emptyCategory(
+                                icon: Icons.photo,
+                                detail: 'No Recent Memories',
+                              ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 30),
+
+                  //diaries
+                  Container(
+                    child: Column(
+                      children: [
+                        //title
+                        categoryHeading(
+                          title: 'Recent Diaries',
+                          pageRedirect: () {
+                            Navigator.of(context).push(
+                              PageTransition(
+                                child: MemoryHomePage(activePage: 1),
+                                type: PageTransitionType.rightToLeft,
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 10.0),
+                        diaries.isNotEmpty 
+                        ? Column(
+                          children: [
+                            Container(
+                              height: 220,
+                              child: PageView.builder(
+                                controller: _diaryPageController,
+                                itemCount: diaries.length,
+                                itemBuilder: ((context, index) {
+                                  return DiaryCard(
+                                    diary: diaries[index],
+                                  );
+                                }),
+                              ),
+                            ),
+                            SizedBox(height: diaries.isEmpty ? 0 : 10.0),
+                            SmoothPageIndicator(
+                              controller: _diaryPageController,
+                              count: diaries.length,
+                              effect: ExpandingDotsEffect(
+                                dotWidth: 10,
+                                dotHeight: 10,
+                                activeDotColor: Color.fromARGB(255, 228, 175, 0),
+                              ),
+                            )
+                          ],
+                        ): emptyCategory(
+                              icon: Icons.description,
+                              detail: 'No Recent Diaries',
+                            ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height:30),
+
+                  //schedules
+                  Container(
+                    child: Column(
+                      children: [
+                        //title
+                        categoryHeading(
+                          title: 'Upcoming Schedules',
                           pageRedirect: () {
                             Navigator.of(context).push(
                               PageTransition(
@@ -275,12 +413,37 @@ class _guardianHomePageState extends State<guardianHomePage> {
                               ),
                             );
                           },
-                          imgAsset: 'assets/images/schedule.jpg',
-                          title: 'Schedules',
                         ),
-                        SizedBox(width: 10.0),
-                        //reminders button
-                        mainButtons(
+                        SizedBox(height: 20.0),
+                        //schedule cards
+                        schedules.isNotEmpty? 
+                        ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount:schedules.length,
+                          itemBuilder:((context, index) {
+                            return UpSchedCard(
+                              schedule: schedules[index],
+                            );
+                          })
+                        )
+                        :emptyCategory(
+                          icon: Icons.event_busy,
+                          detail: 'No Schedules Today',
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height:30),
+
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20),
+                        categoryHeading(
+                          title: 'Upcoming Reminders',
                           pageRedirect: () {
                             Navigator.of(context).push(
                               PageTransition(
@@ -289,327 +452,125 @@ class _guardianHomePageState extends State<guardianHomePage> {
                               ),
                             );
                           },
-                          imgAsset: 'assets/images/reminder.jpg',
-                          title: 'Reminders',
                         ),
-                      ],
+                        SizedBox(height: 20.0),
+                        reminders.isNotEmpty?
+                        ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: reminders.length,
+                          itemBuilder: ((context, index) {
+                            return UpReminderCard(
+                              reminder:reminders[index]
+                            );
+                          }),
+                        )
+                        :emptyCategory(
+                          icon: Icons.notification_important,
+                          detail: 'No Reminders Today',
+                        ),
+                      ]
                     ),
                   ),
-                ),
+                  SizedBox(height: 30),
+                ],
               ),
             ),
-            //overview
-            SliverToBoxAdapter(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Overview",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10.0),
-                      Row(
-                        children: [
-                          statCard(
-                            title: 'Images',
-                            icon: Icons.photo,
-                            iconColor: Color.fromARGB(255, 223, 171, 1),
-                            statNum: _memoryCount,
-                          ),
-                          SizedBox(width: 10.0),
-                          statCard(
-                            title: 'Diaries',
-                            icon: Icons.book_sharp,
-                            iconColor: AppColors.secondColor,
-                            statNum: _diaryCount,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          statCard(
-                            title: 'Schedules',
-                            icon: Icons.calendar_month_outlined,
-                            iconColor: Color.fromARGB(255, 47, 92, 150),
-                            statNum: _scheduleCount,
-                          ),
-                          SizedBox(width: 10.0),
-                          statCard(
-                            title: 'Reminders',
-                            icon: Icons.notifications_active,
-                            iconColor: Color.fromARGB(255, 145, 20, 167),
-                            statNum: _reminderCount,
-                          ),
-                        ],
-                      ),
-                    ],
+          ),
+        ),
+      )
+    );
+  }
+}
+
+class TopBar extends StatelessWidget {
+  const TopBar({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final UserModel user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30),
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello,',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Montserrat',
+                    color: Colors.black,
                   ),
                 ),
-              ),
-            ),
-            // memories
-            SliverToBoxAdapter(
-              child: Container(
-                height: memories.isNotEmpty ? 320 : 150,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.0),
-                    //title
-                    categoryHeading(
-                      title: 'Recent Memories',
-                      pageRedirect: () {
-                        Navigator.of(context).push(
-                          PageTransition(
-                            child: MemoryHomePage(activePage: 0),
-                            type: PageTransitionType.rightToLeft,
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.0),
-                    Expanded(
-                      child: memories.isNotEmpty
-                        ? Column(
-                            children: [
-                              Container(
-                                height: 200,
-                                child: PageView.builder(
-                                  controller: _imagePageController,
-                                  itemCount: memories.length,
-                                  itemBuilder: ((context, index) {
-                                    return MemoryCard(
-                                      memory: memories[index],
-                                    );
-                                  }),
-                                ),
-                              ),
-                              SizedBox(height: 10.0),
-                              SmoothPageIndicator(
-                                controller: _imagePageController,
-                                count: memories.length,
-                                effect: ExpandingDotsEffect(
-                                  activeDotColor:Color.fromARGB(255, 228, 175, 0),
-                                ),
-                              )
-                            ],
-                          )
-                        : emptyCategory(
-                              icon: Icons.photo,
-                              detail: 'No Recent Memories',
-                            ),
-                    ),
-                  ],
+                const SizedBox(height: 10),
+                Text(
+                  '${user.guardianName}!',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Montserrat',
+                    color: Colors.black,
+                  ),
                 ),
-              ),
+              ],
             ),
-            
-            SliverToBoxAdapter(
+            Spacer(),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: SettingsHomePage(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
+              },
               child: Container(
-                height: diaries.isNotEmpty ? 320 : 150,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.0),
-                    //title
-                    categoryHeading(
-                      title: 'Recent Diaries',
-                      pageRedirect: () {
-                        Navigator.of(context).push(
-                          PageTransition(
-                            child: MemoryHomePage(activePage: 1),
-                            type: PageTransitionType.rightToLeft,
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.0),
-                    Expanded(
-                      child: diaries.isNotEmpty 
-                      ? Column(
-                        children: [
-                          Container(
-                            height: 200,
-                            child: PageView.builder(
-                              controller: _diaryPageController,
-                              itemCount: diaries.length,
-                              itemBuilder: ((context, index) {
-                                return DiaryCard(
-                                  diary: diaries[index],
-                                );
-                              }),
-                            ),
-                          ),
-                          SizedBox(height: diaries.isEmpty ? 0 : 10.0),
-                          SmoothPageIndicator(
-                            controller: _diaryPageController,
-                            count: diaries.length,
-                            effect: ExpandingDotsEffect(
-                                activeDotColor: Color.fromARGB(255, 228, 175, 0)),
-                          )
-                        ],
-                      ): emptyCategory(
-                            icon: Icons.description,
-                            detail: 'No Recent Diaries',
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // //UPCOMING SCHEDULE
-            SliverToBoxAdapter(
-              child: Container(
-                height: schedules.isNotEmpty ? 340 : 150,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.0),
-                    //title
-                    categoryHeading(
-                      title: 'Upcoming Schedules',
-                      pageRedirect: () {
-                        Navigator.of(context).push(
-                          PageTransition(
-                            child: ScheduleHomePage(),
-                            type: PageTransitionType.rightToLeft,
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.0),
-                    //schedule cards
-                    Expanded(
-                      child: schedules.isNotEmpty? 
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemCount:schedules.length,
-                        itemBuilder:((context, index) {
-                          return UpSchedCard(
-                            schedule: schedules[index],
-                          );
-                        })
-                      )
-                      :emptyCategory(
-                        icon: Icons.event_busy,
-                        detail: 'No Schedules Today',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            
-            //YOURREMINDERS
-            // SliverToBoxAdapter(
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(10),
-            //     ),
-            //     child: Column(
-            //       children: [
-            //         SizedBox(height: 20),
-            //         categoryHeading(
-            //           title: 'Daily Reminders',
-            //           pageRedirect: () {
-            //             Navigator.of(context).push(
-            //               PageTransition(
-            //                 child: ReminderHomePage(activePage: 0),
-            //                 type: PageTransitionType.rightToLeft,
-            //               ),
-            //             );
-            //           },
-            //         ),
-            //         SizedBox(height: 20.0),
-            //         Padding(
-            //           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            //           child: Column(
-            //             children: [
-            //               //upcoming tile
-            //               reminderTile(
-            //                 title: 'Upcoming',
-            //                 badge: reminders.length,
-            //                 icon: Icons.event_note,
-            //               ),
-            //               SizedBox(height: 10),
-            //               //completed tile
-            //               reminderTile(
-            //                 title: 'Completed',
-            //                 badge: reminders.length,
-            //                 icon: Icons.event_available,
-            //               ),
-            //             ],
-            //           )
-            //         ),
-            //         SizedBox(height: 40),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-          
-            SliverToBoxAdapter(
-              child: Container(
+                height: 50,
+                width: 50,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFE86166),
+                      Color(0xFFF2BA05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
-                height: reminders.isNotEmpty ? 340 : 150,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    categoryHeading(
-                      title: 'Upcoming Reminders',
-                      pageRedirect: () {
-                        Navigator.of(context).push(
-                          PageTransition(
-                            child: ReminderHomePage(activePage: 0),
-                            type: PageTransitionType.rightToLeft,
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.0),
-                    Expanded(
-                      child: reminders.isNotEmpty?
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemCount: reminders.length,
-                        itemBuilder: ((context, index) {
-                          return UpReminderCard(
-                            reminder:reminders[index]
-                          );
-                        }),
-                      )
-                      :emptyCategory(
-                        icon: Icons.event_busy,
-                        detail: 'No Reminders Today',
-                      ),
-                    ),
-                  ]
+                child: Icon(
+                  Icons.settings,
+                  size: 30,
+                  color: Colors.white,
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: SizedBox(height: 40),
-            )
           ],
         ),
-        //drawer
-        drawer: MainDrawer(),
       ),
     );
   }
 }
+
 
 class emptyCategory extends StatelessWidget {
   final IconData icon;
@@ -625,20 +586,22 @@ class emptyCategory extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 40,
+            size: 100,
             color: Colors.black,
           ),
+          SizedBox(height: 10),
           Text(
             detail,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 20,
               fontWeight: FontWeight.w600,
               color: Colors.grey[800],
               fontFamily: 'Montserrat',
             ),
           ),
+          SizedBox(height: 20),
         ],
       );
   }
@@ -792,7 +755,17 @@ class statCard extends StatelessWidget {
       flex: 1,
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(12)),
+          color: Colors.white, 
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -802,7 +775,7 @@ class statCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(width: 10),
+                  SizedBox(width: 5),
                   Container(
                     height: 40,
                     width: 40,
@@ -831,7 +804,7 @@ class statCard extends StatelessWidget {
                           )
                         : Container(),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 5),
                 ],
               ),
               Text(

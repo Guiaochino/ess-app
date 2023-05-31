@@ -1,9 +1,7 @@
-import 'package:ess_app/guardian/create/create_entry_reminder.dart';
-import 'package:ess_app/guardian/widgets/category_appbar.dart';
-import 'package:ess_app/guardian/widgets/category_tab.dart';
 import 'package:ess_app/utils/colors.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:page_transition/page_transition.dart';
 import '../widgets/main_drawer.dart';
 import '../create/create_entry_diary.dart';
 import '../create/create_entry_image.dart';
@@ -12,9 +10,8 @@ import 'memory_image_tab.dart';
 
 class MemoryHomePage extends StatelessWidget {
   final int activePage;
-  const MemoryHomePage({
-    required this.activePage,
-    super.key});
+
+  const MemoryHomePage({required this.activePage, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +24,14 @@ class MemoryHomePage extends StatelessWidget {
           backgroundColor: AppColors.firstColor,
           foregroundColor: Colors.black,
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Memory',
             style: TextStyle(
-              color: Colors.black, 
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.0,
-              fontFamily: 'Montserrat'
-            ),
-          ), 
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+                color: Colors.black),
+          ),
         ),
         drawer: MainDrawer(),
         floatingActionButton: SpeedDial(
@@ -45,6 +41,7 @@ class MemoryHomePage extends StatelessWidget {
           overlayColor: Colors.black,
           overlayOpacity: 0.5,
           spacing: 12,
+          switchLabelPosition: true,
           children: [
             SpeedDialChild(
               child: Icon(
@@ -53,43 +50,77 @@ class MemoryHomePage extends StatelessWidget {
               ),
               label: 'Add Image',
               backgroundColor: Colors.grey[800],
-
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CreateEntryImage()));
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: CreateEntryImage(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
               // onTap: () => add image function
             ),
             SpeedDialChild(
-              child: Icon(Icons.note_add, color: Colors.white),
-              label: 'Add Diary Entry',
+              child: Icon(Icons.note_add, 
+                color: Colors.white,
+              ),
+              label: 'Add Diary',
               backgroundColor: Colors.grey[800],
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CreateEntryDiary()));
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: CreateEntryDiary(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
             )
           ],
         ),
-        body: Column(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            // Set the colors of the tab bar
+            tabBarTheme: TabBarTheme(
+              labelColor: Colors.black, // Modify this line
+              unselectedLabelColor: Colors.grey, // Modify this line
+            ),
+          ),
+          child: Container(
+            height: 60,
+            child: TabBar(
+              tabs: [
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.photo_library),
+                      SizedBox(width: 8), // Adjust the spacing between icon and text
+                      Text('IMAGES'),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.book_rounded),
+                      SizedBox(width: 8), // Adjust the spacing between icon and text
+                      Text('DIARY'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        body: TabBarView(
           children: [
-            categoryTab(
-              icon1: Icons.photo_album_outlined,
-              icon2: Icons.book_outlined,
-              tabLabel1: 'IMAGES',
-              tabLabel2: 'DIARY',
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  MemoryImageTab(),
-                  MemoryDiaryTab(),
-                ],
-              ),
-            ),
+            MemoryImageTab(),
+            MemoryDiaryTab(),
           ],
         ),
-      )
+      ),
     );
   }
 }

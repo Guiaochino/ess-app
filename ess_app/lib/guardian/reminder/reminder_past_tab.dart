@@ -3,7 +3,7 @@ import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/models/reminder_model.dart';
-import 'package:ess_app/models/schedule_model.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/services/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +31,7 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
           List<ReminderModel> pastReminders = snapshot.data!;
           return Container(
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: AppColors.backColor,
             ),
             child: Column(
               children: [
@@ -51,9 +51,10 @@ class _ReminderPastTabState extends State<ReminderPastTab> {
                       Text(
                         'No Reminders',
                         style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25),
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
                       ),
                     ],
                   )
