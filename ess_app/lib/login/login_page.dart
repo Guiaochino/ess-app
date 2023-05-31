@@ -20,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _errorLogin = false;
+  bool _hidePassword = true;
 
   @override
   void dispose() {
@@ -79,23 +80,26 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 20),
                 //emailfield
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.0),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 1.0,
+                      ),
+                    ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 3.0),
                       child: TextField(
+                        maxLines: 1,
                         textAlignVertical: TextAlignVertical.center,
-                        controller:
-                            emailController, // Email Controller for inputs
+                        controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusedBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                          prefixIcon: Icon(Icons.account_box_rounded),
+                          border: InputBorder.none,
+                          prefixIcon: Icon(Icons.account_circle),
                           hintText: 'Username/Email',
                         ),
                       ),
@@ -105,25 +109,37 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 30),
                 //passwordfield
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.0),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 1.0,
+                      ),
+                    ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 3.0),
                       child: TextField(
+                        maxLines: 1,
                         textAlignVertical: TextAlignVertical.center,
-                        obscureText: true,
-                        controller: passwordController, // Password Controller for inputs
+                        controller: passwordController,
+                        obscureText: _hidePassword,
                         keyboardType: TextInputType.visiblePassword,
                         decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          focusedBorder: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
+                          border: InputBorder.none,
                           prefixIcon: Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _hidePassword ? Icons.visibility : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _hidePassword = !_hidePassword;
+                              });
+                            },
+                          ),
                           hintText: 'Password',
                         ),
                       ),
@@ -131,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
     
-                SizedBox(height: 30),
+                SizedBox(height: 10),
     
                 //forgot password
                 Padding(
@@ -156,11 +172,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 30),
     
                 //signin button
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: MaterialButton(
                     onPressed: () async {
                       dynamic result = await _auth.SignInEmailPassword(
@@ -175,6 +191,11 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       } else {
                         print("Login Successfully!");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Logged in successfully'),
+                          ),
+                        );
                         Navigator.of(context).push(
                           PageTransition(
                             child: ChoicePage(),
@@ -184,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                     child: Container(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(15),
                       decoration: BoxDecoration(
                         color: Color(0xFFF2BA05),
                         borderRadius: BorderRadius.circular(12),
@@ -202,34 +223,37 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 30),
     
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Text(
-                    'No Account Yet?',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        PageTransition(
-                          child: CreateAccount(),
-                          type: PageTransitionType.rightToLeft,
-                        ),
-                      );
-                    },
-                    child: Text(
-                      ' Sign up now!',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center, 
+                  children: [
+                    Text(
+                      'No Account Yet?',
                       style: TextStyle(
-                        color: Color.fromARGB(255, 241, 83, 72),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ]),
-                SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageTransition(
+                            child: CreateAccount(),
+                            type: PageTransitionType.rightToLeft,
+                          ),
+                        );
+                      },
+                      child: Text(
+                        ' Sign up now!',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 241, 83, 72),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ]
+                ),
+                SizedBox(height: 30),
               ],
             ),
           ),

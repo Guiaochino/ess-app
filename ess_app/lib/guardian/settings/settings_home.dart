@@ -1,19 +1,20 @@
 import 'dart:async';
-
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/home/patient_home.dart';
 import 'package:ess_app/guardian/settings/change_password/change_password.dart';
 import 'package:ess_app/guardian/settings/change_password/email_verification_sent.dart';
+import 'package:ess_app/guardian/settings/how_to_use/how_to_use_home.dart';
 import 'package:ess_app/login/login_page.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/auth.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/services/notifications.dart';
+import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../home/guardian_home.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:ess_app/guardian/home/guardian_home.dart';
 
 class SettingsHomePage extends StatefulWidget {
   const SettingsHomePage({super.key});
@@ -27,6 +28,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   late TextEditingController guardianController;
   late TextEditingController patientController;
   late StreamSubscription<UserModel> _userStream;
+  
 
   String guardianName = '';
   String patientName = '';
@@ -64,7 +66,6 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFE86166),
@@ -99,7 +100,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
       ),
       body: SafeArea(
         child: Container(
-          color: Colors.grey[300],
+          color: AppColors.backColor,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -255,39 +256,48 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   ),
                 ),
                 SizedBox(height: 10.0),
-                GestureDetector(
-                  onTap:(){
+                //sync notifications
+                settingButton(
+                  title: 'Sync Notifications', 
+                  icon: Icons.sync,
+                  onTap: () {
                     showLoadingDialog(context);
                     NotificationService.syncNotifications(FirebaseAuth.instance.currentUser!.uid);
                   },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.sync,
-                        size: 40,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 30.0),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Sync Notifications',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 20,
-                        color: Colors.black,
-                      ),
-                    ],
+                ),
+                
+                SizedBox(height: 10.0),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'About',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                    ),
                   ),
+                ),
+                SizedBox(height: 10.0),
+                settingButton(
+                  title: 'How to Use', 
+                  icon: Icons.info_outline_rounded,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      PageTransition(
+                        child: HowToUseHome(),
+                        type: PageTransitionType.rightToLeft,
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 10.0),
+                settingButton(
+                  title: 'About Us', 
+                  icon: Icons.logo_dev_rounded,
+                  onTap: () {
+                    _showAboutDialog(context);
+                  },
                 ),
                 SizedBox(height: 10.0),
                 Align(
@@ -302,84 +312,29 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   ),
                 ),
                 SizedBox(height: 10.0),
-                //change password container
-                GestureDetector(
-                  onTap:(){
+                //change password
+                settingButton(
+                  title: 'Change Password', 
+                  icon: Icons.lock_reset_outlined,
+                  onTap: () {
                     Navigator.of(context).push(
                       PageTransition(
                         child: ChangePassword(),
-                        type: PageTransitionType.leftToRight,
+                        type: PageTransitionType.rightToLeft,
                       ),
                     );
                   },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.lock_reset_rounded,
-                        size: 40,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 30.0),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Change Password',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 20,
-                        color: Colors.black,
-                      ),
-                    ],
-                  ),
                 ),
                 SizedBox(height: 10.0),
                 //logout button
-                GestureDetector(
+                settingButton(
+                  title: 'Logout', 
+                  icon: Icons.logout,
                   onTap: () async {
-                    
                     openLogoutDialog();
                   },
-                  child: Container(
-                    height: 80,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.logout_outlined,
-                          size: 40,
-                          color: Colors.black,
-                        ),
-                        SizedBox(width: 30.0),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Text(
-                              'Logout',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 20,
-                          color: Colors.black,
-                        ),
-                      ],
-                    ),
-                  ),
-                )
+                ),
+                
               ],
             ),
           ),
@@ -518,4 +473,254 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
     );
   }
 
+}
+
+class settingButton extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Function()? onTap;
+  const settingButton({
+    super.key, required this.title, required this.icon, this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 40,
+                color: Colors.black,
+              ),
+              SizedBox(width: 30.0),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 20,
+                color: Colors.black,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+void _showAboutDialog(BuildContext context) {
+  final _imagePageController = PageController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            height: 300,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.logo_dev),
+                      Text(
+                        'Developers of GeriAssis',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _imagePageController,
+                      itemCount: 3, // Replace with the number of pages you want
+                      itemBuilder: (BuildContext context, int index) {
+                        final _devsName = ['Guiaochino Tiamzon', 'Mychal Esureña', 'Lester Ecaldre'];
+                        final _devsRole = ['Back-end', 'Front-end', 'Back-end'];
+                        final _devsEmail = ['chinotiamzon@gmail.com', 'tsmmychaalll@gmail.com', 'jlberdlace@gmail.com'];
+                        final _devsGithub = ['github.com/Guiaochino', 'github.com/mychaalll', 'github.com/jlbecaldre'];
+                        final _devsImg = ['assets/images/chinoTiamzon.jpg', 'assets/images/mychalEsurena.png', 'assets/images/lesterEcaldre.jpg'];
+                        return devCard(
+                          name: _devsName[index], 
+                          role: _devsRole[index], 
+                          email: _devsEmail[index], 
+                          github: _devsGithub[index], 
+                          imgPath: _devsImg[index],
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  SmoothPageIndicator(
+                    controller: _imagePageController,
+                    count: 3,
+                    effect: ExpandingDotsEffect(
+                      activeDotColor:AppColors.secondColor,
+                      dotHeight: 8.0,
+                      dotWidth: 8.0,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+class devCard extends StatefulWidget {
+  final String name, role, email, github, imgPath;
+   devCard({
+    super.key, required this.name, required this.role, required this.email, required this.github, required this.imgPath,
+  });
+
+  @override
+  State<devCard> createState() => _devCardState(name: name, role: role, email: email, github: github, imgPath: imgPath,);
+}
+
+class _devCardState extends State<devCard> {
+  final String name, role, email, github, imgPath;
+  bool isPressed = false;
+  AlignmentGeometry _alignment = Alignment.bottomLeft;
+
+  _devCardState({
+    required this.name, required this.role, required this.email, required this.github, required this.imgPath,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onLongPress: () {
+        setState(() {
+          isPressed = true;
+        });
+      },
+      onLongPressEnd: (_){
+        setState(() {
+          isPressed = false;
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Container(
+          decoration:BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: AppColors.backColor,
+          ),
+          child:  Stack(
+            fit: StackFit.expand, 
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12), 
+                  color: Colors.black
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Opacity(
+                    opacity: isPressed? 0.2 : 1,
+                    child: Image.asset(
+                      imgPath,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisAlignment: isPressed ? MainAxisAlignment.center: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      name,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    isPressed? Column(
+                      children: [
+                        SizedBox(height:15),
+                        Text(
+                          '$role Developer',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.email,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              email,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.code,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              github,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ):Container()
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

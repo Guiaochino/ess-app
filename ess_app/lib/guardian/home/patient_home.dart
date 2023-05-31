@@ -106,7 +106,7 @@ class _patientHomePageState extends State<patientHomePage> {
             ),
           ),
         ),
-        drawer: MainDrawer(),
+        drawer: MainDrawer(currentPage: 0,),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(

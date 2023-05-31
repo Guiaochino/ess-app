@@ -154,7 +154,7 @@ class _guardianHomePageState extends State<guardianHomePage> {
                 color: Colors.black),
           ),
         ),
-        drawer: MainDrawer(),
+        drawer: MainDrawer(currentPage: 0,),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(

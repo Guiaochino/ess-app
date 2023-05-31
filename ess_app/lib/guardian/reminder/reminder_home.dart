@@ -31,7 +31,7 @@ class ReminderHomePage extends StatelessWidget {
             ),
           ), 
         ),
-        drawer: MainDrawer(),
+        drawer: MainDrawer(currentPage: 3,),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xFFF2BA05),
           foregroundColor: Colors.black,

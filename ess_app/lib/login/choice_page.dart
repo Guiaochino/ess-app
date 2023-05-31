@@ -32,7 +32,6 @@ class _ChoicePageState extends State<ChoicePage> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserModel?>(context);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.backColor,
@@ -51,15 +50,9 @@ class _ChoicePageState extends State<ChoicePage> {
                   child: (Text(
                     'Who Are You?',
                     style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 30,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.grey,
-                          offset: Offset(5.0, 5.0),
-                        ),
-                      ],
+                      fontWeight: FontWeight.w800,
+                      fontSize: 25,
+                      
                     ),
                   )),
                 ),
@@ -72,6 +65,14 @@ class _ChoicePageState extends State<ChoicePage> {
                   decoration: BoxDecoration(
                     color: Color(0xFFE86166),
                     borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      )
+                    ]
                   ),
                   child: MaterialButton(
                     onPressed: () async {
@@ -92,7 +93,7 @@ class _ChoicePageState extends State<ChoicePage> {
                       );
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(30.0),
                       child: Column(
                         children: [
                           Icon(
@@ -121,8 +122,17 @@ class _ChoicePageState extends State<ChoicePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Color(0xFFF2BA05),
-                      borderRadius: BorderRadius.circular(20)),
+                    color: Color(0xFFF2BA05),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      )
+                    ]
+                  ),
                   child: MaterialButton(
                     onPressed: () async {
                       userPreference = guardianPreference;
@@ -138,7 +148,7 @@ class _ChoicePageState extends State<ChoicePage> {
                               )));
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(30.0),
                       child: Column(
                         children: [
                           Icon(

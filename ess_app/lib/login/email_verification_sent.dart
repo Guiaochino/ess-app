@@ -44,7 +44,8 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'Password Verification Verification',
+                      'Password Reset Verification',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 25,
@@ -75,7 +76,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                               child: (Text(
                                 'Resend',
                                 style: TextStyle(
-                                  color: Color(0xFFE86166),
+                                  color: Color.fromARGB(255, 212, 17, 3),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18.0,
                                 ),

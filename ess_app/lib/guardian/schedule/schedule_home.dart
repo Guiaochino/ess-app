@@ -53,7 +53,7 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
                 ),
               ), 
             ),
-            drawer: MainDrawer(),
+            drawer: MainDrawer(currentPage: 2,),
             floatingActionButton: FloatingActionButton.extended(
               backgroundColor: AppColors.firstColor,
               foregroundColor: Colors.black,

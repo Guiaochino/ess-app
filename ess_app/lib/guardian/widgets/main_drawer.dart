@@ -10,7 +10,8 @@ import '../schedule/schedule_home.dart';
 import '../settings/settings_home.dart';
 
 class MainDrawer extends StatelessWidget {
-  const MainDrawer({super.key});
+  final int currentPage;
+  const MainDrawer({super.key, required this.currentPage});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class MainDrawer extends StatelessWidget {
                 )
               ),
             ),
-            SizedBox(height: 10),
+            Divider(),
             drawerTile(
               icon: Icons.home, 
               title: 'Home', 
@@ -49,8 +50,8 @@ class MainDrawer extends StatelessWidget {
                   );
                 }
               },
+              isSelected: currentPage == 0,
             ),
-            SizedBox(height: 10),
             drawerTile(
               icon: Icons.photo_album, 
               title: 'Memories', 
@@ -62,8 +63,8 @@ class MainDrawer extends StatelessWidget {
                   ),
                 );
               },
+              isSelected: currentPage == 1,
             ),
-            SizedBox(height: 10),
             drawerTile(
               icon: Icons.calendar_month, 
               title: 'Schedules', 
@@ -75,8 +76,8 @@ class MainDrawer extends StatelessWidget {
                   ),
                 );
               },
+              isSelected: currentPage == 2,
             ),
-            SizedBox(height: 10),
             drawerTile(
               icon: Icons.checklist, 
               title: 'Reminders', 
@@ -88,10 +89,11 @@ class MainDrawer extends StatelessWidget {
                   ),
                 );
               },
+              isSelected: currentPage == 3,
             ),
-            SizedBox(height: 10.0),
-            Container(height: 1.0, color: Colors.grey[600]),
-            SizedBox(height: 10.0),
+            Divider(
+              thickness: 1,
+            ),
             drawerTile(
               icon: Icons.settings, 
               title: 'Settings', 
@@ -102,7 +104,8 @@ class MainDrawer extends StatelessWidget {
                     type: PageTransitionType.rightToLeft,
                   ),
                 );
-              },
+              }, 
+              isSelected: currentPage == 4,
             ),
           ],
         ),
@@ -114,32 +117,46 @@ class MainDrawer extends StatelessWidget {
 class drawerTile extends StatelessWidget {
   final String title;
   final IconData icon;
+  final bool isSelected;
   final Function()? navigation;
+
   const drawerTile({
-    Key? key, required this.title, required this.icon, required this.navigation,
+    Key? key,
+    required this.title,
+    required this.icon,
+    required this.navigation,
+    required this.isSelected,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: ListTile(
-        selectedColor: AppColors.firstColor,
-        selectedTileColor: AppColors.firstColor.withOpacity(0.1),
+        selected: true,
         leading: Icon(
           icon,
-          size: 30,
+          size: 24,
           color: Colors.black,
         ),
-        minLeadingWidth: 40,
         title: Text(
           title,
           style: TextStyle(
-            fontSize: 15, 
+            fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: Colors.black,
           ),
         ),
-        onTap: navigation
+        trailing: Container(
+          width: 5,
+          height: 30,
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.secondColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        onTap: navigation,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
     );
   }

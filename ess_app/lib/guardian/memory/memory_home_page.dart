@@ -33,7 +33,7 @@ class MemoryHomePage extends StatelessWidget {
                 color: Colors.black),
           ),
         ),
-        drawer: MainDrawer(),
+        drawer: MainDrawer(currentPage: 1,),
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
           backgroundColor: Color.fromARGB(255, 255, 197, 6),

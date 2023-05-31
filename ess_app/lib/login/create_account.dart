@@ -18,7 +18,7 @@ class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController email_su_controller = TextEditingController();
   final TextEditingController pass_su_controller = TextEditingController();
   final TextEditingController pass_con_su_controller = TextEditingController();
-  bool _errorCreate = true;
+  bool _errorCreate = false;
 
   final AuthServices _auth = AuthServices();
 
