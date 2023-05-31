@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:ess_app/guardian/view/view_entry_image.dart';
 import 'package:ess_app/guardian/widgets/patient_upcoming_reminder.dart';
 import 'package:ess_app/guardian/widgets/patient_upcoming_schedule.dart';
-import 'package:ess_app/guardian/widgets/upcoming_reminder.dart';
 import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/models/reminder_model.dart';
 import 'package:ess_app/models/schedule_model.dart';
@@ -11,8 +9,6 @@ import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
 import 'package:ess_app/guardian/schedule/schedule_home.dart';
 import 'package:ess_app/guardian/widgets/main_drawer.dart';
-import 'package:ess_app/guardian/widgets/reminder_tab_listview.dart';
-import 'package:ess_app/guardian/widgets/schedule_tab_listview.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
@@ -20,7 +16,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 
 class patientHomePage extends StatefulWidget {
   const patientHomePage({super.key});
@@ -33,10 +28,12 @@ class _patientHomePageState extends State<patientHomePage> {
 
   List<ScheduleModel> schedules = [];
   List<ReminderModel> reminders = [];
+  UserModel user = UserModel(uid: '', email: '');
   
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
   late StreamSubscription<List<ReminderModel>> _reminderDataHomeSubscription;
   late StreamSubscription<List<ScheduleModel>> _scheduleDataHomeSubscription;
+  late StreamSubscription<UserModel> _userStream;
   final MemoryModel sampleData  = MemoryModel(
     uid: '12312',
     memoryTitle: 'Test 123',
@@ -63,6 +60,12 @@ class _patientHomePageState extends State<patientHomePage> {
         schedules = data;
       });
     });
+
+    _userStream = dbconn.userData.listen((data) {
+      setState(() {
+        user = data;
+      });
+    });
   }
   @override
   void dispose() {
@@ -73,18 +76,13 @@ class _patientHomePageState extends State<patientHomePage> {
   void _cancelSubscriptions() {
     _reminderDataHomeSubscription.cancel();
     _scheduleDataHomeSubscription.cancel();
+    _userStream.cancel();
   }
  
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-
-    final user = Provider.of<UserModel?>(context);
-
-    if (user == null) {
-      return Center(child: CircularProgressIndicator());
-    }
 
     return WillPopScope(
       onWillPop:() async{
@@ -143,6 +141,8 @@ class _patientHomePageState extends State<patientHomePage> {
                 //     ],
                 //   ),
                 // ),
+                SizedBox(height: 20),
+                TopBar(user: user),
                 SizedBox(height: 20),
                 Container(
                   height: 120,
@@ -309,6 +309,64 @@ class _patientHomePageState extends State<patientHomePage> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class TopBar extends StatelessWidget {
+  const TopBar({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final UserModel user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30),
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Good day,',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Montserrat',
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '${user.patientName}!',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Montserrat',
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+            
+          ],
         ),
       ),
     );
