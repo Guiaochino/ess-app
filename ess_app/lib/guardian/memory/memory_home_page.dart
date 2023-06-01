@@ -48,7 +48,7 @@ class MemoryHomePage extends StatelessWidget {
                 Icons.add_a_photo,
                 color: Colors.white,
               ),
-              label: 'Add Image',
+              label: 'Add Image Entry',
               backgroundColor: Colors.grey[800],
               onTap: () {
                 Navigator.of(context).push(
