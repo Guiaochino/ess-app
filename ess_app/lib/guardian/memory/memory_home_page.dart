@@ -2,9 +2,9 @@ import 'package:ess_app/utils/colors.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:page_transition/page_transition.dart';
-import '../widgets/main_drawer.dart';
-import '../create/create_entry_diary.dart';
-import '../create/create_entry_image.dart';
+import 'package:ess_app/guardian/widgets/main_drawer.dart';
+import 'package:ess_app/guardian/create/create_entry_diary.dart';
+import 'package:ess_app/guardian/create/create_entry_image.dart';
 import 'memory_diary_tab.dart';
 import 'memory_image_tab.dart';
 

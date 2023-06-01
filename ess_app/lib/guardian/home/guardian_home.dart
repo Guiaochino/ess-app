@@ -504,6 +504,14 @@ class TopBar extends StatelessWidget {
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Row(

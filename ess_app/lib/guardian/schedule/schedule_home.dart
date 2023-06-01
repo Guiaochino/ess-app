@@ -60,8 +60,12 @@ class _ScheduleHomePageState extends State<ScheduleHomePage> {
               label: Text('Add Schedule'),
               icon: Icon(Icons.add_box),
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => CreateEntrySchedule()));
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: CreateEntrySchedule(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
             ),
             body: Container(

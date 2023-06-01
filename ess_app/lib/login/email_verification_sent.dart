@@ -1,19 +1,38 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'dart:async';
+
 import 'package:ess_app/login/email_verification.dart';
-import 'package:ess_app/login/forgot_password.dart';
 import 'package:ess_app/login/login_page.dart';
+import 'package:ess_app/services/auth.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
 class EmailVerificationSent extends StatefulWidget {
-  const EmailVerificationSent({Key? key}) : super(key: key);
+  final String email;
+  const EmailVerificationSent({Key? key, required this.email}) : super(key: key);
 
   @override
   State<EmailVerificationSent> createState() => _EmailVerificationSentState();
 }
 
 class _EmailVerificationSentState extends State<EmailVerificationSent> {
+
+  final _auth = AuthServices();
+  bool _isButtonEnabled = true;
+  int _countdown = 30;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -24,7 +43,11 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
           leading: IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EmailVerification()));
+                  PageTransition(
+                    child: EmailVerification(),
+                    type: PageTransitionType.leftToRight,
+                  ),
+                );
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -69,18 +92,61 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                           SizedBox(height: 30),
                           //resend
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 40.0),
+                            padding:const EdgeInsets.symmetric(horizontal: 30.0),
                             child: Container(
                               alignment: Alignment.centerRight,
-                              child: (Text(
-                                'Resend',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 212, 17, 3),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0,
+                              child: GestureDetector(
+                                onTap: (){
+                                  if (_isButtonEnabled) {
+                                    // _auth.ResetPassword(widget.email);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('A password reset email has been sent to the email address.'),
+                                      ),
+                                    );
+
+                                    setState(() {
+                                      _isButtonEnabled = false;
+                                      _countdown = 30;
+                                    });
+
+                                    _timer = Timer.periodic(Duration(seconds: 1), (_timer) {
+                                      setState(() {
+                                        if (_countdown > 0) {
+                                          _countdown--;
+                                        } else {
+                                          _timer.cancel();
+                                          _isButtonEnabled = true;
+                                        }
+                                      });
+                                    });
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    !_isButtonEnabled ? 
+                                    Text(
+                                      '[$_countdown]',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                      ),
+                                    )
+                                    : Container(),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'Resend',
+                                      style: TextStyle(
+                                        color: _isButtonEnabled ? Color.fromARGB(255, 212, 17, 3) : Colors.grey[600],
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                    
+                                  ],
                                 ),
-                              )),
+                              ),
                             ),
                           ),
                           SizedBox(height: 20.0),
@@ -188,35 +254,4 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
         ));
   }
 
-  //verification failed dialog
-  AwesomeDialog verifErrorDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.ERROR,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Verification Failed!',
-      desc: 'Codes do not match.',
-      titleTextStyle: TextStyle(
-        color: Colors.red,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      descTextStyle: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-      ),
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
 }

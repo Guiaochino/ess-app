@@ -386,7 +386,6 @@ class _EditEntryImageState extends State<EditEntryImage> {
     if(_imageSelected != '' && _imageSelected != null || _imageUrl != ''){
       setState(() {
         memory.memoryTitle = titleController.text;
-        memory.memoryDateTime = DateTime.now();
         memory.memoryDetails = paragraphController.text;
       },
       );

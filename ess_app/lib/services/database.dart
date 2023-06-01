@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/models/memory_model.dart';
@@ -6,6 +8,7 @@ import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/models/user_model.dart';
 import 'package:ess_app/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DatabaseService {
   final String uid;
@@ -418,5 +421,74 @@ class DatabaseService {
         .snapshots()
         .map((element) => _dataListFromSnapshot(scheduleCollection, element)
             as List<ScheduleModel>);
+  }
+
+  Future<MemoryModel> fetchMemoryEntry() async {
+    DocumentSnapshot? memoryEntry;
+    MemoryModel memoryOfTheDay;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int storedTimestamp = prefs.getInt('memory_timestamp') ?? 0;
+    final String? storedEntryId = prefs.getString('memory_entry_id');
+
+    final int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
+
+    if (storedEntryId != null && currentTimestamp - storedTimestamp < 24 * 60 * 60 * 1000) {
+      try {
+        memoryEntry = await userCollection
+            .doc(this.uid)
+            .collection('memories')
+            .doc(storedEntryId)
+            .get();
+      } catch (e) {
+        print('Error fetching stored memory entry: $e');
+      }
+    }
+
+    // If no valid stored memory entry, fetch a new random memory entry
+    if (memoryEntry == null) {
+      try {
+        final CollectionReference collection = userCollection.doc(this.uid).collection('memories');
+        final int count = await collection.get().then((snapshot) => snapshot.size);
+
+        if (count > 0) {
+          final int randomIndex = Random().nextInt(count);
+          final QuerySnapshot querySnapshot = await collection
+              .orderBy(FieldPath.documentId)
+              .startAfter([randomIndex.toString()])
+              .limit(1)
+              .get();
+
+          if (querySnapshot.docs.isNotEmpty) {
+            memoryEntry = querySnapshot.docs.first;
+
+            prefs.setString('memory_entry_id', memoryEntry.id);
+            prefs.setInt('memory_timestamp', currentTimestamp);
+          }
+        }
+      } catch (e) {
+        print('Error fetching random memory entry: $e');
+      }
+    }
+
+    if (memoryEntry != null) {
+      memoryOfTheDay = MemoryModel(
+        uid: memoryEntry.get('uid'),
+        memoryTitle: memoryEntry.get('memoryTitle'),
+        memoryDateTime: memoryEntry.get('memoryDateTime').toDate(),
+        memoryImg: memoryEntry.get('memoryImg'),
+        memoryDetails: memoryEntry.get('memoryDetails'),
+      );
+    } else {
+      memoryOfTheDay = MemoryModel(
+        uid: 'test_uid',
+        memoryTitle: 'Test Title',
+        memoryDateTime: DateTime.now(),
+        memoryImg: 'assets/images/memory.jpg',
+        memoryDetails: 'Test Details',
+      );
+    }
+
+    return memoryOfTheDay;
   }
 }

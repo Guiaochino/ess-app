@@ -25,7 +25,11 @@ class _AccountVerificationSent extends State<AccountVerificationSent> {
           leading: IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => CreateAccount()));
+                PageTransition(
+                  child: CreateAccount(),
+                  type: PageTransitionType.leftToRight,
+                ),
+              );
             },
             icon: Icon(
               Icons.arrow_back_ios,

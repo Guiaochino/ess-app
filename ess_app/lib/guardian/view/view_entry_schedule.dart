@@ -1,11 +1,13 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:ess_app/guardian/edit/edit_entry_schedule.dart';
 import 'package:ess_app/guardian/schedule/schedule_home.dart';
 import 'package:ess_app/models/schedule_model.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
-class ViewEntrySchedule extends StatelessWidget {
+class ViewEntrySchedule extends StatefulWidget {
   final ScheduleModel schedule;
   bool _isDone = false;
 
@@ -18,6 +20,11 @@ class ViewEntrySchedule extends StatelessWidget {
     }
   }
 
+  @override
+  State<ViewEntrySchedule> createState() => _ViewEntryScheduleState();
+}
+
+class _ViewEntryScheduleState extends State<ViewEntrySchedule> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -36,7 +43,11 @@ class ViewEntrySchedule extends StatelessWidget {
         leading: IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ScheduleHomePage()));
+                PageTransition(
+                  child: ScheduleHomePage(),
+                  type: PageTransitionType.leftToRight,
+                ),
+              );
             },
             icon: Icon(
               Icons.arrow_back_ios,
@@ -45,9 +56,12 @@ class ViewEntrySchedule extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        EditEntrySchedule(selectedSched: schedule)));
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: EditEntrySchedule(selectedSched: widget.schedule),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
               },
               icon: Icon(
                 Icons.edit,
@@ -70,22 +84,25 @@ class ViewEntrySchedule extends StatelessWidget {
                     width: 5,
                     height: 30,
                     decoration: BoxDecoration(
-                      color: _isDone? Colors.green: Colors.red,
+                      color: widget._isDone? Colors.green: Colors.red,
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   SizedBox(width: 5),
                     Expanded(
-                      child: Text(
-                        schedule.schedTitle, 
-                        overflow: TextOverflow.visible,  
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.black,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.w700
-                        ),
-                      ),
+                      child: AnimatedTextKit(
+                        totalRepeatCount: 1,
+                        animatedTexts: [
+                          TyperAnimatedText(
+                            widget.schedule.schedTitle,
+                            textStyle: TextStyle(
+                              fontSize: 30,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700
+                            ),
+                          )
+                        ],
+                      )
                     ),
                   ],
                 ),
@@ -106,7 +123,7 @@ class ViewEntrySchedule extends StatelessWidget {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          DateFormat('EEE, MMM dd yyyy').format(schedule.schedDateTime),
+                          DateFormat('EEE, MMMM d, yyyy').format(widget.schedule.schedDateTime),
                           overflow: TextOverflow.ellipsis, 
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -136,7 +153,7 @@ class ViewEntrySchedule extends StatelessWidget {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          DateFormat('h:mm a').format(schedule.schedDateTime),
+                          DateFormat('h:mm a').format(widget.schedule.schedDateTime),
                           overflow: TextOverflow.ellipsis, 
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -160,15 +177,22 @@ class ViewEntrySchedule extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        schedule.schedDetails,
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: Colors.black
-                        ),
-                      ),
+                      child: AnimatedTextKit(
+                        totalRepeatCount: 1,
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            widget.schedule.schedDetails,
+                            textAlign: TextAlign.justify,
+                            textStyle: TextStyle(
+                              height: 1.5,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                              color: Colors.black,
+                            ),
+                            speed: Duration(milliseconds: 5),
+                          )
+                        ],
+                      )
                     )
                   ),
                 ),
@@ -186,5 +210,4 @@ class ViewEntrySchedule extends StatelessWidget {
       ),
     );
   }
-  
 }

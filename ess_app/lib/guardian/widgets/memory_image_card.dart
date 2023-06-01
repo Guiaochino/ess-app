@@ -4,6 +4,7 @@ import 'package:ess_app/models/memory_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
 class MemoryImageCard extends StatelessWidget {
   final MemoryModel memory;
@@ -26,10 +27,11 @@ class MemoryImageCard extends StatelessWidget {
         onLongPress: longPressed,
         onTap: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ViewEntryImage(
+            PageTransition(
+              child: ViewEntryImage(
                 memory: memory,
               ),
+              type: PageTransitionType.rightToLeft,
             ),
           );
         },

@@ -16,6 +16,7 @@ class EmailVerification extends StatefulWidget {
 
 class _EmailVerificationState extends State<EmailVerification> {
   final TextEditingController email_su_controller = TextEditingController();
+  bool _isError = false;
 
   final _auth = AuthServices();
 
@@ -28,8 +29,12 @@ class _EmailVerificationState extends State<EmailVerification> {
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => LoginPage()));
+            Navigator.of(context).push(
+              PageTransition(
+                child: LoginPage(),
+                type: PageTransitionType.leftToRight,
+              ),
+            );
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -70,6 +75,31 @@ class _EmailVerificationState extends State<EmailVerification> {
                   child: Column(
                     children: [
                       SizedBox(height: 30),
+                      _isError
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: AppColors.secondColor,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Invalid Credentials.',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                          ],
+                        ),
+                      )
+                    : Container(),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30.0),
                         child: Container(
@@ -128,17 +158,22 @@ class _EmailVerificationState extends State<EmailVerification> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (email_su_controller.text != '') {
-                                  _auth.ResetPassword(email_su_controller.text);
-                                  //TODO: add a send email implementation
-                                  //_auth.verifyEmail( );
-                                  Navigator.of(context).push(
-                                    PageTransition(
-                                      child: EmailVerificationSent(),
-                                      type: PageTransitionType.rightToLeft,
-                                    ),
-                                  );
+                                  bool _error = await _auth.ResetPassword(email_su_controller.text); 
+                                  setState(() {
+                                    _isError = _error;
+                                    email_su_controller.clear();
+                                  });
+
+                                  if(!_isError){
+                                      Navigator.of(context).push(
+                                      PageTransition(
+                                        child: EmailVerificationSent(email: email_su_controller.text,),
+                                        type: PageTransitionType.rightToLeft,
+                                      ),
+                                    );
+                                  }
                                 }
                               },
                               style: ButtonStyle(

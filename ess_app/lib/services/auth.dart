@@ -67,14 +67,16 @@ class AuthServices {
     }
   }
 
-  Future ResetPassword(String email) async {
-    try {
-      _auth.sendPasswordResetEmail(email: email);
-    } catch (err) {
-      print(err.toString());
-      return null;
-    }
+  Future<bool> ResetPassword(String email,) async {
+  try {
+    await _auth.sendPasswordResetEmail(email: email);
+    print('Success email to $email');
+    return false;
+  } catch (err) {
+    print(err.toString());
+    return true;
   }
+}
 
   Future<void> changePassword(String newPassword) async {
     User? user = await _auth.currentUser!;

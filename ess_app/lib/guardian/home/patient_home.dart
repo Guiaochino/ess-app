@@ -1,4 +1,10 @@
 import 'dart:async';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:ess_app/guardian/create/create_entry_diary.dart';
+import 'package:ess_app/guardian/create/create_entry_image.dart';
+import 'package:ess_app/guardian/create/create_entry_reminder.dart';
+import 'package:ess_app/guardian/create/create_entry_schedule.dart';
+import 'package:ess_app/guardian/settings/how_to_use/how_to_use_home.dart';
 import 'package:ess_app/guardian/view/view_entry_image.dart';
 import 'package:ess_app/guardian/widgets/patient_upcoming_reminder.dart';
 import 'package:ess_app/guardian/widgets/patient_upcoming_schedule.dart';
@@ -14,8 +20,10 @@ import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class patientHomePage extends StatefulWidget {
   const patientHomePage({super.key});
@@ -34,18 +42,24 @@ class _patientHomePageState extends State<patientHomePage> {
   late StreamSubscription<List<ReminderModel>> _reminderDataHomeSubscription;
   late StreamSubscription<List<ScheduleModel>> _scheduleDataHomeSubscription;
   late StreamSubscription<UserModel> _userStream;
-  final MemoryModel sampleData  = MemoryModel(
+  MemoryModel sampleData  = MemoryModel(
     uid: '12312',
-    memoryTitle: 'Test 123',
+    memoryTitle: 'No data',
     memoryImg: 'https://firebasestorage.googleapis.com/v0/b/ess-back.appspot.com/o/images%2F36423?alt=media&token=eca6a10e-def8-4149-97ab-9de9e7f5d7b8',
     memoryDateTime: DateTime.now(),
-    memoryDetails: 'Testasdasdasdsa',
+    memoryDetails: 'Testasdasdasasda',
   );
 
   @override
   void initState() {
     super.initState();
     _subscribeToStreams();
+    dbconn.fetchMemoryEntry().then((entry) {
+      print('theres a fetched data');
+      setState(() {
+        sampleData = entry;
+      });
+    });
   }
 
   void _subscribeToStreams(){
@@ -105,45 +119,86 @@ class _patientHomePageState extends State<patientHomePage> {
           ),
         ),
         drawer: MainDrawer(currentPage: 0,),
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          backgroundColor: Color.fromARGB(255, 255, 197, 6),
+          foregroundColor: Colors.black,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          spacing: 12,
+          switchLabelPosition: false,
+          children: [
+            SpeedDialChild(
+              child: Icon(
+                Icons.add_a_photo,
+                color: Colors.white,
+              ),
+              label: 'Add Image',
+              backgroundColor: Colors.grey[800],
+              onTap: () {
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: CreateEntryImage(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
+              },
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.note_add, 
+                color: Colors.white,
+              ),
+              label: 'Add Diary',
+              backgroundColor: Colors.grey[800],
+              onTap: () {
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: CreateEntryDiary(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
+              },
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.notification_add, 
+                color: Colors.white,
+              ),
+              label: 'Add Reminder',
+              backgroundColor: Colors.grey[800],
+              onTap: () {
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: CreateEntryReminder(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
+              },
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.add_box, 
+                color: Colors.white,
+              ),
+              label: 'Add Schedule',
+              backgroundColor: Colors.grey[800],
+              onTap: () {
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: CreateEntrySchedule(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
+              },
+            )
+          ],
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //appbar
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Text(
-                //         'Hello, Akachiii',
-                //         style: TextStyle(
-                //           fontWeight: FontWeight.w600,
-                //           fontSize: 18,
-                //           fontFamily: 'Montserrat',
-                //           color: Colors.black
-                //         ),
-                //       ),
-                //       Container(
-                //         height: 50,
-                //         width: 50,
-                //         decoration: BoxDecoration(
-                //           color: AppColors.secondColor.withOpacity(0.1),
-                //           borderRadius: BorderRadius.all(Radius.circular(12)),
-                //         ),
-                //         child: Icon(
-                //           Icons.person,
-                //           size: 30,
-                //           color: AppColors.secondColor, 
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                SizedBox(height: 20),
+                SizedBox(height: 30),
                 TopBar(user: user),
-                SizedBox(height: 20),
+                SizedBox(height: 40),
                 Container(
                   height: 120,
                   child: Padding(
@@ -152,58 +207,85 @@ class _patientHomePageState extends State<patientHomePage> {
                       children: [
                         //memories button
                         mainButtons(
-                          pageRedirect: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MemoryHomePage(activePage: 0,)));
-                          }, 
-                          imgAsset: 'assets/images/memory.jpg', 
+                          pageRedirect: () {                
+                            Navigator.of(context).push(
+                              PageTransition(
+                                child: MemoryHomePage(activePage: 0),
+                                type: PageTransitionType.rightToLeft,
+                              ),
+                            );
+                          },
+                          imgAsset: 'assets/images/memory.jpg',
                           title: 'Memories',
                         ),
                         SizedBox(width: 10.0),
                         //schedules button
                         mainButtons(
                           pageRedirect: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ScheduleHomePage()));
-                          }, 
-                          imgAsset: 'assets/images/schedule.jpg', 
+                            Navigator.of(context).push(
+                              PageTransition(
+                                child: ScheduleHomePage(),
+                                type: PageTransitionType.rightToLeft,
+                              ),
+                            );
+                          },
+                          imgAsset: 'assets/images/schedule.jpg',
                           title: 'Schedules',
                         ),
                         SizedBox(width: 10.0),
                         //reminders button
-                      mainButtons(
+                        mainButtons(
                           pageRedirect: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ReminderHomePage(activePage: 0,)));
-                          }, 
-                          imgAsset: 'assets/images/reminder.jpg', 
+                            Navigator.of(context).push(
+                              PageTransition(
+                                child: ReminderHomePage(activePage: 0),
+                                type: PageTransitionType.rightToLeft,
+                              ),
+                            );
+                          },
+                          imgAsset: 'assets/images/reminder.jpg',
                           title: 'Reminders',
                         ),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Container(
-                  width: width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                          "Your Memory of the Day",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                            fontFamily: 'Montserrat',
-                            color: Colors.black
+                SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Container(
+                    width: width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            "Your Memory of the Day",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              fontFamily: 'Montserrat',
+                              color: Colors.black
+                            ),
                           ),
-                        ),
-                        MemoryCard(memory: sampleData),
-                    ],
+                          SizedBox(height: 10),
+                          sampleData.memoryTitle != 'Test Title' ?
+                            MemoryCard(memory: sampleData):
+                            Column(
+                              children: [
+                                SizedBox(height: 20),
+                                emptyCategory(
+                                  icon: Icons.photo,
+                                  detail: 'No Memories. Yet',
+                                ),
+                                SizedBox(height: 20),
+                              ],
+                            ) 
+                      ],
+                    ),
                   ),
                 ),
 
-                SizedBox(height: 20),
+                SizedBox(height: 30),
                 //datetimeline
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -221,7 +303,7 @@ class _patientHomePageState extends State<patientHomePage> {
                             color: Colors.black
                           ),
                         ),
-                        SizedBox(height: 10),     
+                        SizedBox(height: 20),     
                         schedules.isEmpty? 
                         Center(
                           child: Column(
@@ -254,7 +336,7 @@ class _patientHomePageState extends State<patientHomePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 30),
                 Container(
                   height: 400,
                   child: Column(
@@ -272,7 +354,7 @@ class _patientHomePageState extends State<patientHomePage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 20),
                       Expanded(
                         child: reminders.isEmpty?
                         Center(
@@ -280,7 +362,7 @@ class _patientHomePageState extends State<patientHomePage> {
                             children: [
                               SizedBox(height: 20),
                               emptyCategory(
-                                icon: Icons.event_busy,
+                                icon: Icons.notifications_off,
                                 detail: 'No Reminders Today',
                               ),
                               SizedBox(height: 20),
@@ -335,6 +417,14 @@ class TopBar extends StatelessWidget {
             bottomLeft: Radius.circular(30),
             bottomRight: Radius.circular(30),
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Row(
@@ -342,19 +432,23 @@ class TopBar extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Good day,',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Montserrat',
-                    color: Colors.black,
-                  ),
+                AnimatedTextKit(
+                  totalRepeatCount: 1,
+                  animatedTexts: [
+                    TyperAnimatedText(
+                      'Good day,',
+                      textStyle: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Montserrat',
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 5),
                 Text(
                   '${user.patientName}!',
-                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.w700,
@@ -362,10 +456,40 @@ class TopBar extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
+              
               ],
             ),
             Spacer(),
-            
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  PageTransition(
+                    child: HowToUseHome(),
+                    type: PageTransitionType.rightToLeft,
+                  ),
+                );
+              },
+              child: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFE86166),
+                      Color(0xFFF2BA05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Icon(
+                  Icons.info_outline,
+                  size: 30,
+                  color: Colors.white,
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -383,10 +507,9 @@ class MemoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      padding: EdgeInsets.all(20),
+      height: 200,
+      margin: EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
@@ -397,81 +520,94 @@ class MemoryCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            memory.memoryTitle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 10),
-          Image.network(
-            memory.memoryImg,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: 200,
-          ),
-          SizedBox(height: 10),
-          Text(
-            memory.memoryDetails,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Icon(
-                Icons.calendar_today,
-                size: 14,
-                color: Colors.grey[600],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Stack(
+          children: [
+            ColorFiltered(
+              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
+              child: Image.network(
+                memory.memoryImg,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 200,
               ),
-              SizedBox(width: 4),
-              Text(
-                DateFormat('MMM d, yyyy').format(memory.memoryDateTime),
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
-              ),
-              Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    PageTransition(
-                      child: ViewEntryImage(
-                        memory: memory,
+            ),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    memory.memoryTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    memory.memoryDetails,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 14,
+                        color: Colors.white,
                       ),
-                      type: PageTransitionType.bottomToTop
-                    )
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Color(0xFFE86166),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                      SizedBox(width: 4),
+                      Text(
+                        DateFormat('MMM d, yyyy').format(memory.memoryDateTime),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Spacer(),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageTransition(
+                              child: ViewEntryImage(
+                                memory: memory,
+                              ),
+                              type: PageTransitionType.bottomToTop,
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Color(0xFFE86166),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          'Read More',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                child: Text(
-                  'Read More',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -491,7 +627,7 @@ class emptyCategory extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 40,
+            size: 100,
             color: Colors.black,
           ),
           Text(
@@ -499,7 +635,7 @@ class emptyCategory extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 20,
               fontWeight: FontWeight.w600,
               color: Colors.grey[800],
               fontFamily: 'Montserrat',

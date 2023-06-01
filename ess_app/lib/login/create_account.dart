@@ -210,24 +210,34 @@ class _CreateAccountState extends State<CreateAccount> {
                               padding: const EdgeInsets.all(10.0),
                               child: MaterialButton(
                                 onPressed: () async {
-                                  dynamic result =
-                                      await _auth.SignUpEmailPassword(
-                                          email_su_controller.text.trim(),
-                                          pass_su_controller.text.trim());
-                                  if (result == null) {
+                                  if (pass_su_controller.text.trim() == pass_con_su_controller.text.trim()) {
+                                    dynamic result =
+                                        await _auth.SignUpEmailPassword(
+                                            email_su_controller.text.trim(),
+                                            pass_su_controller.text.trim());
+                                    if (result == null) {
+                                      setState(() {
+                                        _errorCreate = true;
+                                        email_su_controller.clear();
+                                        pass_su_controller.clear();
+                                        pass_con_su_controller.clear();
+                                      });
+                                    } else {
+                                      Navigator.of(context).push(
+                                        PageTransition(
+                                          child: LoginPage(),
+                                          type: PageTransitionType.rightToLeft,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                  else{
                                     setState(() {
                                       _errorCreate = true;
                                       email_su_controller.clear();
                                       pass_su_controller.clear();
                                       pass_con_su_controller.clear();
                                     });
-                                  } else {
-                                    Navigator.of(context).push(
-                                      PageTransition(
-                                        child: LoginPage(),
-                                        type: PageTransitionType.rightToLeft,
-                                      ),
-                                    );
                                   }
                                   
                                 },

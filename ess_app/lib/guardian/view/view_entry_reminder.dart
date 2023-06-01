@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:ess_app/guardian/edit/edit_entry_reminder.dart';
 import 'package:ess_app/guardian/reminder/reminder_home.dart';
 import 'package:ess_app/utils/colors.dart';
@@ -6,7 +7,7 @@ import 'package:ess_app/models/reminder_model.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
-class ViewReminder extends StatelessWidget {
+class ViewReminder extends StatefulWidget {
   final ReminderModel reminder;
   bool _isDone = false;
 
@@ -20,6 +21,11 @@ class ViewReminder extends StatelessWidget {
     }
   }
 
+  @override
+  State<ViewReminder> createState() => _ViewReminderState();
+}
+
+class _ViewReminderState extends State<ViewReminder> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -39,7 +45,7 @@ class ViewReminder extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(
               PageTransition(
-                child: ReminderHomePage(activePage: !_isDone? 0 : 1),
+                child: ReminderHomePage(activePage: !widget._isDone? 0 : 1),
                 type: PageTransitionType.leftToRight,
               ),
             );
@@ -57,7 +63,7 @@ class ViewReminder extends StatelessWidget {
                 //edit
                 Navigator.of(context).push(
                   PageTransition(
-                    child: EditEntryReminder(selectedReminder: reminder),
+                    child: EditEntryReminder(selectedReminder: widget.reminder),
                     type: PageTransitionType.rightToLeft,
                   ),
                 );
@@ -82,24 +88,27 @@ class ViewReminder extends StatelessWidget {
                   children: [
                     Container(
                       width: 5,
-                      height: 30,
+                      height: 40,
                       decoration: BoxDecoration(
-                        color: _isDone? Colors.green: Colors.red,
+                        color: widget._isDone? Colors.green: Colors.red,
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     SizedBox(width: 5),
                     Expanded(
-                      child: Text(
-                        reminder.reminderTitle, 
-                        overflow: TextOverflow.visible,  
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.black,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.w700
-                        ),
-                      ),
+                      child: AnimatedTextKit(
+                        totalRepeatCount: 1,
+                        animatedTexts: [
+                          TyperAnimatedText(
+                            widget.reminder.reminderTitle,
+                            textStyle: TextStyle(
+                              fontSize: 30,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700
+                            ),
+                          )
+                        ],
+                      )
                     ),
                   ],
                 ),
@@ -121,7 +130,7 @@ class ViewReminder extends StatelessWidget {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          DateFormat('h:mm a').format(reminder.reminderDateTime),
+                          DateFormat('h:mm a').format(widget.reminder.reminderDateTime),
                           overflow: TextOverflow.ellipsis, 
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -146,15 +155,22 @@ class ViewReminder extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        reminder.reminderDetails,
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: Colors.black
-                        ),
-                      ),
+                      child: AnimatedTextKit(
+                        totalRepeatCount: 1,
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            widget.reminder.reminderDetails,
+                            textAlign: TextAlign.justify,
+                            textStyle: TextStyle(
+                              height: 1.5,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                              color: Colors.black,
+                            ),
+                            speed: Duration(milliseconds: 5),
+                          )
+                        ],
+                      )
                     )
                   ),
                 ),

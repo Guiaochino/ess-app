@@ -3,6 +3,7 @@ import 'package:ess_app/models/diary_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
 class MemoryTabListView extends StatelessWidget {
   final DiaryModel diary;
@@ -131,8 +132,9 @@ class MemoryTabListView extends StatelessWidget {
                       InkWell(
                         onTap: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ViewEntryDiary(diary: diary),
+                            PageTransition(
+                              child: ViewEntryDiary(diary: diary),
+                              type: PageTransitionType.rightToLeft,
                             ),
                           );
                         },

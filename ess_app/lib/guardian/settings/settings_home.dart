@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:ess_app/constants.dart';
 import 'package:ess_app/guardian/home/patient_home.dart';
-import 'package:ess_app/guardian/settings/change_password/change_password.dart';
 import 'package:ess_app/guardian/settings/change_password/email_verification_sent.dart';
 import 'package:ess_app/guardian/settings/how_to_use/how_to_use_home.dart';
 import 'package:ess_app/login/login_page.dart';
@@ -34,6 +33,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   String patientName = '';
 
   final dbconn = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid);
+  final _auth = AuthServices();
 
   
   @override
@@ -67,6 +67,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Color(0xFFE86166),
         elevation: 0,
@@ -124,7 +125,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                     final guardianName = await openGuardianDialog();
                     if(guardianName == null || guardianName.isEmpty) {
                       setState(() {
-                        this.guardianName = 'Guardian';
+                        this.guardianName = user.guardianName!;
                       });
                     } else {
                       setState(() {
@@ -193,7 +194,7 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                     final patientName = await openPatientDialog();
                     if(patientName == null || patientName.isEmpty) {
                       setState(() {
-                        this.patientName = 'Patient';
+                        this.patientName = user.patientName!;
                       });
                     } else {
                       setState(() {
@@ -317,9 +318,15 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
                   title: 'Change Password', 
                   icon: Icons.lock_reset_outlined,
                   onTap: () {
+                    _auth.ResetPassword(user.email!);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('A password reset email has been sent to your registered email address.'),
+                      ),
+                    );
                     Navigator.of(context).push(
                       PageTransition(
-                        child: ChangePassword(),
+                        child: EmailVerificationSentChangePass(email: user.email!,),
                         type: PageTransitionType.rightToLeft,
                       ),
                     );
@@ -391,12 +398,16 @@ class _SettingsHomePageState extends State<SettingsHomePage> {
 
   //submit names
   Future<void> submitGuardian() async {
-    dbconn.updateGuardianName(guardianController.text);
+    if (guardianController.text != '') {
+      dbconn.updateGuardianName(guardianController.text);
+    }
     Navigator.of(context).pop(guardianController.text);
     guardianController.clear();
   }
   Future <void> submitPatient() async {
-    dbconn.updatePatientName(patientController.text);
+    if (patientController.text != '') {
+  dbconn.updatePatientName(patientController.text);
+}
     Navigator.of(context).pop(patientController.text);
     patientController.clear();
   }

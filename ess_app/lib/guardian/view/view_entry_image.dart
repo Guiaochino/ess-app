@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:ess_app/guardian/edit/edit_entry_image.dart';
 import 'package:ess_app/models/memory_model.dart';
 import 'package:ess_app/utils/colors.dart';
@@ -6,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import '../memory/memory_home_page.dart';
 
-class ViewEntryImage extends StatelessWidget {
+class ViewEntryImage extends StatefulWidget {
   final MemoryModel memory;
   
   
@@ -14,6 +15,11 @@ class ViewEntryImage extends StatelessWidget {
     required this.memory
   });
 
+  @override
+  State<ViewEntryImage> createState() => _ViewEntryImageState();
+}
+
+class _ViewEntryImageState extends State<ViewEntryImage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -52,7 +58,7 @@ class ViewEntryImage extends StatelessWidget {
                 //edit
                 Navigator.of(context).push(
                   PageTransition(
-                    child: EditEntryImage(selectedMemory: memory),
+                    child: EditEntryImage(selectedMemory: widget.memory),
                     type: PageTransitionType.rightToLeft,
                   ),
                 );
@@ -81,7 +87,7 @@ class ViewEntryImage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        DateFormat('EEEE, MMM d, yyyy').format(memory.memoryDateTime),
+                        DateFormat('EEEE, MMM d, yyyy').format(widget.memory.memoryDateTime),
                         overflow: TextOverflow.ellipsis, 
                         textAlign: TextAlign.left,
                         style: TextStyle(
@@ -93,17 +99,20 @@ class ViewEntryImage extends StatelessWidget {
                       SizedBox(height: 5.0),
                       //diary title
                       Container(
-                        child: Text(
-                          memory.memoryTitle,
-                          maxLines: 2, 
-                          overflow: TextOverflow.ellipsis,  
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.black,
-                            overflow: TextOverflow.ellipsis,
-                            fontWeight: FontWeight.w700
-                          ),
-                        ),
+                        child: AnimatedTextKit(
+                          totalRepeatCount: 1,
+                          animatedTexts: [
+                            TyperAnimatedText(
+                              widget.memory.memoryTitle,
+                              textStyle: TextStyle(
+                                fontSize: 30,
+                                color: Colors.black,
+                                overflow: TextOverflow.ellipsis,
+                                fontWeight: FontWeight.w700
+                              ),
+                            )
+                          ],
+                        )
                       ),
                     ],
                   ),
@@ -121,12 +130,20 @@ class ViewEntryImage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                       child: GestureDetector(
                         child: Image.network(
-                          memory.memoryImg,
+                          widget.memory.memoryImg,
                           fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child; // Image loaded successfully, display it
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(), // Show loading indicator
+                            );
+                          },
                         ),
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(builder: (_){
-                            return ImageScreen(imgPath: memory.memoryImg);
+                            return ImageScreen(imgPath: widget.memory.memoryImg);
                           }));
                         },
                       ),
@@ -147,16 +164,22 @@ class ViewEntryImage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
-                        child: Text(
-                          memory.memoryDetails,
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            height: 1.5,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15,
-                            color: Colors.black
-                          ),
-                        ),
+                        child: AnimatedTextKit(
+                          totalRepeatCount: 1,
+                          animatedTexts: [
+                            TypewriterAnimatedText(
+                              widget.memory.memoryDetails,
+                              textAlign: TextAlign.justify,
+                              textStyle: TextStyle(
+                                height: 1.5,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                color: Colors.black,
+                              ),
+                              speed: Duration(milliseconds: 5),
+                            )
+                          ],
+                        )
                       ),
                     )
                   ),

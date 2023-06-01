@@ -1,17 +1,11 @@
-/*
-  NOTE: edit entry diary uses INT editIndex taken from listviewbuilder index 
-*/
-
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/guardian/memory/memory_home_page.dart';
 import 'package:ess_app/guardian/widgets/popup_dialogs.dart';
 import 'package:ess_app/services/database.dart';
 import 'package:ess_app/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import '../../models/diary_model.dart';
+import 'package:ess_app/models/diary_model.dart';
+import 'package:page_transition/page_transition.dart';
 
 class EditEntryDiary extends StatefulWidget {
   final DiaryModel selectedDiary;
@@ -63,7 +57,11 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 1,)));
+              PageTransition(
+                child: MemoryHomePage(activePage: 1),
+                type: PageTransitionType.leftToRight,
+              ),
+            );
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -87,8 +85,8 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                       'Edit Diary',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 25,
                       ),
                     ),
                   ),
@@ -96,42 +94,46 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                 SizedBox(height: 20.0),
                 // mood radio buttons -
                 Container(
-                  height: 60,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          customRadio(Icons.sentiment_very_dissatisfied_outlined, 1),
-                          customRadio(Icons.sentiment_very_dissatisfied, 2),
-                          customRadio(Icons.sentiment_dissatisfied, 3),
-                          customRadio(Icons.sentiment_neutral_rounded, 4),
-                          customRadio(Icons.sentiment_satisfied, 5),
-                          customRadio(Icons.sentiment_satisfied_outlined, 6),
-                          customRadio(Icons.sentiment_very_satisfied_outlined, 7)
-                        ],
-                      ),
+                  height: 70,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        customRadio(Icons.sentiment_very_dissatisfied_outlined, 1),
+                        SizedBox(width: 5),
+                        customRadio(Icons.sentiment_very_dissatisfied, 2),
+                        SizedBox(width: 5),
+                        customRadio(Icons.sentiment_dissatisfied, 3),
+                        SizedBox(width: 5),
+                        customRadio(Icons.sentiment_neutral_rounded, 4),
+                        SizedBox(width: 5),
+                        customRadio(Icons.sentiment_satisfied, 5),
+                        SizedBox(width: 5),
+                        customRadio(Icons.sentiment_satisfied_outlined, 6),
+                        SizedBox(width: 5),
+                        customRadio(Icons.sentiment_very_satisfied_outlined, 7)
+                      ],
                     ),
                   ),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 20.0),
                 //diary title
                 Align(
                   alignment: Alignment.center,
                   child: Container(
                     height: 50,
                     child: Container(
-                      width: width - 60,
+                      width: width - 40,
                       child: TextField(
                         controller: titleController,
+                        textAlignVertical: TextAlignVertical.bottom,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 25,
+                          fontSize: 18,
                           color: Colors.black,
-                          fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w600,
                         ),
                         decoration: InputDecoration(
                           iconColor: Colors.black,
@@ -139,184 +141,83 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
                           border: UnderlineInputBorder(),
                           hintText: 'Enter Diary Title',
                           hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[700],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
+                        
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: 20.0),
-                //date and time
-                Container(
-                  height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                       Expanded(
-                      flex: 5,
-                      child: Container(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.calendar_month,
-                            color: Color(0xFFE86166),
-                            size: 40,
-                          ),
-                          SizedBox(width: 5.0),
-                          Expanded(
-                              child: MaterialButton(
-                            onPressed: () async {
-                              DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: _dateTime,
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2025),
-                              );
-                              if (newDate == null) return;
-                              final newDateTime = DateTime(
-                                newDate.year,
-                                newDate.month,
-                                newDate.day,
-                                _dateTime.hour,
-                                _dateTime.minute,
-                              );
-                              setState(() {
-                                _dateTime = newDateTime;
-                              });
-                            },
-                            child: Text(
-                              DateFormat.yMMMEd().format(_dateTime),
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFFE86166),
-                              ),
-                            ),
-                          ))
-                        ],
-                      )),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.watch_later,
-                            color: Color(0xFFE86166),
-                            size: 40,
-                          ),
-                          SizedBox(width: 5.0),
-                          Expanded(
-                              child: MaterialButton(
-                            onPressed: () async {
-                              TimeOfDay? newTime = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.fromDateTime(_dateTime),
-                              );
-                              if (newTime == null) return;
-                              final newDateTime = DateTime(
-                                _dateTime.year,
-                                _dateTime.month,
-                                _dateTime.day,
-                                newTime.hour,
-                                newTime.minute,
-                              );
-                              setState(() {
-                                _dateTime = newDateTime;
-                              });
-                            },
-                            child: Text(
-                              _timeOfDay.format(context).toString(),
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFFE86166),
-                              ),
-                            ),
-                          ))
-                        ],
-                      )),
-                    ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.0),
-                //recording button
-                SizedBox(height: 20),
-                //paragraph
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Container(
-                      color: Colors.white,
                       child: TextFormField(
                         controller: paragraphController,
                         maxLines: 40,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           height: 2,
                           color: Colors.black,
                         ),
                         decoration: InputDecoration(
                           hintText: 'What happened today?',
                           hintStyle: TextStyle(
+                            fontSize: 18,
                             color: Colors.grey[600],
                           ),
+                          filled: true,
+                          fillColor: Colors.white,
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 5.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                //save button
+                SizedBox(height: 20.0),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ElevatedButton(
                     onPressed: (){
                       saveDiaryEntry();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFFF2BA05)),
+                      backgroundColor: MaterialStateProperty.all(AppColors.firstColor),
                       overlayColor: MaterialStateProperty.all(Color.fromARGB(255, 230, 177, 5)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(8),
                         )
                       )
                     ),
                     child: Container(
-                      height: 80,
-                      
+                      height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.save_alt,
-                            size: 35,
+                            Icons.save,
+                            size: 25,
                             color: Colors.black,
                           ),
                           SizedBox(width: 10),
                           width > 280?
                           Text(
-                            'Save',
+                            'Save Diary',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 25,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ): Container()
@@ -334,36 +235,6 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
     );
   }
 
-  //success dialog
-  AwesomeDialog successDialog(BuildContext context) {
-    return AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(
-        color: Color(0xFFE86166),
-        width: 2,
-      ),
-      width: MediaQuery.of(context).size.width * 0.9,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
-      animType: AnimType.SCALE,
-      title: 'Edited Successfully!',
-      titleTextStyle: TextStyle(
-        color: Colors.green,
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-      onDissmissCallback:(type) {
-        Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => MemoryHomePage(activePage: 1,)));
-      },
-      padding: EdgeInsets.all(15),
-      showCloseIcon: false,
-      autoHide: Duration(seconds: 3),
-    );
-  }
 
   //saving diary
   void saveDiaryEntry() {
@@ -383,33 +254,50 @@ class _EditEntryDiaryState extends State<EditEntryDiary> {
     setState(() {
       diary.diaryTitle = titleController.text;
       diary.emoteRate = selectedMood;
-      diary.diaryDateTime = _dateTime;
       diary.diaryDetails = paragraphController.text;
     },);
 
     dbconn.updateDiaryByID(diary.uid, diary);
     print('Diary Entry Edited');
-    showSuccessDialog(context, 'Your reminder has been edited.', MemoryHomePage(activePage: 1));
+    showSuccessDialog(context, 'Your diary has been edited.', MemoryHomePage(activePage: 1));
 
   }
   
   //radio button
   Widget customRadio(IconData icon, int index) {
+    final isSelected = selectedMood == index;
+
     return GestureDetector(
       onTap: () {
         setState(() {
-          if(selectedMood == index){
-            selectedMood = 0;
-          }
-          else{
-            selectedMood = index;
-          }
+          selectedMood = isSelected ? 0 : index;
         });
-      }, 
-      child: Icon(
-        icon,
-        size: (selectedMood == index) ? 60.0 : 45.0,
-        color: (selectedMood == index) ? iconColor(index) : Colors.grey[700],
+      },
+      child: Container(
+        width: isSelected ? 50.0 : 40.0,
+        height: isSelected ? 50.0 : 40.0,
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(8),
+          color: isSelected ? Colors.white : Colors.grey[200],
+          border: Border.all(
+            color: isSelected ? iconColor(index) : Colors.grey[700]!,
+            width: isSelected ? 3.0 : 1.0,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          size: isSelected ? 36.0 : 24.0,
+          color: isSelected ? iconColor(index) : Colors.grey[700],
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:ess_app/guardian/edit/edit_entry_diary.dart';
 import 'package:ess_app/models/diary_model.dart';
 import 'package:ess_app/utils/colors.dart';
@@ -6,13 +7,18 @@ import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import '../memory/memory_home_page.dart';
 
-class ViewEntryDiary extends StatelessWidget {
+class ViewEntryDiary extends StatefulWidget {
   final DiaryModel diary;
 
   const ViewEntryDiary({
     required this.diary
   });
 
+  @override
+  State<ViewEntryDiary> createState() => _ViewEntryDiaryState();
+}
+
+class _ViewEntryDiaryState extends State<ViewEntryDiary> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -53,7 +59,7 @@ class ViewEntryDiary extends StatelessWidget {
                 //edit
                 Navigator.of(context).push(
                   PageTransition(
-                    child: EditEntryDiary(selectedDiary: diary),
+                    child: EditEntryDiary(selectedDiary: widget.diary),
                     type: PageTransitionType.rightToLeft,
                   ),
                 );
@@ -84,7 +90,7 @@ class ViewEntryDiary extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            DateFormat('EEEE, MMM d, yyyy').format(diary.diaryDateTime),
+                            DateFormat('EEEE, MMM d, yyyy').format(widget.diary.diaryDateTime),
                             overflow: TextOverflow.ellipsis, 
                             textAlign: TextAlign.left,
                             style: TextStyle(
@@ -96,16 +102,20 @@ class ViewEntryDiary extends StatelessWidget {
                           SizedBox(height: 5.0),
                           //diary title
                           Container(
-                            child: Text(
-                              this.diary.diaryTitle, 
-                              overflow: TextOverflow.visible,  
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.black,
-                                overflow: TextOverflow.ellipsis,
-                                fontWeight: FontWeight.w700
-                              ),
-                            ),
+                            child: AnimatedTextKit(
+                              totalRepeatCount: 1,
+                              animatedTexts: [
+                                TyperAnimatedText(
+                                  widget.diary.diaryTitle, 
+                                  textStyle: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.black,
+                                    overflow: TextOverflow.ellipsis,
+                                    fontWeight: FontWeight.w700
+                                  ),
+                                ),
+                              ],
+                            )
                           ),
                         ],
                       ),
@@ -114,12 +124,12 @@ class ViewEntryDiary extends StatelessWidget {
                       height: 60,
                       width: 60,
                       decoration: BoxDecoration(
-                        color: iconColor(diary.emoteRate).withOpacity(0.1),
+                        color: iconColor(widget.diary.emoteRate).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
-                        icon(diary.emoteRate),
-                        color: iconColor(diary.emoteRate),
+                        icon(widget.diary.emoteRate),
+                        color: iconColor(widget.diary.emoteRate),
                         size: 40,
                       ),
                     ),
@@ -136,14 +146,22 @@ class ViewEntryDiary extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        diary.diaryDetails,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: Colors.black
-                        ),
-                      ),
+                      child: AnimatedTextKit(
+                        totalRepeatCount: 1,
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            widget.diary.diaryDetails,
+                            textAlign: TextAlign.justify,
+                            textStyle: TextStyle(
+                              height: 1.5,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                              color: Colors.black,
+                            ),
+                            speed: Duration(milliseconds: 5),
+                          )
+                        ],
+                      )
                     )
                   ),
                 ),
@@ -158,6 +176,7 @@ class ViewEntryDiary extends StatelessWidget {
       )
     );
   }
+
   IconData icon(int index){
     IconData iconRate = Icons.sentiment_neutral_outlined;
     switch (index){
@@ -185,6 +204,7 @@ class ViewEntryDiary extends StatelessWidget {
     }
     return iconRate;
   }
+
   Color iconColor(int index){
     Color iconColor = Colors.grey;
     switch (index){

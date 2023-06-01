@@ -7,7 +7,7 @@ Future<void> showSuccessDialog(BuildContext context, String message, Widget page
     barrierDismissible: true,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Success'),
+        title: Text('Success!'),
         content: Text(message),
         actions: [
           TextButton(
@@ -33,7 +33,7 @@ Future<bool?> showConfirmationDialog(BuildContext context, String message) async
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Confirm'),
+        title: Text('Confirmation'),
         content: Text(message),
         actions: <Widget>[
           TextButton(
@@ -43,7 +43,12 @@ Future<bool?> showConfirmationDialog(BuildContext context, String message) async
             },
           ),
           TextButton(
-            child: Text('Delete'),
+            child: Text(
+              'Delete',
+              style: TextStyle(
+                color: Colors.red
+              ),
+            ),
             onPressed: () {
               Navigator.of(context).pop(true);
             },
