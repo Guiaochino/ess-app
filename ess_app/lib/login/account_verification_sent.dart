@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:ess_app/login/create_account.dart';
 import 'package:ess_app/login/email_verification.dart';
@@ -7,14 +9,34 @@ import 'package:ess_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../services/auth.dart';
+
 class AccountVerificationSent extends StatefulWidget {
-  const AccountVerificationSent({Key? key}) : super(key: key);
+  final String email;
+  const AccountVerificationSent({Key? key, required this.email})
+      : super(key: key);
 
   @override
   State<AccountVerificationSent> createState() => _AccountVerificationSent();
 }
 
 class _AccountVerificationSent extends State<AccountVerificationSent> {
+  final _auth = AuthServices();
+  bool _isButtonEnabled = true;
+  int _countdown = 30;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -74,17 +96,64 @@ class _AccountVerificationSent extends State<AccountVerificationSent> {
                           //resend
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 40.0),
+                                const EdgeInsets.symmetric(horizontal: 30.0),
                             child: Container(
                               alignment: Alignment.centerRight,
-                              child: (Text(
-                                'Resend',
-                                style: TextStyle(
-                                  color: Color(0xFFE86166),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (_isButtonEnabled) {
+                                    _auth.ResetPassword(widget.email);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'A password reset email has been sent to the email address.'),
+                                      ),
+                                    );
+
+                                    setState(() {
+                                      _isButtonEnabled = false;
+                                      _countdown = 30;
+                                    });
+
+                                    _timer = Timer.periodic(
+                                        Duration(seconds: 1), (_timer) {
+                                      setState(() {
+                                        if (_countdown > 0) {
+                                          _countdown--;
+                                        } else {
+                                          _timer.cancel();
+                                          _isButtonEnabled = true;
+                                        }
+                                      });
+                                    });
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    !_isButtonEnabled
+                                        ? Text(
+                                            '[$_countdown]',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18.0,
+                                            ),
+                                          )
+                                        : Container(),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      'Resend',
+                                      style: TextStyle(
+                                        color: _isButtonEnabled
+                                            ? Color.fromARGB(255, 212, 17, 3)
+                                            : Colors.grey[600],
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              )),
+                              ),
                             ),
                           ),
                           SizedBox(height: 20.0),

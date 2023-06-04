@@ -81,31 +81,32 @@ class _CreateAccountState extends State<CreateAccount> {
                         //Email
                         SizedBox(height: 30),
                         _errorCreate
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.secondColor,
-                                    borderRadius:
-                                        BorderRadius.circular(8.0),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Invalid Credentials. Try again',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white),
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 40.0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.secondColor,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Invalid Credentials. Try again',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    SizedBox(height: 10),
+                                  ],
                                 ),
-                                SizedBox(height: 10),
-                              ],
-                            ),
-                          )
-                        : Container(),
+                              )
+                            : Container(),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: Container(
@@ -210,7 +211,8 @@ class _CreateAccountState extends State<CreateAccount> {
                               padding: const EdgeInsets.all(10.0),
                               child: MaterialButton(
                                 onPressed: () async {
-                                  if (pass_su_controller.text.trim() == pass_con_su_controller.text.trim()) {
+                                  if (pass_su_controller.text.trim() ==
+                                      pass_con_su_controller.text.trim()) {
                                     dynamic result =
                                         await _auth.SignUpEmailPassword(
                                             email_su_controller.text.trim(),
@@ -225,13 +227,12 @@ class _CreateAccountState extends State<CreateAccount> {
                                     } else {
                                       Navigator.of(context).push(
                                         PageTransition(
-                                          child: LoginPage(),
+                                          child: AccountVerificationSent(email: email_su_controller.text),
                                           type: PageTransitionType.rightToLeft,
                                         ),
                                       );
                                     }
-                                  }
-                                  else{
+                                  } else {
                                     setState(() {
                                       _errorCreate = true;
                                       email_su_controller.clear();
@@ -239,7 +240,6 @@ class _CreateAccountState extends State<CreateAccount> {
                                       pass_con_su_controller.clear();
                                     });
                                   }
-                                  
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(15),
@@ -267,33 +267,32 @@ class _CreateAccountState extends State<CreateAccount> {
                         Container(
                           alignment: Alignment.bottomCenter,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Have an Account?',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    PageTransition(
-                                      child: LoginPage(),
-                                      type: PageTransitionType.rightToLeft,
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  ' Log in',
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Have an Account?',
                                   style: TextStyle(
-                                    color: Color(0xFFE86166),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                            ]
-                          ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      PageTransition(
+                                        child: LoginPage(),
+                                        type: PageTransitionType.rightToLeft,
+                                      ),
+                                    );
+                                  },
+                                  child: Text(
+                                    ' Log in',
+                                    style: TextStyle(
+                                      color: Color(0xFFE86166),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ]),
                         ),
                       ],
                     ),
@@ -306,5 +305,4 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
     );
   }
-
 }
