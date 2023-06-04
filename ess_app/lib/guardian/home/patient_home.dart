@@ -270,15 +270,17 @@ class _patientHomePageState extends State<patientHomePage> {
                           SizedBox(height: 10),
                           sampleData.memoryTitle != 'Test Title' ?
                             MemoryCard(memory: sampleData):
-                            Column(
-                              children: [
-                                SizedBox(height: 20),
-                                emptyCategory(
-                                  icon: Icons.photo,
-                                  detail: 'No Memories. Yet',
-                                ),
-                                SizedBox(height: 20),
-                              ],
+                            Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  emptyCategory(
+                                    icon: Icons.photo,
+                                    detail: 'No Memories. Yet',
+                                  ),
+                                  SizedBox(height: 20),
+                                ],
+                              ),
                             ) 
                       ],
                     ),

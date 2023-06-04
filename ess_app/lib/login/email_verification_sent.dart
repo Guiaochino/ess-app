@@ -98,7 +98,7 @@ class _EmailVerificationSentState extends State<EmailVerificationSent> {
                               child: GestureDetector(
                                 onTap: (){
                                   if (_isButtonEnabled) {
-                                    // _auth.ResetPassword(widget.email);
+                                    _auth.ResetPassword(widget.email);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text('A password reset email has been sent to the email address.'),
